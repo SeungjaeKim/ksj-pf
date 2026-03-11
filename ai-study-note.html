@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI 학습 노트 생성기</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- PDF.js 라이브러리 추가 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <style>
+      :root {
+        --primary-color: #5a67d8; /* 세련된 퍼플블루 */
+        --primary-hover: #4c51bf;
+        --bg-color: #f7fafc; /* 아주 연한 회색 배경 */
+        --box-bg: #ffffff;
+        --text-main: #2d3748;
+        --text-muted: #718096;
+        --border-color: #e2e8f0;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          "Pretendard",
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          "Helvetica Neue",
+          Arial,
+          sans-serif;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        /* 배경에 미세한 그라데이션 추가로 고급스러움 강조 */
+        background-image: radial-gradient(
+          circle at top,
+          #ffffff,
+          transparent 70%
+        );
+      }
+
+      .container {
+        text-align: center;
+        width: 100%;
+        max-width: 800px;
+        padding: 0 20px;
+        animation: fadeIn 0.8s ease-out forwards;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        margin-bottom: 2.5rem;
+      }
+
+      .header h1 {
+        font-size: 2.75rem;
+        font-weight: 800;
+        color: var(--text-main);
+        margin-bottom: 0.75rem;
+        letter-spacing: -0.02em;
+      }
+
+      .header p {
+        font-size: 1.125rem;
+        color: var(--text-muted);
+      }
+
+      /* 하얀색 박스로 감싸는 입체감 있는 입력 영역 */
+      .input-box {
+        background: var(--box-bg);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.05),
+          0 1px 3px rgba(0, 0, 0, 0.02);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .input-box:hover {
+        transform: translateY(-2px);
+        box-shadow:
+          0 20px 40px rgba(0, 0, 0, 0.08),
+          0 4px 6px rgba(0, 0, 0, 0.04);
+      }
+
+      .input-group {
+        display: flex;
+        gap: 1rem;
+      }
+
+      @media (max-width: 640px) {
+        .input-group {
+          flex-direction: column;
+        }
+      }
+
+      input[type="url"],
+      input[type="password"],
+      input[type="text"] {
+        flex: 1;
+        padding: 1.25rem 1.5rem;
+        font-size: 1.125rem;
+        border: 2px solid var(--border-color);
+        border-radius: 14px;
+        outline: none;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        transition: all 0.3s ease;
+      }
+
+      input[type="url"]::placeholder,
+      input[type="password"]::placeholder,
+      input[type="text"]::placeholder {
+        color: #a0aec0;
+      }
+
+      /* 입력창 포커스 시 마이크로 인터랙션 */
+      input[type="url"]:focus,
+      input[type="password"]:focus,
+      input[type="text"]:focus {
+        border-color: var(--primary-color);
+        background-color: #ffffff;
+        box-shadow: 0 0 0 4px rgba(90, 103, 216, 0.15);
+      }
+
+      /* 커스텀 파일 업로드 영역 스타일 */
+      .file-upload-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 1rem;
+        width: 100%;
+      }
+      .file-upload-area {
+        position: relative;
+        width: 100%;
+        padding: 2.5rem 2rem;
+        border: 2px dashed #cbd5e1;
+        border-radius: 14px;
+        background-color: var(--bg-color);
+        transition: all 0.3s ease;
+        text-align: center;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      .file-upload-area:hover, .file-upload-area.dragover {
+        border-color: var(--primary-color);
+        background-color: #f7f8fc;
+      }
+      .file-upload-area input[type="file"] {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        cursor: pointer;
+      }
+      .file-upload-icon {
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+      .file-upload-text {
+        color: var(--text-main);
+        font-weight: 600;
+        font-size: 1.1rem;
+      }
+      .file-upload-subtext {
+        color: #a0aec0;
+        font-size: 0.9rem;
+      }
+      .file-info {
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background: #f1f5f9;
+        border-radius: 10px;
+        font-weight: 500;
+        color: var(--text-main);
+      }
+      .file-info .file-name {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .remove-file-btn {
+        background: none;
+        box-shadow: none;
+        color: #ef4444;
+        padding: 0.25rem;
+        border-radius: 6px;
+        font-size: 1.25rem;
+        border: none;
+        cursor: pointer;
+      }
+      .remove-file-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+      }
+
+      button.submit-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 1.25rem 2.25rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        border-radius: 14px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+
+      /* 버튼 호버 시 이펙트 */
+      button.submit-btn:hover {
+        box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+        transform: translateY(-2px);
+        background: linear-gradient(135deg, #7187eb 0%, #835ab1 100%);
+      }
+
+      button.submit-btn:active {
+        transform: translateY(1px);
+      }
+
+      .button-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* 로딩 애니메이션 */
+      .loader {
+        display: none;
+        width: 22px;
+        height: 22px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 0.8s ease-in-out infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loading-text {
+        display: none;
+        text-align: center;
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: -0.5rem;
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .toc-box h3 {
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+        font-size: 1.25rem;
+        font-weight: 700;
+        border-bottom: 2px solid var(--border-color);
+        padding-bottom: 0.75rem;
+      }
+
+      .preview-content,
+      .result-content {
+        color: var(--text-main);
+        font-size: 1.05rem;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .toc-box {
+        background: var(--box-bg);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
+        margin-top: 2.5rem;
+        text-align: left;
+        display: none;
+        animation: fadeIn 0.6s ease-out;
+      }
+
+      .accordion-part { margin-bottom: 0.75rem; }
+      .accordion-part-header {
+        background: #ffffff;
+        padding: 1rem 1.25rem;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 700;
+        border: 2px solid var(--border-color);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.2s ease;
+      }
+      .accordion-part-header:hover {
+        border-color: var(--primary-color);
+        background: #F7FAFC;
+      }
+      .accordion-part-body {
+        padding: 1rem 0 0.5rem 1rem;
+        border-left: 2px solid var(--border-color);
+        margin-left: 1.25rem;
+        display: none;
+        animation: fadeIn 0.3s ease-out;
+      }
+      .accordion-chapter { margin-bottom: 1.25rem; }
+      .accordion-chapter-title {
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 0.5rem;
+        font-size: 1.02rem;
+      }
+      .accordion-clip {
+        background: #F7FAFC;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.4rem;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        color: var(--text-muted);
+      }
+      .accordion-clip:hover {
+        border-color: var(--primary-color);
+        background: #EBF4FF;
+        color: var(--primary-color);
+        transform: translateX(4px);
+      }
+
+      .result-box {
+        background: linear-gradient(to bottom right, #ffffff, #f8faff);
+        padding: 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(90, 103, 216, 0.1), 0 5px 15px rgba(0, 0, 0, 0.03);
+        margin-top: 2.5rem;
+        text-align: left;
+        display: none;
+        animation: fadeIn 0.6s ease-out;
+        border: 1px solid rgba(90, 103, 216, 0.1);
+      }
+
+      .result-box h3 {
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        font-weight: 800;
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* 마크다운 스타일링 */
+      .result-content h1, .result-content h2, .result-content h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: var(--text-main);
+      }
+      .result-content ul, .result-content ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      .result-content li {
+        margin-bottom: 0.5rem;
+      }
+      .result-content p {
+        margin-bottom: 1rem;
+      }
+
+      .error-text {
+        color: #E53E3E;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: -0.5rem;
+        display: none;
+        animation: fadeIn 0.3s;
+      }
+      
+      /* 홈으로 돌아가기 버튼 */
+      .back-to-home {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        text-decoration: none;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 600;
+        padding: 10px 15px;
+        background: var(--box-bg);
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+      }
+      .back-to-home:hover {
+        transform: translateX(-5px);
+        color: var(--primary-color);
+      }
+    </style>
+  </head>
+  <body>
+    <a href="projects.html" class="back-to-home">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        작품 목록으로 돌아가기
+    </a>
+    <div class="container">
+      <div class="header">
+        <h1>AI 학습 노트 생성</h1>
+        <p>긴 영상이나 복잡한 글을 단 한 번의 클릭으로 깔끔하게 요약합니다.</p>
+      </div>
+
+      <div class="input-box">
+        <input
+          type="password"
+          id="apiKeyInput"
+          placeholder="Gemini API Key 입력 (***)"
+          autocomplete="off"
+        />
+        
+        <input
+          type="password"
+          id="notionApiKeyInput"
+          placeholder="Notion API Key 입력 (선택, secret_...)"
+          autocomplete="off"
+          style="margin-top: 1rem;"
+        />
+        
+        <input
+          type="text"
+          id="notionPageIdInput"
+          placeholder="Notion 상위 Page ID 입력 (예: STUDY 페이지 ID)"
+          autocomplete="off"
+          style="margin-top: 1rem;"
+        />
+        
+        <div class="file-upload-wrapper">
+          <div class="file-upload-area" id="dropZone">
+            <input type="file" id="pdfInput" accept="application/pdf" />
+            <svg class="file-upload-icon" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <line x1="9" y1="15" x2="12" y2="12"></line>
+              <line x1="15" y1="15" x2="12" y2="12"></line>
+            </svg>
+            <div class="file-upload-text">강의 교재 PDF 파일을 이곳에 드롭하거나 클릭하여 업로드하세요</div>
+            <div class="file-upload-subtext">마지막 페이지는 추출에서 자동으로 제외됩니다.</div>
+          </div>
+          
+          <div class="file-info" id="fileInfo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary-color)">
+              <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+              <polyline points="13 2 13 9 20 9"></polyline>
+            </svg>
+            <div class="file-name" id="fileName">파일 이름.pdf</div>
+            <button type="button" class="remove-file-btn" id="removeFileBtn" title="파일 삭제">×</button>
+          </div>
+
+          <button type="button" id="submitBtn" class="submit-btn">
+            <span class="button-content">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              학습 노트 자동 생성
+            </span>
+            <div class="loader" id="loader"></div>
+          </button>
+        </div>
+        
+        <div id="loadingText" class="loading-text">PDF를 분석 중입니다... ⏳</div>
+        <div id="errorText" class="error-text">파일을 처리하지 못했습니다. 형식을 확인해 주세요.</div>
+      </div>
+
+      <div id="tocBox" class="toc-box">
+        <h3>📚 학습 목차 (커리큘럼)</h3>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">원하는 목차를 클릭하면 상세 실습 교재가 생성됩니다.</p>
+        <div id="tocList" class="toc-list"></div>
+      </div>
+
+      <div id="resultBox" class="result-box">
+        <h3>✨ 상세 실습 페이지</h3>
+        <div id="detailLoadingText" class="loading-text" style="margin-bottom: 1rem;">상세 실습 교재를 집필 중입니다... ✍️</div>
+        <div id="notionSuccessText" style="display: none; color: #38A169; font-weight: bold; background: #C6F6D5; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center;">✅ 노션에 성공적으로 저장되었습니다!</div>
+        <div id="resultContent" class="result-content"></div>
+      </div>
+    </div>
+
+    <script>
+      /**
+       * 노션 API 호출 공통 헬퍼 함수
+       */
+      async function callNotionAPI(endpoint, method, bodyParams, notionApiKey) {
+        const corsProxy = 'https://corsproxy.io/?';
+        const url = corsProxy + encodeURIComponent(`https://api.notion.com/v1${endpoint}`);
+        
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            "Authorization": `Bearer ${notionApiKey}`,
+            "Notion-Version": "2022-06-28",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(bodyParams)
+        });
+        
+        if (!response.ok) {
+           const errText = await response.text();
+           throw new Error(`Notion API 에러: ${response.status} - ${errText}`);
+        }
+        return await response.json();
+      }
+
+      /**
+       * [Notion API 연동 준비 Function]
+       * 1단계 목차가 완성되었을 때 노션에 '메인 페이지'를 만듭니다.
+       */
+      async function createNotionMainPage(title, tocList, notionApiKey, parentPageId) {
+        if (!notionApiKey || !parentPageId) {
+          console.log("Notion 설정이 없으므로 메인 페이지 저장을 건너뜁니다.");
+          return null;
+        }
+        console.log("Notion API: 메인 페이지 생성 준비 완료", { title });
+        
+        const bodyParams = {
+          parent: { page_id: parentPageId },
+          properties: {
+            title: {
+              title: [
+                {
+                  text: { content: title }
+                }
+              ]
+            }
+          }
+        };
+
+        try {
+          const data = await callNotionAPI('/pages', 'POST', bodyParams, notionApiKey);
+          return data.id; // 생성된 페이지 ID
+        } catch (error) {
+          console.error("Notion 메인 페이지 생성 실패", error);
+          return null;
+        }
+      }
+
+      /**
+       * [Notion API 연동 준비 Function]
+       * 2단계 상세 내용이 완성되었을 때, 메인 페이지 하위에 '상세 보기 페이지'를 추가합니다.
+       */
+      async function addNotionSubPage(mainPageId, chapterTitle, detailedContent, notionApiKey) {
+        if (!notionApiKey || !mainPageId) {
+          console.log("Notion 설정 또는 메인페이지 ID가 없으므로 서브 페이지 저장을 건너뜁니다.");
+          return;
+        }
+        console.log(`Notion API: [${mainPageId}] 하위에 서브 페이지 추가 준비 완료`, { chapterTitle });
+
+        // 마크다운 텍스트를 줄 단위로 분할하여 Notion paragraph 블록 배열로 변환
+        const lines = detailedContent.split('\\n');
+        const blocks = lines.map(line => {
+           let content = line;
+           if(content === "") content = " "; // 빈 줄 허용을 위한 꼼수
+           
+           // 너무 긴 줄은 노션 제약(2000자) 우회 용도로 자름 (안전빵)
+           if (content.length > 1900) {
+              content = content.substring(0, 1900) + "...";
+           }
+           
+           return {
+             object: "block",
+             type: "paragraph",
+             paragraph: {
+               rich_text: [
+                 {
+                   type: "text",
+                   text: { content: content }
+                 }
+               ]
+             }
+           };
+        });
+
+        // Notion API는 한 번에 100개의 block만 허용
+        const chunkSize = 100;
+        let createdPageId = null;
+
+        // 첫 번째 청크로 페이지를 우선 생성
+        const firstChunk = blocks.slice(0, chunkSize);
+        const bodyParams = {
+          parent: { page_id: mainPageId },
+          properties: {
+            title: {
+              title: [
+                { text: { content: chapterTitle } }
+              ]
+            }
+          },
+          children: firstChunk
+        };
+
+        try {
+          const data = await callNotionAPI('/pages', 'POST', bodyParams, notionApiKey);
+          createdPageId = data.id;
+        } catch (error) {
+           console.error("Notion 하위 페이지 생성 실패", error);
+           return;
+        }
+
+        // 블록이 100개가 넘는다면 append block 으로 이어서 붙임
+        for (let i = chunkSize; i < blocks.length; i += chunkSize) {
+           const chunk = blocks.slice(i, i + chunkSize);
+           try {
+              await callNotionAPI(`/blocks/${createdPageId}/children`, 'PATCH', { children: chunk }, notionApiKey);
+           } catch(error) {
+              console.error("Notion 블록 이어붙이기 실패", error);
+           }
+        }
+        
+        // UI 반영
+        document.getElementById("notionSuccessText").style.display = "block";
+      }
+
+      // PDF.js 워커 설정
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+      let selectedPdfFile = null;
+
+      const dropZone = document.getElementById("dropZone");
+      const pdfInput = document.getElementById("pdfInput");
+      const fileInfo = document.getElementById("fileInfo");
+      const fileNameDisplay = document.getElementById("fileName");
+      const removeFileBtn = document.getElementById("removeFileBtn");
+
+      // 드래그 앤 드롭 이벤트 처리
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+      });
+
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+      });
+
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        const dt = e.dataTransfer;
+        handleFiles(dt.files);
+      });
+
+      pdfInput.addEventListener('change', function() {
+        handleFiles(this.files);
+      });
+
+      function handleFiles(files) {
+        if (files.length > 0) {
+          const file = files[0];
+          if (file.type === "application/pdf") {
+            selectedPdfFile = file;
+            fileNameDisplay.textContent = file.name;
+            dropZone.style.display = "none";
+            fileInfo.style.display = "flex";
+          } else {
+            alert("PDF 파일만 업로드 가능합니다.");
+          }
+        }
+      }
+
+      removeFileBtn.addEventListener('click', () => {
+        selectedPdfFile = null;
+        pdfInput.value = "";
+        fileInfo.style.display = "none";
+        dropZone.style.display = "flex";
+        
+        document.getElementById("tocBox").style.display = "none";
+        document.getElementById("resultBox").style.display = "none";
+      });
+
+      /**
+       * PDF에서 텍스트 추출 (마지막 페이지 제외)
+       */
+      async function extractTextFromPDF(file) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        
+        // 전체 페이지가 1장이면 1장을 그대로 추출하고, 그 이상이면 마지막 페이지 제외
+        const targetPages = pdf.numPages > 1 ? pdf.numPages - 1 : 1;
+        let fullText = "";
+
+        for (let i = 1; i <= targetPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(" ");
+          fullText += pageText + "\\n";
+        }
+        return fullText;
+      }
+
+      /**
+       * 노션 URL에서 32자리 UUID 필터링 함수
+       */
+      function extractNotionId(input) {
+        if (!input) return "";
+        // 32자리의 영숫자 (중간 하이픈 유무 무관) 추출
+        const match = input.match(/([a-zA-Z0-9]{32}|[a-zA-Z0-9]{8}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{4}-[a-zA-Z0-9]{12})/);
+        
+        if (match) {
+           // 하이픈이 들어간 형태(8-4-4-4-12)로 변환해 리턴
+           let rawId = match[0].replace(/-/g, '');
+           return `${rawId.slice(0,8)}-${rawId.slice(8,12)}-${rawId.slice(12,16)}-${rawId.slice(16,20)}-${rawId.slice(20,32)}`;
+        }
+        return input; 
+      }
+
+      document
+        .getElementById("submitBtn")
+        .addEventListener("click", async function (e) {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+          const buttonContent = document.querySelector(".button-content");
+          const loader = document.getElementById("loader");
+          const loadingText = document.getElementById("loadingText");
+          const errorText = document.getElementById("errorText");
+          const tocBox = document.getElementById("tocBox");
+          const tocList = document.getElementById("tocList");
+          const resultBox = document.getElementById("resultBox");
+          const resultContent = document.getElementById("resultContent");
+          const detailLoadingText = document.getElementById("detailLoadingText");
+          const apiKeyInput = document.getElementById("apiKeyInput");
+          const apiKey = apiKeyInput.value.trim();
+          
+          const notionApiKeyInput = document.getElementById("notionApiKeyInput");
+          const notionApiKey = notionApiKeyInput.value.trim();
+          
+          const notionPageIdInput = document.getElementById("notionPageIdInput");
+          // URL 복붙 시 ID만 추출
+          const notionPageId = extractNotionId(notionPageIdInput.value.trim());
+
+          if (!selectedPdfFile) {
+            alert("강의 교재 PDF 파일을 업로드 해 주세요!");
+            return;
+          }
+
+          if (!apiKey) {
+            alert("Gemini API Key를 입력해 주세요!");
+            apiKeyInput.focus();
+            return;
+          }
+
+          // UI 초기화 및 로딩 시작
+          errorText.style.display = "none";
+          tocBox.style.display = "none";
+          tocList.innerHTML = "";
+          resultBox.style.display = "none";
+          resultContent.innerHTML = "";
+          detailLoadingText.style.display = "none";
+
+          loadingText.textContent = "PDF 텍스트를 추출하고 AI가 커리큘럼을 분석 중입니다... ⏳";
+          loadingText.style.display = "block";
+          buttonContent.style.display = "none";
+          loader.style.display = "block";
+          submitBtn.style.opacity = "0.9";
+          submitBtn.style.cursor = "wait";
+          submitBtn.disabled = true;
+
+          try {
+            // PDF 텍스트 추출 (최대 15p)
+            const extractedText = await extractTextFromPDF(selectedPdfFile);
+            
+            // AI 호출 (Gemini)
+            const systemPrompt = `다음은 강의 소개서 PDF에서 추출한 텍스트야. 이 내용을 분석해서 '강의 커리큘럼(목차)'만 완벽하게 찾아내어 무조건 아래의 JSON 배열 형식으로만 응답해. 마크다운 백틱(\`\`\`)이나 다른 설명은 절대 넣지 마.
+형식: [{"title": "Part 이름", "chapters": [{"title": "Chapter 이름", "clips": ["Clip 1", "Clip 2"]}]}]
+
+[PDF 추출 텍스트]
+${extractedText}`;
+
+            const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+            
+            const response = await fetch(apiEndpoint, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: systemPrompt }] }]
+              })
+            });
+
+            if (!response.ok) throw new Error("Gemini API 호출 에러");
+
+            const data = await response.json();
+            let aiText = data.candidates[0].content.parts[0].text.trim();
+            // 백틱 찌꺼기 제거 방어 로직
+            aiText = aiText.replace(/^\s*```json/i, "").replace(/```\s*$/, "").trim();
+            
+            const curriculumTree = JSON.parse(aiText);
+
+            if (!curriculumTree || curriculumTree.length === 0) {
+               throw new Error("파싱 가능한 커리큘럼 데이터가 없습니다.");
+            }
+
+            // 노션 연동 실제 호출
+            const allClips = curriculumTree.flatMap(p => p.chapters.flatMap(c => c.clips));
+            
+            // 파일명 정제
+            const cleanFileName = selectedPdfFile.name
+               .replace(/\.[^/.]+$/, "") // 확장자 제거
+               .replace(/[-_]/g, " ")     // 특수문자 치환
+               .replace(/\s+/g, " ")      // 다중 공백 단일화
+               .trim();
+
+            const mainPageId = await createNotionMainPage(`강의 노트: ${cleanFileName}`, allClips, notionApiKey, notionPageId);
+
+            // 아코디언 렌더링
+            tocList.innerHTML = "";
+            curriculumTree.forEach((part) => {
+              const partDiv = document.createElement("div");
+              partDiv.className = "accordion-part";
+              
+              const partHeader = document.createElement("div");
+              partHeader.className = "accordion-part-header";
+              partHeader.innerHTML = `<span>${part.title}</span> <span>▼</span>`;
+              
+              const partBody = document.createElement("div");
+              partBody.className = "accordion-part-body";
+              
+              if (part.chapters) {
+                  part.chapters.forEach(chapter => {
+                     const chDiv = document.createElement("div");
+                     chDiv.className = "accordion-chapter";
+                     
+                     const chTitle = document.createElement("div");
+                     chTitle.className = "accordion-chapter-title";
+                     chTitle.textContent = chapter.title;
+                     chDiv.appendChild(chTitle);
+                     
+                     if (chapter.clips) {
+                         chapter.clips.forEach(clip => {
+                            const clipDiv = document.createElement("div");
+                            clipDiv.className = "accordion-clip";
+                            clipDiv.textContent = clip;
+                            clipDiv.onclick = () => handleClipClick(part.title, chapter.title, clip, apiKey, mainPageId, extractedText, notionApiKey);
+                            chDiv.appendChild(clipDiv);
+                         });
+                     }
+                     partBody.appendChild(chDiv);
+                  });
+              }
+              
+              partHeader.onclick = () => {
+                 const isHidden = partBody.style.display === "none" || partBody.style.display === "";
+                 partBody.style.display = isHidden ? "block" : "none";
+                 partHeader.innerHTML = `<span>${part.title}</span> <span>${isHidden ? '▲' : '▼'}</span>`;
+              };
+              
+              partDiv.appendChild(partHeader);
+              partDiv.appendChild(partBody);
+              tocList.appendChild(partDiv);
+            });
+            
+            tocBox.style.display = "block";
+            
+          } catch (error) {
+            console.error(error);
+            errorText.textContent = error.message || "데이터를 파싱하지 못했습니다. PDF 내용이나 API 키를 확인해주세요.";
+            errorText.style.display = "block";
+          } finally {
+            loadingText.style.display = "none";
+            buttonContent.style.display = "flex";
+            loader.style.display = "none";
+            submitBtn.style.opacity = "1";
+            submitBtn.style.cursor = "pointer";
+            submitBtn.disabled = false;
+          }
+        });
+
+      // 2단계 상세 실습 페이지 생성 처리 함수
+      function handleClipClick(partTitle, chapterTitle, clipTitle, apiKey, mainPageId, extractedPdfText, notionApiKey) {
+        const resultBox = document.getElementById("resultBox");
+        const resultContent = document.getElementById("resultContent");
+        const detailLoadingText = document.getElementById("detailLoadingText");
+        const notionSuccessText = document.getElementById("notionSuccessText");
+        
+        // UI 표시 및 리셋
+        resultBox.style.display = "block";
+        resultContent.innerHTML = "";
+        detailLoadingText.style.display = "block";
+        notionSuccessText.style.display = "none";
+        
+        // 2단계 스크롤 이동
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+
+        const systemPrompt = `너는 IT 분야 전문 지식을 갖춘 1타 강사야. 사용자가 선택한 주제는 [${partTitle}] - [${chapterTitle}] - [${clipTitle}] 이며, 제공된 PDF 교재의 내용은 다음과 같아:
+[${extractedPdfText}]
+
+이 PDF 내용과 너의 전문 지식을 결합하여, 사용자가 선택한 주제에 맞는 핵심 내용과 실전 예시를 마크다운 형식으로 아주 상세하고 쉽게 작성해 줘.
+
+반드시 다음 3가지 양식을 지켜서 작성해야 해:
+# 📖 [${clipTitle}]
+## 🎯 핵심 요약 (이 클립에서 반드시 알아야 할 3가지)
+## 💻 실전 코드 및 설정 예시 (코드가 필요 없는 주제라면 구체적인 사례나 다이어그램 설명으로 대체)
+## 💡 행동 가이드 (학습 후 바로 적용해 볼 수 있는 To-Do 리스트)`;
+        
+        const apiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        
+        fetch(apiEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: systemPrompt }
+                ]
+              }
+            ]
+          })
+        })
+        .then((response) => {
+           if (!response.ok) throw new Error("Gemini API 호출 에러");
+           return response.json();
+        })
+        .then(async (data) => {
+           // 상세 분석 로딩 텍스트 숨기기
+           detailLoadingText.style.display = "none";
+           
+           const aiDetailText = data.candidates[0].content.parts[0].text;
+           resultContent.innerHTML = marked.parse(aiDetailText);
+           
+           // 2. 노션 연동 하위 페이지 추가 호출
+           await addNotionSubPage(mainPageId, `${chapterTitle} / ${clipTitle}`, aiDetailText, notionApiKey);
+        })
+        .catch(err => {
+           detailLoadingText.style.display = "none";
+           resultContent.innerHTML = `<span style="color:#E53E3E; font-weight:bold;">상세 실습 페이지 생성 중 오류가 발생했습니다. 다시 클릭해 주세요.</span>`;
+        });
+      }
+    </script>
+  </body>
+</html>

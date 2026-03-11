@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me | Creative Developer</title>
+    <meta name="description" content="김승재 - 10년 차 백엔드 개발자의 이야기와 경험">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Specific adjustments for standalone about page */
+        body {
+            overflow-y: auto;
+        }
+        .about-section {
+            padding-top: 150px; /* Account for fixed nav */
+        }
+        
+        /* Expandable More Timelines */
+        .timeline-hidden-items {
+            display: none;
+            animation: fadeInDown 0.5s ease forwards;
+        }
+        
+        .timeline-hidden-items.show {
+            display: block;
+        }
+        
+        .timeline-more-btn {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 5px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+        
+        .timeline-more-btn:hover {
+            color: #fff;
+        }
+        
+        .timeline-more-btn svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .timeline-more-btn.open svg {
+            transform: rotate(180deg);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="glow-blob blob-1" style="animation: none; opacity: 0.2"></div>
+    <div class="glow-blob blob-2" style="animation: none; opacity: 0.1"></div>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="index.html" style="text-decoration:none; color:inherit;">PORT<span>FOLIO</span></a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="index.html#projects">Projects</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="about-section">
+            <div class="container">
+                <h2 class="section-title">About <span>Me</span></h2>
+                
+                <div class="about-grid">
+                    <!-- Profile Area -->
+                    <div class="profile-card glass-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <span class="avatar-text">SJ</span>
+                            </div>
+                            <div class="profile-titles">
+                                <h3>비즈니스 가치를 더하는<br><span>김승재</span> 입니다.</h3>
+                                <p class="role-badge">10년 차 Back-End Engineer</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-body">
+                            <p class="quote">"안정적인 시스템이 곧 최고의 비즈니스 전략이다."</p>
+                            <p class="intro-desc">
+                                다양한 도메인에서 10년간 축적된 경험을 바탕으로 <strong>대규모 트래픽 처리</strong>와 <strong>안정적인 시스템 아키텍처 구축</strong>에 특화된 백엔드 엔지니어입니다.<br><br>
+                                복잡한 비즈니스 요구사항을 견고한 코드로 풀어내는 것에 자부심을 느낍니다. 
+                                최근에는 <strong>Test-Driven Development (TDD)</strong>와 <strong>Clean Architecture</strong> 방법론을 통하여 
+                                장애를 예방하고 유지보수 비용을 획기적으로 낮추는 시스템 설계에 집중하며, 지속 가능한 개발 문화를 팀에 정착시키는 데 기여하고 있습니다.
+                            </p>
+                        </div>
+
+                        <div class="contact-chips">
+                            <a href="mailto:ksj84@kakao.com" class="chip">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                ksj84@kakao.com
+                            </a>
+                            <a href="https://github.com/SeungjaeKim" target="_blank" class="chip">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                GitHub
+                            </a>
+                            <a href="https://kimseungjae.tistory.com/" target="_blank" class="chip">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"></path><path d="M4 9h16"></path><path d="M9 4v16"></path></svg>
+                                Blog (Tistory)
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Career Timeline Area -->
+                    <div class="career-timeline">
+                        <h3 class="timeline-title">Experience & Journey</h3>
+                        
+                        <div class="timeline-container">
+                            <div class="timeline-item">
+                                <div class="timeline-dot" style="background:var(--secondary-color); box-shadow:0 0 15px var(--secondary-color);"></div>
+                                <div class="timeline-content glass-card" style="border-color: rgba(0,210,211,0.3);">
+                                    <span class="timeline-date" style="color:var(--secondary-color);">2023.05 - 현재</span>
+                                    <h4>휴먼베이스</h4>
+                                    <p>보건의료 빅데이터 통합 플랫폼 개발 및 운영<br>
+                                    <span class="tech-stack">JAVA, MyBatis, SPRINGBOOT, Vue, PostgreSQL</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content glass-card">
+                                    <span class="timeline-date">2022.03 - 2023.01</span>
+                                    <h4>(주)세명소프트</h4>
+                                    <p>삼성엔지니어링 플랜트 부진 공기 예측 시스템<br>
+                                    <span class="tech-stack">JAVA, SPRINGBOOT, PostgreSQL</span></p>
+                                </div>
+                            </div>
+
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content glass-card">
+                                    <span class="timeline-date">2021.07 - 2022.02</span>
+                                    <h4>이플라츠</h4>
+                                    <p>현대자동차 일본 자동차 온라인 판매 사이트<br>
+                                    <span class="tech-stack">JAVA, SPRINGBOOT, PostgreSQL</span></p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="timeline-content glass-card">
+                                    <span class="timeline-date">2020.09 - 2021.03</span>
+                                    <h4>쉐어마인드</h4>
+                                    <p>EBS 공통 API 및 어드민 개발<br>
+                                    <span class="tech-stack">JAVA, SPRINGBOOT, MariaDB</span></p>
+                                </div>
+                            </div>
+                            
+                            <!-- Toggle Button for More -->
+                            <div class="timeline-more" style="padding-bottom: 10px;">
+                                <div class="timeline-dot" style="background: transparent; border-color: var(--text-muted); box-shadow: none;"></div>
+                                <button class="timeline-more-btn" id="toggleTimelineBtn">
+                                    이전 경력 7개 더보기 
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </button>
+                            </div>
+
+                            <!-- Hidden items -->
+                            <div class="timeline-hidden-items" id="hiddenTimeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2019.12 - 2020.08</span>
+                                        <h4>엔트러스이엔아이</h4>
+                                        <p>GS FRESH 개발 및 운영<br>
+                                        <span class="tech-stack">JAVA, Spring, Oracle</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2016.05 - 2019.11</span>
+                                        <h4>피에프디</h4>
+                                        <p>미즈온 등 자사 쇼핑몰 구축 및 정산 시스템 개발<br>
+                                        <span class="tech-stack">JAVA, PHP, MySQL</span></p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2016.03 - 2016.04</span>
+                                        <h4>아크릴</h4>
+                                        <p>감성 사전 구축 및 태깅</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2015.06 - 2015.11</span>
+                                        <h4>I&T 시스템</h4>
+                                        <p>교직원 공제회 홈페이지 고도화</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2013.03 - 2015.02</span>
+                                        <h4>YGP커뮤니케이션</h4>
+                                        <p>비월드투어 앱 마스터 및 운영</p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-dot"></div>
+                                    <div class="timeline-content glass-card">
+                                        <span class="timeline-date">2006.10 - 2007.09</span>
+                                        <h4>스타엠엔터테인먼트</h4>
+                                        <p>웹 마스터</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item edu" style="margin-top: 20px;">
+                                <div class="timeline-dot edu-dot"></div>
+                                <div class="timeline-content glass-card">
+                                    <h4>Education</h4>
+                                    <p>수원대학교 인터넷정보 공학과 졸업<br>광성고등학교 졸업</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Skills Section -->
+                <div class="skills-wrapper">
+                    <h3 class="timeline-title center-title">Core Skills</h3>
+                    <div class="tech-bubbles">
+                        <div class="bubble bg-java">Java</div>
+                        <div class="bubble bg-spring">Spring (Boot, MVC, Batch, Security)</div>
+                        <div class="bubble bg-jpa">JPA / MyBatis</div>
+                        <div class="bubble bg-db">PostgreSQL</div>
+                        <div class="bubble bg-db">MySQL / MariaDB</div>
+                        <div class="bubble bg-front">Vue.js</div>
+                        <div class="bubble bg-devops">Jenkins / Tomcat</div>
+                        <div class="bubble bg-tool">Git / SVN</div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Toggle Hidden Timeline Items
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('toggleTimelineBtn');
+            const hiddenContainer = document.getElementById('hiddenTimeline');
+
+            if(toggleBtn && hiddenContainer) {
+                toggleBtn.addEventListener('click', () => {
+                    const isShowing = hiddenContainer.classList.contains('show');
+                    if(isShowing) {
+                        hiddenContainer.classList.remove('show');
+                        toggleBtn.classList.remove('open');
+                        toggleBtn.innerHTML = '이전 경력 7개 더보기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>';
+                    } else {
+                        hiddenContainer.classList.add('show');
+                        toggleBtn.classList.add('open');
+                        toggleBtn.innerHTML = '접기 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"></polyline></svg>';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
