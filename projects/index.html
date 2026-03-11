@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
     <style>
         .projects-section {
             padding-top: 150px;
@@ -22,12 +22,12 @@
     <div class="glow-blob blob-3"></div>
 
     <nav class="glass-nav">
-        <div class="logo"><a href="index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
+        <div class="logo"><a href="../index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
         <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="projects.html" class="active">Projects</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../about/index.html">About</a></li>
+            <li><a href="index.html" class="active">Projects</a></li>
+            <li><a href="../index.html#contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -41,7 +41,7 @@
                         <div class="project-header">
                             <span class="project-category">AI / Full-stack</span>
                             <div class="project-links">
-                                <a href="ai-study-note.html" target="_blank" class="project-link" title="Live Demo">
+                                <a href="ai-study-note/index.html" target="_blank" class="project-link" title="Live Demo">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                                 <a href="#" class="project-link" title="GitHub Source">
@@ -82,7 +82,7 @@
                         <div class="project-header">
                             <span class="project-category">Speech / Realtime</span>
                             <div class="project-links">
-                                <a href="live-translation.html" target="_blank" class="project-link" title="Live Demo">
+                                <a href="live-translation/index.html" target="_blank" class="project-link" title="Live Demo">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                                 </a>
                                 <a href="#" class="project-link" title="GitHub Source">
@@ -117,10 +117,55 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="project-card glass-card">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <span class="project-category">UI / UX Planning</span>
+                            <div class="project-links">
+                                <a href="stage-on/index.html" target="_blank" class="project-link" title="Live Demo">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                </a>
+                                <a href="#" class="project-link" title="GitHub Source">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <h3 class="project-title">STAGE ON Performance Showcase <span class="badge">Portfolio Mockup</span></h3>
+
+                        <p class="project-desc">
+                            공연 브랜드 랜딩, 로그인/회원가입, 공연 상세, 찜, 후기, 다단계 예매 플로우까지 한 흐름으로 담은
+                            <strong>전시형 공연 사이트</strong> 프로젝트입니다. 실제 기능 없이도 서비스 기획과 UI 설계 감각이 보이도록 구성했습니다.
+                        </p>
+
+                        <div class="project-features">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>공연 소개형 랜딩과 카드형 <strong>공연 리스트 UI</strong></li>
+                                <li><strong>탭 구조 상세 페이지</strong>로 공연 정보, 할인, 위치, 후기 정리</li>
+                                <li><strong>로그인 / 비밀번호 찾기 / 회원가입</strong> 인증 화면 목업</li>
+                                <li><strong>7단계 예약 UX</strong>와 localStorage 기반 찜 목록 구현</li>
+                            </ul>
+                        </div>
+
+                        <div class="project-tech-stack">
+                            <span class="tech-tag">HTML5 / CSS3</span>
+                            <span class="tech-tag">Vanilla JS</span>
+                            <span class="tech-tag">JSON Mock Data</span>
+                            <span class="tech-tag">UX Planning</span>
+                            <span class="tech-tag">Portfolio Prototype</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <script src="script.js"></script>
+    <script src="../script.js"></script>
 </body>
 </html>
+
+
+
+

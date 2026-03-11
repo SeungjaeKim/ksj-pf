@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 후기 등록</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="review-write">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="detail.html">상세 페이지</a>
+                    <a href="review-write.html" class="active">후기 등록</a>
+                    <a href="booking.html">예매</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="centered-shell">
+            <section class="stageon-card auth-card">
+                <span class="eyebrow">Review Modal Mockup</span>
+                <h1 class="auth-heading">관람 후기 등록</h1>
+                <p class="auth-note">별점, 제목, 내용, 다중 이미지 업로드 UI까지 담은 리뷰 등록 모달형 페이지 목업입니다.</p>
+                <form class="form-grid" data-auth-form>
+                    <div class="field">
+                        <label class="inline-label">별점 선택</label>
+                        <div class="pagination">
+                            <button class="page-btn active" type="button">★ 5</button>
+                            <button class="page-btn" type="button">★ 4</button>
+                            <button class="page-btn" type="button">★ 3</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="review-title">제목</label>
+                        <input class="stageon-input" id="review-title" type="text" placeholder="후기 제목을 입력해 주세요" data-required>
+                    </div>
+                    <div class="field">
+                        <label for="review-body">내용</label>
+                        <textarea class="stageon-textarea" id="review-body" placeholder="공연 분위기, 좌석, 추천 포인트를 자유롭게 적어 주세요" data-required></textarea>
+                    </div>
+                    <div class="field">
+                        <label class="inline-label">이미지 첨부</label>
+                        <div class="image-upload-mock">
+                            <div>
+                                <strong>다중 이미지 업로드 UI</strong>
+                                <div class="helper">실제 업로드는 없지만, 미리보기와 삭제 버튼 배치를 확인할 수 있습니다.</div>
+                            </div>
+                            <button class="stageon-ghost-btn" type="button">파일 선택</button>
+                        </div>
+                        <div class="upload-preview">
+                            <div class="preview-tile"><button type="button">삭제</button></div>
+                            <div class="preview-tile"><button type="button">삭제</button></div>
+                            <div class="preview-tile"><button type="button">삭제</button></div>
+                        </div>
+                    </div>
+                    <button class="stageon-btn" type="submit">후기 등록</button>
+                    <div class="error-text" data-form-error aria-live="polite"></div>
+                </form>
+            </section>
+        </main>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

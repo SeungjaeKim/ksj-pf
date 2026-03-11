@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 공연 소개형 랜딩</title>
+    <meta name="description" content="공연 소개, 예매 유도, 인증 흐름까지 담은 전시형 공연 브랜드 사이트 목업입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="landing">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="index.html" class="active">브랜드</a>
+                    <a href="list.html">공연 리스트</a>
+                    <a href="detail.html">상세 페이지</a>
+                    <a href="booking.html">예매 플로우</a>
+                    <a href="login.html">로그인</a>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            <section class="stageon-hero stageon-section">
+                <div class="stageon-grid-hero stageon-section">
+                    <article class="stageon-card hero-copy">
+                        <span class="eyebrow">Performance Brand Showcase</span>
+                        <h1 class="stageon-title">관객이 머무는 순간까지 설계된 공연 랜딩</h1>
+                        <p class="stageon-lead" data-brand-lead></p>
+                        <div class="hero-actions">
+                            <a class="stageon-btn" href="detail.html">대표 공연 상세 보기</a>
+                            <a class="stageon-ghost-btn" href="booking.html">예매 UX 목업 보기</a>
+                        </div>
+                    </article>
+                    <article class="hero-poster">
+                        <div class="poster-copy">
+                            <span class="poster-badge">Featured Show</span>
+                            <h2 class="poster-headline">Seoul Prime Night</h2>
+                            <div class="poster-meta">
+                                <span>명동 전용관 · 2026.04.03 - 2026.08.30</span>
+                                <span>논버벌 퍼포먼스 · 100분 · 만 7세 이상</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="stageon-section">
+                <div class="section-head">
+                    <div>
+                        <h2 class="section-title">이 프로젝트에 담은 화면</h2>
+                        <p class="section-copy">실제 예매 기능은 없지만, 서비스 기획과 화면 설계 감각이 드러나도록 핵심 흐름을 모두 정적 UI로 구성했습니다.</p>
+                    </div>
+                </div>
+                <div class="feature-grid" data-landing-feature-grid></div>
+            </section>
+
+            <section class="stageon-section">
+                <div class="section-head">
+                    <div>
+                        <h2 class="section-title">대표 공연 라인업</h2>
+                        <p class="section-copy">리스트 페이지와 동일한 더미 데이터를 사용해 카드형 탐색 구조를 보여줍니다.</p>
+                    </div>
+                    <a class="stageon-link-btn" href="list.html">전체 리스트로 이동</a>
+                </div>
+                <div class="show-grid" data-show-grid></div>
+            </section>
+
+            <section class="stageon-section">
+                <div class="split-layout">
+                    <article class="info-card">
+                        <span class="eyebrow">Flow Mockup</span>
+                        <h2 class="section-title">예매 플로우 UI 목업</h2>
+                        <p class="section-copy">관람일시 선택, 좌석 및 인원 선택, 할인, 결제 정보, 포인트, 쿠폰, 결제수단까지 7단계 흐름을 한 페이지에서 체험할 수 있도록 만들었습니다.</p>
+                        <div class="inline-actions">
+                            <a class="stageon-btn" href="booking.html">예매 스텝 시작</a>
+                        </div>
+                    </article>
+                    <article class="info-card">
+                        <span class="eyebrow">Auth Mockup</span>
+                        <h2 class="section-title">로그인과 회원가입 UX</h2>
+                        <p class="section-copy">입력창 상태, 체크박스, 보조 링크, 간단한 프론트 검증 메시지까지 담아 실서비스처럼 보이는 인증 흐름을 구성했습니다.</p>
+                        <div class="inline-actions">
+                            <a class="stageon-ghost-btn" href="login.html">로그인</a>
+                            <a class="stageon-ghost-btn" href="signup.html">회원가입</a>
+                            <a class="stageon-ghost-btn" href="recover.html">비밀번호 찾기</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="stageon-footer">
+            <div class="stageon-footer-inner">
+                <div>STAGE ON Showcase Project</div>
+                <div>Landing · Detail · Auth · Wishlist · Booking Mockup</div>
+            </div>
+        </footer>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

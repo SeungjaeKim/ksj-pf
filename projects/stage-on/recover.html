@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 비밀번호 찾기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="recover">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="login.html">로그인</a>
+                    <a href="recover.html" class="active">비밀번호 찾기</a>
+                    <a href="signup.html">회원가입</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="centered-shell">
+            <section class="auth-grid">
+                <article class="auth-card stageon-card">
+                    <span class="eyebrow">Recovery Mockup</span>
+                    <h1 class="auth-heading">비밀번호 찾기</h1>
+                    <p class="auth-note">등록된 이메일 주소를 입력하면 인증 링크를 발송하는 흐름을 가정한 보조 기능 화면입니다.</p>
+                    <form class="form-grid" data-auth-form>
+                        <div class="field">
+                            <label for="recover-email">이메일</label>
+                            <input class="stageon-input" id="recover-email" name="email" type="email" placeholder="example@stageon.co.kr" data-required>
+                            <div class="helper">가입 시 사용한 이메일을 입력해 주세요.</div>
+                        </div>
+                        <button class="stageon-btn" type="submit">인증 요청</button>
+                        <div class="error-text" data-form-error aria-live="polite"></div>
+                    </form>
+                </article>
+                <aside class="mini-card">
+                    <h2>포트폴리오 포인트</h2>
+                    <p class="auth-note">보조 기능까지 설계한 화면 경험을 강조할 수 있고, 메인 인증 흐름과 동일한 디자인 시스템으로 완성도를 높였습니다.</p>
+                </aside>
+            </section>
+        </main>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

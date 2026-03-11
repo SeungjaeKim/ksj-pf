@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 회원가입</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="signup">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="login.html">로그인</a>
+                    <a href="signup.html" class="active">회원가입</a>
+                    <a href="recover.html">비밀번호 찾기</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="centered-shell">
+            <section class="auth-grid">
+                <article class="auth-card stageon-card">
+                    <span class="eyebrow">Sign Up Mockup</span>
+                    <h1 class="auth-heading">회원 유입 플로우 설계</h1>
+                    <p class="auth-note">기본 가입 폼과 약관 동의 블록을 함께 배치해 실제 서비스형 회원가입 UX를 보여줍니다.</p>
+                    <form class="form-grid" data-auth-form>
+                        <div class="field">
+                            <label for="signup-email">이메일</label>
+                            <input class="stageon-input" id="signup-email" name="email" type="email" placeholder="example@stageon.co.kr" data-required>
+                        </div>
+                        <div class="form-row-2">
+                            <div class="field">
+                                <label for="signup-password">비밀번호</label>
+                                <input class="stageon-input" id="signup-password" name="password" type="password" placeholder="8자 이상 입력" data-required>
+                            </div>
+                            <div class="field">
+                                <label for="signup-password-confirm">비밀번호 확인</label>
+                                <input class="stageon-input" id="signup-password-confirm" name="passwordConfirm" type="password" placeholder="비밀번호 재입력" data-required>
+                            </div>
+                        </div>
+                        <div class="consent-group">
+                            <label class="stageon-checkbox"><input type="checkbox"><span>개인정보 수집 및 이용에 동의합니다.</span></label>
+                            <label class="stageon-checkbox"><input type="checkbox"><span>마케팅 및 광고 활용 정보 수신에 동의합니다.</span></label>
+                        </div>
+                        <button class="stageon-btn" type="submit">가입하기</button>
+                        <div class="error-text" data-form-error aria-live="polite"></div>
+                    </form>
+                </article>
+                <aside class="auth-side">
+                    <article class="policy-card">
+                        <h2>개인정보 수집 이용 동의</h2>
+                        <p>예매 알림, 예매 내역 확인, 고객 문의 응대를 위한 최소한의 회원 정보를 수집하는 상황을 가정한 문구 영역입니다.</p>
+                    </article>
+                    <article class="policy-card">
+                        <h2>마케팅 및 광고 활용 동의</h2>
+                        <p>신규 공연 오픈 알림, 할인 쿠폰 제공, 시즌 이벤트 안내를 위한 선택 동의 UI 목업입니다.</p>
+                    </article>
+                </aside>
+            </section>
+        </main>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

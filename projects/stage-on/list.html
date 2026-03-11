@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 공연 리스트</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="list">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="index.html">브랜드</a>
+                    <a href="list.html" class="active">공연 리스트</a>
+                    <a href="detail.html">상세 페이지</a>
+                    <a href="wishlist.html">찜 목록</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="page-top-space">
+            <section class="stageon-section">
+                <div class="section-head">
+                    <div>
+                        <span class="eyebrow">List / Grid Mockup</span>
+                        <h1 class="section-title">공연 탐색 리스트</h1>
+                        <p class="section-copy">정렬과 필터 UI를 둔 카드형 페이지입니다. 실제 검색은 없지만 화면 구조와 액션 버튼 배치를 포트폴리오용으로 보여줍니다.</p>
+                    </div>
+                </div>
+                <div class="list-toolbar">
+                    <select class="stageon-select" style="max-width: 180px;">
+                        <option>최신순</option>
+                        <option>평점순</option>
+                        <option>낮은 가격순</option>
+                    </select>
+                    <select class="stageon-select" style="max-width: 180px;">
+                        <option>전체 장르</option>
+                        <option>가족 공연</option>
+                        <option>투어 공연</option>
+                    </select>
+                    <button class="stageon-ghost-btn" type="button">그리드 보기</button>
+                    <button class="stageon-ghost-btn" type="button">리스트 보기</button>
+                    <div class="toolbar-spacer"></div>
+                    <span class="toolbar-note">총 3개 공연</span>
+                </div>
+                <div class="show-grid" data-show-grid></div>
+            </section>
+        </main>
+
+        <footer class="stageon-footer">
+            <div class="stageon-footer-inner">
+                <div>STAGE ON List Mockup</div>
+                <div>정렬 · 필터 · 카드형 UI</div>
+            </div>
+        </footer>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

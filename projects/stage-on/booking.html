@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 예매 플로우</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="booking">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="detail.html">상세</a>
+                    <a href="booking.html" class="active">예매</a>
+                    <a href="booking-complete.html">완료</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="page-top-space">
+            <section class="stageon-section" data-booking-root>
+                <div class="section-head">
+                    <div>
+                        <span class="eyebrow">Booking Step Flow</span>
+                        <h1 class="section-title">다단계 예약 UX 목업</h1>
+                        <p class="section-copy">실제 결제는 없지만, 공연 예매에서 자주 등장하는 단계와 입력 포인트를 모두 경험할 수 있게 구성했습니다.</p>
+                    </div>
+                </div>
+                <div class="stepper">
+                    <span class="step-chip active">1 관람일시</span>
+                    <span class="step-chip">2 좌석/인원</span>
+                    <span class="step-chip">3 할인</span>
+                    <span class="step-chip">4 결제정보</span>
+                    <span class="step-chip">5 포인트</span>
+                    <span class="step-chip">6 쿠폰</span>
+                    <span class="step-chip">7 결제수단</span>
+                </div>
+
+                <div class="booking-layout">
+                    <div class="form-grid">
+                        <article class="step-card step-panel active">
+                            <h3>Step 1. 관람일시 선택</h3>
+                            <p>달력 대신 회차 선택용 버튼 UI를 배치해 날짜와 시간을 빠르게 고를 수 있게 했습니다.</p>
+                            <div class="date-grid" data-date-grid></div>
+                            <div class="time-grid" data-time-grid style="margin-top: 12px;"></div>
+                            <div class="booking-actions"><button class="stageon-btn" type="button" data-step-next>다음 단계</button></div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 2. 좌석 및 인원 선택</h3>
+                            <div class="field">
+                                <label for="people">인원 수</label>
+                                <select class="stageon-select" id="people" name="people" style="max-width: 180px;">
+                                    <option value="1">1명</option>
+                                    <option value="2" selected>2명</option>
+                                    <option value="3">3명</option>
+                                    <option value="4">4명</option>
+                                </select>
+                            </div>
+                            <div class="seat-grid" data-seat-grid></div>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-step-next>다음 단계</button>
+                            </div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 3. 할인정보 선택</h3>
+                            <div class="radio-group" data-discount-options></div>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-step-next>다음 단계</button>
+                            </div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 4. 결제정보 입력</h3>
+                            <div class="form-row-2">
+                                <div class="field"><label for="buyer-name">예매자 이름</label><input class="stageon-input" id="buyer-name" type="text" placeholder="홍길동"></div>
+                                <div class="field"><label for="buyer-phone">연락처</label><input class="stageon-input" id="buyer-phone" type="tel" placeholder="010-0000-0000"></div>
+                            </div>
+                            <div class="field"><label for="buyer-email">이메일</label><input class="stageon-input" id="buyer-email" type="email" placeholder="example@stageon.co.kr"></div>
+                            <label class="stageon-checkbox"><input type="checkbox"><span>환불 규정 및 예매 유의사항에 동의합니다.</span></label>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-step-next>다음 단계</button>
+                            </div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 5. 포인트 사용</h3>
+                            <div class="mini-card" style="margin-bottom: 14px;">보유 포인트 12,000P</div>
+                            <div class="field"><label for="point">사용 포인트</label><input class="stageon-input" id="point" name="point" type="number" placeholder="0"></div>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-step-next>다음 단계</button>
+                            </div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 6. 쿠폰 / 예매권 인증</h3>
+                            <div class="field"><label for="coupon">쿠폰 코드 입력</label><input class="stageon-input" id="coupon" type="text" placeholder="SPRINGON"></div>
+                            <div class="coupon-list" data-coupon-list></div>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-step-next>다음 단계</button>
+                            </div>
+                        </article>
+
+                        <article class="step-card step-panel">
+                            <h3>Step 7. 결제수단 선택</h3>
+                            <div class="method-group" data-payment-methods></div>
+                            <div class="booking-actions">
+                                <button class="stageon-ghost-btn" type="button" data-step-prev>이전</button>
+                                <button class="stageon-btn" type="button" data-finish-booking>최종 결제 버튼</button>
+                            </div>
+                        </article>
+                    </div>
+
+                    <aside class="seat-summary">
+                        <h2>예매 요약</h2>
+                        <div data-booking-summary></div>
+                    </aside>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+

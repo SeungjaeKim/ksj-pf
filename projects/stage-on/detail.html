@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAGE ON | 공연 상세</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./theme.css">
+</head>
+<body class="stageon-body" data-page="detail">
+    <div class="stageon-shell">
+        <nav class="stageon-nav">
+            <div class="stageon-nav-inner">
+                <a class="stageon-brand" href="index.html"><span class="stageon-brand-mark">STAGE</span> ON</a>
+                <div class="stageon-nav-links">
+                    <a href="list.html">공연 리스트</a>
+                    <a href="detail.html" class="active">상세</a>
+                    <a href="review-write.html">후기 등록</a>
+                    <a href="booking.html">예매</a>
+                </div>
+            </div>
+        </nav>
+
+        <main class="page-top-space">
+            <section class="stageon-section">
+                <div class="split-layout">
+                    <article class="detail-poster">
+                        <div class="detail-poster-copy">
+                            <span class="tone-badge">Main Performance</span>
+                            <h1 class="poster-headline" data-show-title>Seoul Prime Night</h1>
+                            <p class="section-copy" data-show-subtitle></p>
+                        </div>
+                    </article>
+                    <article class="stageon-card hero-copy">
+                        <span class="eyebrow">Show Detail</span>
+                        <h2 class="section-title" data-show-title>Seoul Prime Night</h2>
+                        <p class="section-copy" data-show-description></p>
+                        <div class="stat-row" data-show-stats></div>
+                        <div class="detail-tabs" data-tab-group>
+                            <button class="tab-btn active" type="button" data-tab-target="info">공연 정보</button>
+                            <button class="tab-btn" type="button" data-tab-target="discount">할인 혜택</button>
+                            <button class="tab-btn" type="button" data-tab-target="location">오시는 길</button>
+                            <button class="tab-btn" type="button" data-tab-target="review">후기</button>
+                        </div>
+
+                        <section class="tab-panel active" data-tab-panel="info">
+                            <div class="detail-meta" data-show-meta></div>
+                        </section>
+                        <section class="tab-panel" data-tab-panel="discount">
+                            <div class="discount-grid" data-discount-grid></div>
+                        </section>
+                        <section class="tab-panel" data-tab-panel="location">
+                            <div class="mini-card" style="margin-bottom: 16px; min-height: 220px; display: grid; place-items: center; background: linear-gradient(145deg, rgba(255,214,153,0.08), rgba(255,132,72,0.12));">지도 이미지 / 임베드 영역</div>
+                            <div class="transport-list" data-transport-list></div>
+                        </section>
+                        <section class="tab-panel" data-tab-panel="review">
+                            <div class="reviews-toolbar">
+                                <span class="toolbar-note">관람 후기 리스트</span>
+                                <div class="toolbar-spacer"></div>
+                                <a class="stageon-ghost-btn" href="review-write.html">후기 등록</a>
+                            </div>
+                            <div class="review-grid" data-review-grid></div>
+                            <div class="pagination" style="margin-top: 16px;">
+                                <button class="page-btn active" type="button">1</button>
+                                <button class="page-btn" type="button">2</button>
+                                <button class="page-btn" type="button">다음</button>
+                            </div>
+                        </section>
+
+                        <div class="hero-actions">
+                            <button class="stageon-ghost-btn" type="button" data-like-id="seoul-prime-night">찜하기</button>
+                            <a class="stageon-btn" href="booking.html">예매하기</a>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+
+        <footer class="stageon-footer">
+            <div class="stageon-footer-inner">
+                <div>탭형 상세 페이지 목업</div>
+                <div>공연 정보 · 할인 · 위치 · 후기</div>
+            </div>
+        </footer>
+    </div>
+    <script src="./data-fallback.js"></script>
+    <script src="./ui.js"></script>
+</body>
+</html>
+
+
