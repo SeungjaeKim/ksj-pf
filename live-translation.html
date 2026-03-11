@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Voice Translator | My Portfolio</title>
+    <meta name="description" content="실시간 음성 인식, 번역, 음성 출력을 한 번에 보여주는 라이브 통역 포트폴리오 프로젝트입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="projects.html" class="active">Projects</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="translation-page">
+        <section class="translation-hero">
+            <div class="container">
+                <div class="translation-shell glass-card">
+                    <div class="translation-intro">
+                        <span class="project-category">Speech / Translation / Voice</span>
+                        <h1 class="translation-title">Live Voice Translator</h1>
+                        <p class="translation-lead">
+                            마이크 입력을 실시간으로 받아 원문과 번역문을 동시에 보여주고, 번역 결과를 음성으로 다시 읽어주는 데모 페이지입니다.
+                        </p>
+                    </div>
+
+                    <div class="translation-toolbar">
+                        <label class="field-group">
+                            <span>입력 언어</span>
+                            <select id="inputLanguage" class="translator-select">
+                                <option value="ko-KR" data-translate-lang="ko">한국어</option>
+                                <option value="en-US" data-translate-lang="en">영어</option>
+                                <option value="ja-JP" data-translate-lang="ja">일본어</option>
+                                <option value="zh-CN" data-translate-lang="zh-CN">중국어</option>
+                            </select>
+                        </label>
+
+                        <label class="field-group">
+                            <span>번역 언어</span>
+                            <select id="outputLanguage" class="translator-select">
+                                <option value="en-US" data-translate-lang="en">영어</option>
+                                <option value="ko-KR" data-translate-lang="ko">한국어</option>
+                                <option value="ja-JP" data-translate-lang="ja">일본어</option>
+                                <option value="zh-CN" data-translate-lang="zh-CN">중국어</option>
+                            </select>
+                        </label>
+
+                        <div class="translator-actions">
+                            <button id="startBtn" class="btn btn-primary" type="button">통역 시작</button>
+                            <button id="stopBtn" class="btn btn-secondary" type="button" disabled>정지</button>
+                        </div>
+                    </div>
+
+                    <div class="translator-status-row">
+                        <div id="statusPill" class="status-pill">대기 중</div>
+                        <p class="translator-note">
+                            Chrome 또는 Edge에서 마이크 권한을 허용하면 가장 안정적으로 동작합니다. 번역은 인터넷 연결이 필요합니다.
+                        </p>
+                    </div>
+
+                    <div class="translator-panels">
+                        <section class="translator-panel glass-panel">
+                            <div class="panel-heading">
+                                <h2>원문</h2>
+                                <span class="panel-badge">Speech to Text</span>
+                            </div>
+                            <textarea id="sourceText" class="translator-textarea" placeholder="말한 내용이 여기에 실시간으로 쌓입니다." readonly></textarea>
+                        </section>
+
+                        <section class="translator-panel glass-panel">
+                            <div class="panel-heading">
+                                <h2>번역문</h2>
+                                <span class="panel-badge">Translated + Spoken</span>
+                            </div>
+                            <textarea id="translatedText" class="translator-textarea" placeholder="번역된 결과가 여기에 표시되고 음성으로도 출력됩니다." readonly></textarea>
+                        </section>
+                    </div>
+
+                    <div class="translator-footer">
+                        <div class="mini-stat">
+                            <span class="mini-label">인식 상태</span>
+                            <strong id="recognitionState">idle</strong>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-label">음성 출력</span>
+                            <strong id="speechState">ready</strong>
+                        </div>
+                        <div class="mini-stat">
+                            <span class="mini-label">마지막 업데이트</span>
+                            <strong id="lastUpdated">-</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="live-translation.js"></script>
+</body>
+</html>

@@ -1,33 +1,28 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projects | My Portfolio</title>
-    <meta name="description" content="포트폴리오 프로젝트 목록입니다.">
-    <!-- Google Fonts -->
+    <meta name="description" content="포트폴리오 프로젝트 목록 페이지입니다.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* 추가적인 상단 여백 보정 (Nav바를 가리지 않기 위해) */
         .projects-section {
             padding-top: 150px;
         }
     </style>
 </head>
 <body>
-    <!-- Background Canvas for Interactive Effects -->
     <canvas id="bg-canvas"></canvas>
-    
-    <!-- Animated Gradient Background Elements -->
     <div class="glow-blob blob-1"></div>
     <div class="glow-blob blob-2"></div>
     <div class="glow-blob blob-3"></div>
 
     <nav class="glass-nav">
-        <div class="logo">PORT<span>FOLIO</span></div>
+        <div class="logo"><a href="index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="about.html">About</a></li>
@@ -36,13 +31,11 @@
         </ul>
     </nav>
 
-    <!-- Projects Section -->
     <section id="projects" class="projects-section">
         <div class="container">
             <h2 class="section-title">My <span>Work</span></h2>
-            
+
             <div class="projects-grid">
-                <!-- Project 1: AI Study Note Generator -->
                 <div class="project-card glass-card">
                     <div class="project-content">
                         <div class="project-header">
@@ -56,24 +49,24 @@
                                 </a>
                             </div>
                         </div>
-                        
-                        <h3 class="project-title">AI 학습 노트 자동 생성기 <span class="badge">Gemini</span></h3>
-                        
+
+                        <h3 class="project-title">AI Study Note Generator <span class="badge">Gemini</span></h3>
+
                         <p class="project-desc">
-                            PDF 기반의 강의 교재를 단 한 번의 클릭으로 깔끔하게 분석하고 노션(Notion)에 자동으로 저장해주는 지능형 웹 애플리케이션입니다. 
-                            <strong>Google Gemini 2.5 Flash API</strong>를 활용해 커리큘럼을 생성하고, 상세 실전 마크다운 노트를 작성하는 것이 특징입니다.
+                            PDF 강의 자료를 빠르게 분석하고 학습용 요약 노트를 자동 생성해주는 프로젝트입니다.
+                            <strong>Google Gemini</strong> 기반으로 요약, 구조화, 노션 연동 흐름까지 한 번에 다룹니다.
                         </p>
-                        
+
                         <div class="project-features">
-                            <h4>✨ Key Features</h4>
+                            <h4>Key Features</h4>
                             <ul>
-                                <li><strong>PDF.js</strong>를 이용한 브라우저 자체 Text Extraction (Drag & Drop)</li>
-                                <li><strong>Gemini 2.5</strong> 기반의 스마트 목차 파싱 및 실전 코드/가이드 생성</li>
-                                <li><strong>Notion API 연동 (CORS Proxy)</strong>: 자동 페이지/하위 페이지 트리 구성</li>
-                                <li>사용자 경험 극대화를 위한 Glassmorphism 기반의 마이크로 인터랙션</li>
+                                <li><strong>PDF.js</strong> 기반 텍스트 추출과 드래그 앤 드롭 업로드</li>
+                                <li><strong>Gemini API</strong> 기반 요약, 마크다운 정리, 학습 노트 생성</li>
+                                <li><strong>Notion API</strong> 연동으로 페이지 자동 생성</li>
+                                <li>정적 페이지 안에서도 풍부한 인터랙션을 제공하는 UI 구성</li>
                             </ul>
                         </div>
-                        
+
                         <div class="project-tech-stack">
                             <span class="tech-tag">HTML5 / CSS3</span>
                             <span class="tech-tag">Vanilla JS</span>
@@ -83,8 +76,47 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- More projects can be added here in the future -->
+
+                <div class="project-card glass-card">
+                    <div class="project-content">
+                        <div class="project-header">
+                            <span class="project-category">Speech / Realtime</span>
+                            <div class="project-links">
+                                <a href="live-translation.html" target="_blank" class="project-link" title="Live Demo">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                </a>
+                                <a href="#" class="project-link" title="GitHub Source">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        <h3 class="project-title">Live Voice Translator <span class="badge">Web Speech</span></h3>
+
+                        <p class="project-desc">
+                            번역 버튼을 누르면 마이크가 켜지고, 말한 문장을 실시간으로 받아 원문과 번역문을 각각 표시한 뒤
+                            번역된 결과를 음성으로 다시 들려주는 실시간 통역 프로젝트입니다.
+                        </p>
+
+                        <div class="project-features">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li><strong>SpeechRecognition</strong> 기반 실시간 음성 인식과 자동 재연결</li>
+                                <li><strong>실시간 번역</strong> 큐 처리로 문장 단위 번역 결과를 순차 반영</li>
+                                <li><strong>SpeechSynthesis</strong> 기반 번역문 음성 출력</li>
+                                <li>입력 언어와 출력 언어를 선택할 수 있는 데모형 통역 인터페이스</li>
+                            </ul>
+                        </div>
+
+                        <div class="project-tech-stack">
+                            <span class="tech-tag">HTML5 / CSS3</span>
+                            <span class="tech-tag">Vanilla JS</span>
+                            <span class="tech-tag">Web Speech API</span>
+                            <span class="tech-tag">Fetch API</span>
+                            <span class="tech-tag">Realtime UI</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
