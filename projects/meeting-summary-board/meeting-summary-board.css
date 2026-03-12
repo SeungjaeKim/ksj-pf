@@ -1,0 +1,440 @@
+﻿:root {
+    --meeting-bg-top: rgba(8, 20, 38, 0.92);
+    --meeting-bg-bottom: rgba(3, 10, 25, 0.96);
+    --meeting-border: rgba(120, 170, 255, 0.18);
+    --meeting-text: #ecf3ff;
+    --meeting-muted: #9eb1d2;
+    --meeting-accent: #76e4c3;
+    --meeting-warm: #ffb257;
+    --meeting-danger: #ff7f7f;
+}
+
+body {
+    color: var(--meeting-text);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(66, 214, 182, 0.18), transparent 32%),
+        radial-gradient(circle at 85% 18%, rgba(76, 123, 255, 0.22), transparent 34%),
+        linear-gradient(180deg, var(--meeting-bg-top) 0%, var(--meeting-bg-bottom) 100%);
+}
+
+.meeting-page {
+    position: relative;
+    z-index: 1;
+    padding: 7.5rem 0 5rem;
+}
+
+.meeting-hero,
+.meeting-studio,
+.results-section,
+.roadmap-section {
+    padding-top: 1.5rem;
+}
+
+.meeting-hero-grid,
+.studio-grid,
+.board-grid,
+.roadmap-grid,
+.summary-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.meeting-hero-grid {
+    grid-template-columns: minmax(0, 1.6fr) minmax(290px, 0.9fr);
+}
+
+.studio-grid {
+    grid-template-columns: minmax(0, 1.45fr) minmax(280px, 0.85fr);
+    align-items: start;
+}
+
+.summary-grid,
+.roadmap-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.board-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.9fr);
+    margin-top: 1.5rem;
+}
+
+.meeting-intro,
+.signal-card,
+.studio-panel,
+.workflow-panel,
+.summary-card,
+.action-board-card,
+.owner-board-card,
+.roadmap-card {
+    border: 1px solid var(--meeting-border);
+    background: linear-gradient(180deg, rgba(15, 28, 51, 0.9) 0%, rgba(10, 19, 35, 0.82) 100%);
+    box-shadow: 0 24px 60px rgba(4, 8, 20, 0.4);
+}
+
+.meeting-intro {
+    padding: 2.5rem;
+}
+
+.meeting-intro h1 {
+    margin: 0.75rem 0 1rem;
+    font-size: clamp(2.6rem, 5vw, 4.6rem);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+}
+
+.eyebrow,
+.section-kicker,
+.signal-label {
+    display: inline-flex;
+    color: var(--meeting-accent);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.hero-lead,
+.panel-heading p,
+.results-header p,
+.workflow-list p,
+.inline-status,
+.input-note {
+    color: var(--meeting-muted);
+}
+
+.hero-lead {
+    max-width: 60ch;
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+.hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.hero-tags span,
+.count-badge {
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(118, 228, 195, 0.2);
+    background: rgba(118, 228, 195, 0.08);
+    font-size: 0.9rem;
+    color: #d8fff2;
+}
+
+.signal-card {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.signal-card-header {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.signal-card-header strong {
+    font-size: 1.55rem;
+    line-height: 1.2;
+}
+
+.signal-metrics {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.75rem;
+}
+
+.signal-metrics div {
+    padding: 1rem 1.1rem;
+    border-radius: 1.1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.signal-metrics span,
+.lane-caption {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--meeting-muted);
+    font-size: 0.84rem;
+}
+
+.studio-panel,
+.workflow-panel,
+.summary-card,
+.action-board-card,
+.owner-board-card,
+.roadmap-card {
+    padding: 1.6rem;
+}
+
+.panel-heading,
+.results-header,
+.card-header-row,
+.owner-card-header,
+.action-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.panel-heading,
+.results-header {
+    align-items: flex-end;
+}
+
+.panel-heading {
+    margin-bottom: 1.35rem;
+}
+
+.panel-heading h2,
+.results-header h2 {
+    margin-top: 0.35rem;
+    font-size: clamp(1.6rem, 2vw, 2.2rem);
+}
+
+.sample-actions,
+.studio-actions,
+.action-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.sample-actions {
+    margin-bottom: 1rem;
+}
+
+.sample-btn,
+.ghost-btn {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--meeting-text);
+    border-radius: 999px;
+    padding: 0.7rem 1rem;
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.sample-btn:hover,
+.ghost-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(118, 228, 195, 0.36);
+    background: rgba(118, 228, 195, 0.1);
+}
+
+.input-label {
+    display: block;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.transcript-input {
+    width: 100%;
+    min-height: 300px;
+    resize: vertical;
+    padding: 1.15rem 1.2rem;
+    border-radius: 1.3rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: linear-gradient(180deg, rgba(5, 13, 26, 0.92) 0%, rgba(8, 16, 29, 0.88) 100%);
+    color: var(--meeting-text);
+    font: inherit;
+    line-height: 1.7;
+}
+
+.transcript-input:focus {
+    outline: none;
+    border-color: rgba(118, 228, 195, 0.45);
+    box-shadow: 0 0 0 4px rgba(118, 228, 195, 0.08);
+}
+
+.input-note {
+    margin: 0.8rem 0 1.2rem;
+    font-size: 0.92rem;
+}
+
+.workflow-list,
+.summary-list,
+.bullet-list,
+.lane-items,
+.owner-board,
+.owner-task-list,
+.stats-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.workflow-list article,
+.summary-point,
+.stat-card,
+.lane,
+.owner-card,
+.owner-task,
+.empty-state,
+.action-card {
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.workflow-list article,
+.summary-point,
+.stat-card,
+.lane,
+.owner-card,
+.owner-task,
+.empty-state,
+.action-card {
+    padding: 1rem;
+}
+
+.workflow-list strong,
+.summary-card h3,
+.action-board-card h3,
+.owner-board-card h3,
+.roadmap-card h3,
+.lane h4 {
+    display: block;
+    margin-bottom: 0.45rem;
+}
+
+.stats-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 1.25rem;
+}
+
+.stat-card span {
+    display: block;
+    color: var(--meeting-muted);
+    font-size: 0.84rem;
+}
+
+.stat-card strong {
+    display: block;
+    margin-top: 0.55rem;
+    font-size: 1.9rem;
+    line-height: 1;
+}
+
+.bullet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.bullet-list li {
+    position: relative;
+    padding-left: 1rem;
+    line-height: 1.6;
+}
+
+.bullet-list li::before {
+    content: "";
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--meeting-accent);
+}
+
+.lane-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.action-card h5 {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.4;
+}
+
+.priority-pill,
+.meta-chip {
+    padding: 0.32rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.priority-high {
+    background: rgba(255, 127, 127, 0.16);
+    color: #ffd2d2;
+}
+
+.priority-medium {
+    background: rgba(255, 178, 87, 0.18);
+    color: #ffe4be;
+}
+
+.priority-low {
+    background: rgba(118, 228, 195, 0.18);
+    color: #d4fff2;
+}
+
+.meta-chip,
+.owner-task small,
+.empty-state,
+.source-text {
+    color: var(--meeting-muted);
+}
+
+.source-text,
+.summary-point,
+.owner-task {
+    line-height: 1.6;
+}
+
+@media (max-width: 1080px) {
+    .meeting-hero-grid,
+    .studio-grid,
+    .summary-grid,
+    .board-grid,
+    .roadmap-grid,
+    .stats-grid,
+    .lane-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .meeting-page {
+        padding-top: 6.5rem;
+    }
+
+    .meeting-intro,
+    .signal-card,
+    .studio-panel,
+    .workflow-panel,
+    .summary-card,
+    .action-board-card,
+    .owner-board-card,
+    .roadmap-card {
+        padding: 1.2rem;
+    }
+
+    .meeting-intro h1 {
+        font-size: 2.4rem;
+    }
+
+    .panel-heading,
+    .results-header,
+    .card-header-row,
+    .owner-card-header,
+    .action-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .transcript-input {
+        min-height: 240px;
+    }
+}
+

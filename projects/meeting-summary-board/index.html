@@ -1,0 +1,227 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Summary Board | My Portfolio</title>
+    <meta name="description" content="회의록과 녹취 텍스트를 요약하고 액션 아이템과 담당자별 할 일을 정리하는 업무형 SaaS 포트폴리오 프로젝트입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="./meeting-summary-board.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="../../index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../about/index.html">About</a></li>
+            <li><a href="../../projects/index.html" class="active">Projects</a></li>
+            <li><a href="../../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="meeting-page">
+        <section class="meeting-hero">
+            <div class="container">
+                <div class="meeting-hero-grid">
+                    <div class="meeting-intro glass-card">
+                        <span class="eyebrow">AI / Productivity / SaaS</span>
+                        <h1>Meeting Summary Board</h1>
+                        <p class="hero-lead">
+                            회의록이나 녹취 텍스트를 넣으면 핵심 요약, 결정 사항, 액션 아이템, 담당자별 할 일을 한 화면에서 정리해주는 업무형 보드입니다.
+                        </p>
+                        <div class="hero-tags">
+                            <span>회의 직후 공유 가능한 결과물</span>
+                            <span>담당자 중심 후속 작업 정리</span>
+                            <span>포트폴리오용 SaaS UX 데모</span>
+                        </div>
+                    </div>
+
+                    <aside class="signal-card glass-card">
+                        <div class="signal-card-header">
+                            <span class="signal-label">Portfolio Positioning</span>
+                            <strong>B2B 업무 자동화</strong>
+                        </div>
+                        <div class="signal-metrics">
+                            <div>
+                                <span>Primary Users</span>
+                                <strong>PM · 팀리드 · 운영 담당</strong>
+                            </div>
+                            <div>
+                                <span>Core Output</span>
+                                <strong>Summary / Action / Owner Board</strong>
+                            </div>
+                            <div>
+                                <span>What It Shows</span>
+                                <strong>기획력 + 정보구조 + 실사용 흐름</strong>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="meeting-studio">
+            <div class="container studio-grid">
+                <div class="studio-panel glass-card">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">Demo Workspace</span>
+                            <h2>회의 텍스트로 보드 만들기</h2>
+                        </div>
+                        <p>샘플 데이터를 불러오거나 직접 붙여넣어 결과를 확인해 보세요.</p>
+                    </div>
+
+                    <div class="sample-actions">
+                        <button type="button" class="sample-btn" data-sample="planning">샘플 회의록</button>
+                        <button type="button" class="sample-btn" data-sample="transcript">샘플 녹취 텍스트</button>
+                        <button type="button" class="ghost-btn" id="clearInputBtn">비우기</button>
+                    </div>
+
+                    <label class="input-label" for="transcriptInput">회의록 / 녹취 텍스트</label>
+                    <textarea id="transcriptInput" class="transcript-input" placeholder="예: 김민지: 이번 주 안에 랜딩 초안 공유할게요. 박준호: 결제 플로우는 다음 주 수요일까지 API 스펙 정리하겠습니다."></textarea>
+
+                    <div class="input-note">
+                        줄바꿈이 있는 회의록, 화자명이 포함된 녹취록, 간단한 메모 형태 모두 입력 가능합니다.
+                    </div>
+
+                    <div class="studio-actions">
+                        <button type="button" class="btn btn-primary" id="analyzeBtn">보드 생성</button>
+                        <div class="inline-status" id="statusText">텍스트를 입력하면 바로 분석할 수 있습니다.</div>
+                    </div>
+                </div>
+
+                <aside class="workflow-panel glass-card">
+                    <div class="panel-heading">
+                        <div>
+                            <span class="section-kicker">Planning</span>
+                            <h2>서비스 기획 포인트</h2>
+                        </div>
+                    </div>
+
+                    <div class="workflow-list">
+                        <article>
+                            <strong>문제</strong>
+                            <p>회의 직후 핵심 내용과 할 일이 채팅, 노트, 메일에 흩어져 후속 관리가 어려움</p>
+                        </article>
+                        <article>
+                            <strong>핵심 가치</strong>
+                            <p>한 번의 입력으로 요약, 결정, 액션, 담당자 뷰까지 자동 구성</p>
+                        </article>
+                        <article>
+                            <strong>MVP 범위</strong>
+                            <p>텍스트 입력, 요약 생성, 액션 아이템 추출, 담당자별 묶음, 우선순위 시각화</p>
+                        </article>
+                        <article>
+                            <strong>확장 방향</strong>
+                            <p>LLM API 연동, 회의 파일 업로드, Slack/Notion 연동, 팀별 히스토리 보관</p>
+                        </article>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="results-section" id="resultsSection" hidden>
+            <div class="container">
+                <div class="results-header">
+                    <div>
+                        <span class="section-kicker">Generated Board</span>
+                        <h2>회의 결과 보드</h2>
+                    </div>
+                    <p id="resultSummaryLine">요약 결과가 여기에 표시됩니다.</p>
+                </div>
+
+                <div class="stats-grid" id="statsGrid"></div>
+
+                <div class="summary-grid">
+                    <article class="glass-card summary-card">
+                        <h3>핵심 요약</h3>
+                        <div id="summaryHighlights" class="summary-list"></div>
+                    </article>
+
+                    <article class="glass-card summary-card">
+                        <h3>결정 사항</h3>
+                        <ul id="decisionList" class="bullet-list"></ul>
+                    </article>
+
+                    <article class="glass-card summary-card">
+                        <h3>리스크 / 체크 포인트</h3>
+                        <ul id="riskList" class="bullet-list"></ul>
+                    </article>
+                </div>
+
+                <div class="board-grid">
+                    <article class="glass-card action-board-card">
+                        <div class="card-header-row">
+                            <h3>액션 아이템 보드</h3>
+                            <span id="actionCountBadge" class="count-badge">0 items</span>
+                        </div>
+                        <div class="lane-grid" id="actionBoard"></div>
+                    </article>
+
+                    <article class="glass-card owner-board-card">
+                        <div class="card-header-row">
+                            <h3>담당자별 할 일</h3>
+                            <span id="ownerCountBadge" class="count-badge">0 owners</span>
+                        </div>
+                        <div id="ownerBoard" class="owner-board"></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="roadmap-section">
+            <div class="container">
+                <div class="results-header">
+                    <div>
+                        <span class="section-kicker">Build Plan</span>
+                        <h2>포트폴리오용 구현 범위와 일정</h2>
+                    </div>
+                    <p>실제 지원 포트폴리오에서는 2주 MVP + 1주 고도화 구조가 가장 설득력 있습니다.</p>
+                </div>
+
+                <div class="roadmap-grid">
+                    <article class="glass-card roadmap-card">
+                        <h3>1주차</h3>
+                        <ul class="bullet-list">
+                            <li>문제 정의, 사용자 시나리오, 와이어프레임</li>
+                            <li>입력 폼, 결과 보드, 담당자 뷰 IA 설계</li>
+                            <li>샘플 데이터 기준 요약/액션 추출 로직 구현</li>
+                        </ul>
+                    </article>
+
+                    <article class="glass-card roadmap-card">
+                        <h3>2주차</h3>
+                        <ul class="bullet-list">
+                            <li>우선순위, 마감일, 결정/리스크 분류 고도화</li>
+                            <li>반응형 UI, 빈 상태, 에러 상태, 샘플 체험 흐름 보강</li>
+                            <li>프로젝트 소개 문구와 기획 포인트 정리</li>
+                        </ul>
+                    </article>
+
+                    <article class="glass-card roadmap-card">
+                        <h3>추가 확장</h3>
+                        <ul class="bullet-list">
+                            <li>OpenAI 또는 Gemini 연동으로 요약 품질 향상</li>
+                            <li>회의 파일 업로드, 음성 파일 전사, 협업 툴 연동</li>
+                            <li>팀별 저장공간과 히스토리 검색 기능 추가</li>
+                        </ul>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="../../script.js"></script>
+    <script src="./meeting-summary-board.js"></script>
+</body>
+</html>
+

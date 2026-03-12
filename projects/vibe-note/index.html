@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIBE NOTE | Mood-Based Music Curator</title>
+    <meta name="description" content="오늘의 감정을 음악과 콘텐츠, 작은 행동 제안으로 연결해주는 감정 기반 큐레이션 포트폴리오 프로젝트입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vibe-note.css">
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+    <div class="orb orb-c"></div>
+
+    <div class="page-shell">
+        <header class="topbar">
+            <a class="back-link" href="../index.html">프로젝트 목록으로 돌아가기</a>
+            <div class="top-meta">
+                <span class="meta-pill">Mood Curation</span>
+                <span class="meta-pill">Music + Media</span>
+                <span class="meta-pill">Interactive Demo</span>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="hero-card panel">
+                <p class="eyebrow">Emotion Curator</p>
+                <h1>VIBE NOTE</h1>
+                <p class="hero-copy">
+                    오늘의 감정을 입력하면 음악, 영상, 문장, 그리고 아주 작은 행동 제안까지 함께 건네는 감정 큐레이션 경험입니다.
+                    단순 추천이 아니라 지금의 기분을 하나의 무드로 번역해 보여주는 포트폴리오 데모로 구성했습니다.
+                </p>
+
+                <div class="mood-chips" id="moodChips">
+                    <button class="chip active" type="button" data-mood="calm">차분함</button>
+                    <button class="chip" type="button" data-mood="joy">설렘</button>
+                    <button class="chip" type="button" data-mood="focus">집중</button>
+                    <button class="chip" type="button" data-mood="blue">위로</button>
+                    <button class="chip" type="button" data-mood="fire">에너지</button>
+                </div>
+
+                <label class="prompt-box" for="moodInput">
+                    <span>오늘의 기분 한 줄</span>
+                    <textarea id="moodInput" rows="4" placeholder="예: 조용히 마음 정리하고 싶은 밤이에요. 머리가 복잡하지만 조금은 가벼워지고 싶어요."></textarea>
+                </label>
+
+                <div class="energy-block">
+                    <div class="energy-header">
+                        <span>현재 에너지</span>
+                        <strong id="energyValue">53</strong>
+                    </div>
+                    <input id="energyRange" type="range" min="0" max="100" value="53">
+                </div>
+
+                <div class="hero-actions">
+                    <button class="primary-btn" id="generateBtn" type="button">무드 추천 받기</button>
+                    <button class="ghost-btn" id="shuffleBtn" type="button">랜덤 바이브</button>
+                </div>
+            </section>
+
+            <section class="result-card panel" id="resultCard">
+                <div class="result-top">
+                    <div>
+                        <p class="eyebrow">Today&apos;s Atmosphere</p>
+                        <h2 id="resultTitle">고요한 밤의 정리</h2>
+                    </div>
+                    <div class="vibe-score">
+                        <span>Vibe Match</span>
+                        <strong id="matchValue">94%</strong>
+                    </div>
+                </div>
+
+                <p class="result-summary" id="resultSummary">
+                    생각이 많아진 저녁에 과하게 끌어올리기보다, 호흡을 정리해 주는 부드러운 흐름으로 추천을 맞췄습니다.
+                </p>
+
+                <section class="quote-card">
+                    <p class="quote-label">오늘의 한 문장</p>
+                    <blockquote id="quoteText">천천히 가도 괜찮아요. 지금의 속도도 당신의 리듬이니까요.</blockquote>
+                </section>
+
+                <section class="grid-section">
+                    <div class="section-heading">
+                        <h3>추천 음악</h3>
+                        <span id="musicTag">Calm / Soft Glow</span>
+                    </div>
+                    <div class="music-list" id="musicList"></div>
+                </section>
+
+                <section class="grid-section dual">
+                    <div class="media-card">
+                        <div class="section-heading">
+                            <h3>추천 콘텐츠</h3>
+                        </div>
+                        <div class="stack-list" id="mediaList"></div>
+                    </div>
+
+                    <div class="media-card">
+                        <div class="section-heading">
+                            <h3>작은 행동 제안</h3>
+                        </div>
+                        <div class="action-tip" id="actionTip"></div>
+                        <div class="reason-box">
+                            <p class="reason-label">왜 이런 추천인가요?</p>
+                            <p id="reasonText"></p>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <script src="vibe-note.js"></script>
+</body>
+</html>
