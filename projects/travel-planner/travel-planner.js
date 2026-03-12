@@ -1,4 +1,4 @@
-﻿const TRAVEL_PLAN_ENDPOINT = "/api/travel-plan";
+const TRAVEL_PLAN_ENDPOINT = "/api/travel-plan";
 const styleLabels = {
   balanced: "밸런스",
   food: "맛집 중심",
@@ -13,60 +13,60 @@ const budgetLabels = {
 
 const tripData = {
   tokyo: {
-    name: "Tokyo",
-    country: "Japan",
-    stay: "fast-paced city trip",
+    name: "도쿄",
+    country: "일본",
+    stay: "빠른 템포의 도시 여행",
     budgetBase: { smart: 120, comfort: 175, premium: 260 },
     checklist: [
-      ["Suica or transit pass", "공항에서 바로 이동 동선을 정리해 두세요."],
-      ["TeamLab / museum booking", "인기 전시는 사전 예약이 안전합니다."],
-      ["Pocket Wi-Fi or eSIM", "지도와 번역 앱 사용 대비를 해두세요."]
+      ["스이카 또는 교통패스", "공항에서 바로 이동 동선을 정리해 두세요."],
+      ["팀랩 / 박물관 예약", "인기 전시는 사전 예약이 안전합니다."],
+      ["포켓 와이파이 또는 eSIM", "지도와 번역 앱 사용 대비를 해두세요."]
     ],
     points: [
-      { name: "Asakusa", x: 18, y: 42, styles: ["culture", "balanced"] },
-      { name: "Shibuya", x: 58, y: 62, styles: ["food", "balanced"] },
-      { name: "Shinjuku", x: 50, y: 34, styles: ["food", "balanced"] },
-      { name: "Ueno", x: 28, y: 18, styles: ["culture", "balanced"] },
-      { name: "Odaiba", x: 78, y: 78, styles: ["nature", "premium"] },
-      { name: "Kichijoji", x: 12, y: 72, styles: ["nature", "smart"] }
+      { name: "아사쿠사", x: 18, y: 42, styles: ["culture", "balanced"] },
+      { name: "시부야", x: 58, y: 62, styles: ["food", "balanced"] },
+      { name: "신주쿠", x: 50, y: 34, styles: ["food", "balanced"] },
+      { name: "우에노", x: 28, y: 18, styles: ["culture", "balanced"] },
+      { name: "오다이바", x: 78, y: 78, styles: ["nature", "premium"] },
+      { name: "기치조지", x: 12, y: 72, styles: ["nature", "smart"] }
     ]
   },
   paris: {
-    name: "Paris",
-    country: "France",
-    stay: "museum and cafe rhythm",
+    name: "파리",
+    country: "프랑스",
+    stay: "박물관과 카페 중심의 리듬",
     budgetBase: { smart: 145, comfort: 210, premium: 320 },
     checklist: [
-      ["Museum pass", "루브르와 오르세 동선을 미리 압축해 두세요."],
-      ["Cafe reservation", "인기 브런치 시간대는 예약이 편합니다."],
-      ["Metro carnet", "중심 구역 이동 비용을 아끼기 좋습니다."]
+      ["뮤지엄 패스", "루브르와 오르세 동선을 미리 압축해 두세요."],
+      ["카페 예약", "인기 브런치 시간대는 예약이 편합니다."],
+      ["메트로 까르네", "중심 구역 이동 비용을 아끼기 좋습니다."]
     ],
     points: [
-      { name: "Louvre", x: 48, y: 46, styles: ["culture", "premium"] },
-      { name: "Le Marais", x: 62, y: 32, styles: ["food", "balanced"] },
-      { name: "Montmartre", x: 34, y: 18, styles: ["culture", "smart"] },
-      { name: "Seine Walk", x: 54, y: 60, styles: ["balanced", "nature"] },
-      { name: "Saint-Germain", x: 40, y: 70, styles: ["food", "premium"] },
-      { name: "Eiffel Area", x: 20, y: 54, styles: ["balanced", "premium"] }
+      { name: "루브르", x: 48, y: 46, styles: ["culture", "premium"] },
+      { name: "르 마레", x: 62, y: 32, styles: ["food", "balanced"] },
+      { name: "몽마르트", x: 34, y: 18, styles: ["culture", "smart"] },
+      { name: "센 강 산책", x: 54, y: 60, styles: ["balanced", "nature"] },
+      { name: "생제르맹", x: 40, y: 70, styles: ["food", "premium"] },
+      { name: "에펠 주변", x: 20, y: 54, styles: ["balanced", "premium"] }
     ]
   },
   bali: {
-    name: "Bali",
-    country: "Indonesia",
-    stay: "slow reset with views",
+    name: "발리",
+    country: "인도네시아",
+    stay: "풍경과 함께하는 느린 재충전",
     budgetBase: { smart: 90, comfort: 145, premium: 230 },
     checklist: [
-      ["Scooter or driver", "이동 거리가 길어서 하루 동선을 미리 묶는 것이 중요합니다."],
-      ["Sunset dining booking", "인기 비치 클럽은 예약 여부를 확인하세요."],
-      ["Temple dress code", "사원 방문용 가벼운 겉옷을 챙기면 좋습니다."]
+      ["스쿠터 또는 기사 차량", "이동 거리가 길어서 하루 동선을 미리 묶는 것이 중요합니다."],
+      ["선셋 다이닝 예약", "인기 비치 클럽은 예약 여부를 확인하세요."],
+      ["사원 복장 규정", "사원 방문용 가벼운 겉옷을 챙기면 좋습니다."]
     ],
     points: [
-      { name: "Ubud", x: 48, y: 30, styles: ["culture", "nature"] },
-      { name: "Canggu", x: 28, y: 70, styles: ["food", "balanced"] },
-      { name: "Seminyak", x: 40, y: 78, styles: ["food", "premium"] },
-      { name: "Uluwatu", x: 76, y: 82, styles: ["nature", "premium"] },
-      { name: "Tegalalang", x: 60, y: 20, styles: ["nature", "smart"] },
-      { name: "Sanur", x: 72, y: 56, styles: ["balanced", "comfort"] }
+      { name: "우붓", x: 48, y: 30, styles: ["culture", "nature"] },
+      { name: "창구", x: 28, y: 70, styles: ["food", "balanced"] },
+      { name: "스미냑", x: 40, y: 78, styles: ["food", "premium"] },
+      { name: "울루와투", x: 76, y: 82, styles: ["nature", "premium"] },
+      { name: "뜨갈랄랑", x: 60, y: 20, styles: ["nature", "smart"] },
+      { name: "사누르", x: 72, y: 56, styles: ["balanced", "comfort"] }
     ]
   }
 };
@@ -154,9 +154,9 @@ function createDemoPlan(payload) {
       headline: `${primary.name} 중심 데모 코스`,
       focus: `${primary.name}에서 시작해 ${evening.name}까지 자연스럽게 이어지는 하루 흐름입니다.`,
       slots: [
-        { tag: "Morning", spot: primary.name, title: `${primary.name} 아침 산책`, description: `${primary.name}에서 하루를 시작하며 핵심 포인트를 여유롭게 둘러봅니다.` },
-        { tag: "Afternoon", spot: secondary.name, title: `${secondary.name} 점심 & 이동`, description: `${secondary.name} 주변에서 점심과 실내외 일정을 묶어 효율적으로 움직입니다.` },
-        { tag: "Evening", spot: evening.name, title: `${evening.name} 저녁 마무리`, description: `${evening.name}에서 야경, 디너, 산책까지 하루를 부드럽게 마무리합니다.` }
+        { tag: "오전", spot: primary.name, title: `${primary.name} 아침 산책`, description: `${primary.name}에서 하루를 시작하며 핵심 포인트를 여유롭게 둘러봅니다.` },
+        { tag: "오후", spot: secondary.name, title: `${secondary.name} 점심과 이동`, description: `${secondary.name} 주변에서 점심과 실내외 일정을 묶어 효율적으로 움직입니다.` },
+        { tag: "저녁", spot: evening.name, title: `${evening.name} 저녁 마무리`, description: `${evening.name}에서 야경, 저녁 식사, 산책까지 하루를 부드럽게 마무리합니다.` }
       ]
     };
   });
@@ -169,7 +169,7 @@ function createDemoPlan(payload) {
     duration,
     travelers,
     budgetTone: payload.budgetTone,
-    dateRangeLabel: `${duration} Days`,
+    dateRangeLabel: `${duration}일 일정`,
     mapPoints: spots,
     dayPlans,
     budgetBreakdown: [
@@ -254,7 +254,7 @@ function normalizeAiPlan(aiPlan, payload) {
     duration: Number(payload.duration),
     travelers: Number(payload.travelers),
     budgetTone: payload.budgetTone,
-    dateRangeLabel: `${payload.duration} Days`,
+    dateRangeLabel: `${payload.duration}일 일정`,
     mapPoints,
     dayPlans,
     budgetBreakdown,
@@ -310,9 +310,9 @@ function renderSummary(plan) {
   summaryTitle.textContent = `${plan.city.name} 여행 요약`;
   summaryDates.textContent = plan.dateRangeLabel;
   summaryStats.innerHTML = `
-    <div class="stat-card"><strong>${escapeHtml(plan.city.country)}</strong><span>Destination</span></div>
-    <div class="stat-card"><strong>${escapeHtml(plan.styleLabel)}</strong><span>Travel mood</span></div>
-    <div class="stat-card"><strong>${plan.travelers}명</strong><span>Travelers</span></div>
+    <div class="stat-card"><strong>${escapeHtml(plan.city.country)}</strong><span>여행지</span></div>
+    <div class="stat-card"><strong>${escapeHtml(plan.styleLabel)}</strong><span>여행 무드</span></div>
+    <div class="stat-card"><strong>${plan.travelers}명</strong><span>여행 인원</span></div>
   `;
   tripNarrative.textContent = plan.tripNarrative;
   mapCaption.textContent = `주요 동선 ${plan.mapPoints.length}곳`;
@@ -330,7 +330,7 @@ function renderTimeline(plan) {
     <article class="day-card">
       <header>
         <div>
-          <h3>Day ${day.day}</h3>
+          <h3>${day.day}일차</h3>
           <div class="day-date">${escapeHtml(day.date)}</div>
         </div>
         <span>${escapeHtml(day.headline)}</span>

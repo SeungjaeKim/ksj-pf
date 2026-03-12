@@ -7,8 +7,8 @@ window.STAGE_ON_FALLBACK = {
   "shows": [
     {
       "id": "seoul-prime-night",
-      "title": "Seoul Prime Night",
-      "subtitle": "Kitchen Beat Performance",
+      "title": "서울 프라임 나이트",
+      "subtitle": "키친 비트 퍼포먼스",
       "period": "2026.04.03 - 2026.08.30",
       "venue": "STAGE ON 전용관",
       "location": "서울 중구 명동길 41, 3층",
@@ -22,14 +22,14 @@ window.STAGE_ON_FALLBACK = {
       "heroCopy": "주방의 소리와 도시의 속도를 무대 위로 끌어올린 대표 공연",
       "description": "칼, 도마, 냄비, 브러시를 악기처럼 다루는 배우들이 빠른 비트와 슬랩스틱 코미디를 엮어내는 시그니처 공연입니다. 외국인 관람객도 직관적으로 즐길 수 있는 논버벌 구성이며, 커튼콜 촬영 존과 포토 스팟까지 함께 제안합니다.",
       "posterTone": "amber",
-      "posterLabel": "SPRING RUN",
+      "posterLabel": "스프링 런",
       "rating": 4.8,
       "likeCount": 1284,
       "price": 88000,
       "genres": [
-        "Non-verbal",
-        "Family",
-        "Tourist Pick"
+        "논버벌",
+        "가족",
+        "여행객 추천"
       ],
       "discounts": [
         {
@@ -65,8 +65,8 @@ window.STAGE_ON_FALLBACK = {
     },
     {
       "id": "midnight-beat-busan",
-      "title": "Midnight Beat Busan",
-      "subtitle": "Harbor Edition",
+      "title": "미드나이트 비트 부산",
+      "subtitle": "하버 에디션",
       "period": "2026.05.10 - 2026.07.19",
       "venue": "부산 드림씨어터 스테이지",
       "location": "부산 남구 전포대로 133",
@@ -80,14 +80,14 @@ window.STAGE_ON_FALLBACK = {
       "heroCopy": "항구 도시의 야경과 타악 리듬을 결합한 투어 에디션",
       "description": "부산 바다와 야시장 무드를 재해석한 셋업으로, 오리지널 공연의 에너지를 지역 감성과 함께 즐길 수 있도록 설계한 투어 버전입니다.",
       "posterTone": "crimson",
-      "posterLabel": "TOUR EDITION",
+      "posterLabel": "투어 에디션",
       "rating": 4.7,
       "likeCount": 842,
       "price": 77000,
       "genres": [
-        "Tour",
-        "Rhythm",
-        "Comedy"
+        "투어",
+        "리듬",
+        "코미디"
       ],
       "discounts": [
         {
@@ -115,8 +115,8 @@ window.STAGE_ON_FALLBACK = {
     },
     {
       "id": "matinee-family-jam",
-      "title": "Matinee Family Jam",
-      "subtitle": "Weekend Special",
+      "title": "마티네 패밀리 잼",
+      "subtitle": "주말 스페셜",
       "period": "2026.04.11 - 2026.06.28",
       "venue": "성수 아트홀",
       "location": "서울 성동구 성수이로 20길 12",
@@ -128,14 +128,14 @@ window.STAGE_ON_FALLBACK = {
       "heroCopy": "아이와 함께 보기 좋은 낮 공연 스페셜",
       "description": "더 짧고 밝은 템포로 구성해 어린이 동반 관객에게 맞춘 패밀리형 공연입니다. 체험형 포토존과 리듬 워크숍 안내도 함께 제공합니다.",
       "posterTone": "gold",
-      "posterLabel": "FAMILY PICK",
+      "posterLabel": "가족 추천",
       "rating": 4.9,
       "likeCount": 613,
       "price": 66000,
       "genres": [
-        "Family",
-        "Weekend",
-        "Easy Entry"
+        "가족",
+        "주말",
+        "가볍게 보기 좋음"
       ],
       "discounts": [
         {
@@ -174,7 +174,7 @@ window.STAGE_ON_FALLBACK = {
     },
     {
       "id": "review-3",
-      "author": "travelnotes",
+      "author": "여행노트",
       "date": "2026.02.18",
       "rating": 5,
       "title": "도시 여행 코스에 넣기 좋음",

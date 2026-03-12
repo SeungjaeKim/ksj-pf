@@ -5,7 +5,7 @@ async function loadStageOnData() {
     try {
         const response = await fetch(STAGE_ON_DATA_URL);
         if (!response.ok) {
-            throw new Error("Failed to load stage data");
+            throw new Error("공연 데이터를 불러오지 못했습니다.");
         }
         return await response.json();
     } catch (error) {
@@ -13,7 +13,7 @@ async function loadStageOnData() {
             brand: {
                 name: "STAGE ON",
                 tagline: "도심 한가운데서 터지는 리듬, 몸으로 기억되는 퍼포먼스",
-                description: "정적 환경 fallback 데이터"
+                description: "정적 환경 기본 데이터"
             },
             shows: [],
             reviews: [],
@@ -247,13 +247,14 @@ function setupBooking(data, show) {
     }
 
     function renderSummary() {
+        const selectedDiscount = data.booking.discountOptions.find((option) => option.id === state.discount)?.name || "일반";
         summary.innerHTML = `
             <ul class="summary-list">
                 <li><span>공연</span><strong>${show.title}</strong></li>
                 <li><span>관람 일시</span><strong>${state.date} ${state.time}</strong></li>
                 <li><span>좌석</span><strong>${state.seats.join(", ") || "미선택"}</strong></li>
                 <li><span>인원</span><strong>${state.people}명</strong></li>
-                <li><span>할인</span><strong>${state.discount}</strong></li>
+                <li><span>할인</span><strong>${selectedDiscount}</strong></li>
                 <li><span>쿠폰</span><strong>${state.coupon || "미적용"}</strong></li>
                 <li><span>포인트</span><strong>${state.point.toLocaleString("ko-KR")}P</strong></li>
             </ul>

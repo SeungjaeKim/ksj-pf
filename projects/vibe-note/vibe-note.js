@@ -1,4 +1,4 @@
-﻿const VIBE_ENDPOINT = "/api/vibe-note";
+const VIBE_ENDPOINT = "/api/vibe-note";
 const moodLabels = {
     calm: "차분함",
     joy: "설렘",
@@ -19,12 +19,12 @@ const moodDatabase = {
         title: "고요한 밤의 정리",
         summary: "생각이 많아진 저녁에 과하게 끌어올리기보다, 호흡을 정리해 주는 부드러운 흐름으로 추천을 맞췄습니다.",
         quote: "천천히 가도 괜찮아요. 지금의 속도도 당신의 리듬이니까요.",
-        musicTag: "Calm / Soft Glow",
+        musicTag: "차분함 / 부드러운 잔광",
         match: 94,
         songs: [
-            { title: "Moonlit Desk", artist: "Haze Room", note: "잔잔한 피아노와 얇은 신스로 머릿속 소음을 낮춰줍니다." },
-            { title: "Quiet Orbit", artist: "Luno", note: "너무 무겁지 않게 감정을 붙들어 주는 로파이 무드입니다." },
-            { title: "Velvet Window", artist: "Mare", note: "하루 끝의 피로를 느슨하게 풀어주는 부드러운 템포입니다." }
+            { title: "달빛 책상", artist: "헤이즈 룸", note: "잔잔한 피아노와 얇은 신스로 머릿속 소음을 낮춰줍니다." },
+            { title: "고요한 궤도", artist: "루노", note: "너무 무겁지 않게 감정을 붙들어 주는 로파이 무드입니다." },
+            { title: "벨벳 창가", artist: "마레", note: "하루 끝의 피로를 느슨하게 풀어주는 부드러운 템포입니다." }
         ],
         media: [
             { title: "5분 야간 산책 브이로그", note: "정보 과잉 없이 풍경에만 집중할 수 있는 짧은 영상." },
@@ -37,12 +37,12 @@ const moodDatabase = {
         title: "설렘이 번지는 오후",
         summary: "기분이 이미 밝게 올라와 있어서, 그 흐름을 과하지 않게 이어줄 반짝이는 추천으로 묶었습니다.",
         quote: "좋은 순간은 더 커지지 않아도 충분히 빛나요.",
-        musicTag: "Joy / Sunlit Pop",
+        musicTag: "설렘 / 햇살 팝",
         match: 97,
         songs: [
-            { title: "Citrus Heart", artist: "Soleil", note: "밝은 기타와 경쾌한 보컬이 기분 좋은 탄력을 더합니다." },
-            { title: "Lucky Afternoon", artist: "Nover", note: "창문을 연 듯한 개방감이 있는 가벼운 팝 무드입니다." },
-            { title: "Peach Tempo", artist: "Milo", note: "웃음이 남아 있는 순간과 잘 맞는 말랑한 리듬입니다." }
+            { title: "시트러스 하트", artist: "솔레이", note: "밝은 기타와 경쾌한 보컬이 기분 좋은 탄력을 더합니다." },
+            { title: "행운의 오후", artist: "노버", note: "창문을 연 듯한 개방감이 있는 가벼운 팝 무드입니다." },
+            { title: "복숭아 템포", artist: "마일로", note: "웃음이 남아 있는 순간과 잘 맞는 말랑한 리듬입니다." }
         ],
         media: [
             { title: "컬러풀한 여행 릴스 모음", note: "가벼운 자극으로 설렘의 여운을 길게 이어줍니다." },
@@ -55,12 +55,12 @@ const moodDatabase = {
         title: "몰입을 위한 선명한 공기",
         summary: "산만함을 덜고 한 방향으로 생각을 모으기 위해, 리듬은 단정하고 감정선은 얇은 큐레이션으로 정리했습니다.",
         quote: "집중은 억지로 만드는 힘보다, 방해를 덜어내는 기술에 가까워요.",
-        musicTag: "Focus / Clean Pulse",
+        musicTag: "집중 / 선명한 리듬",
         match: 91,
         songs: [
-            { title: "Clear Frame", artist: "Index", note: "반복적인 패턴이 생각을 한 방향으로 정렬해 줍니다." },
-            { title: "Linear Bloom", artist: "Aster", note: "너무 감정적이지 않은 전개로 작업 흐름을 지켜줍니다." },
-            { title: "White Signal", artist: "Polar", note: "백색 소음처럼 곁을 채우는 미니멀 전자 사운드입니다." }
+            { title: "선명한 프레임", artist: "인덱스", note: "반복적인 패턴이 생각을 한 방향으로 정렬해 줍니다." },
+            { title: "직선의 개화", artist: "아스터", note: "너무 감정적이지 않은 전개로 작업 흐름을 지켜줍니다." },
+            { title: "하얀 신호", artist: "폴라", note: "백색 소음처럼 곁을 채우는 미니멀 전자 사운드입니다." }
         ],
         media: [
             { title: "25분 타이머 집중 세션", note: "작업과 휴식을 나눠 리듬을 만드는 데 도움이 됩니다." },
@@ -73,12 +73,12 @@ const moodDatabase = {
         title: "조용한 위로의 파도",
         summary: "기분이 조금 가라앉은 날에는 억지로 끌어올리는 대신, 지금 감정을 부드럽게 통과하게 해주는 흐름이 더 잘 맞습니다.",
         quote: "괜찮아지는 속도는 모두 달라요. 오늘은 그저 지나가도 충분해요.",
-        musicTag: "Blue / Warm Comfort",
+        musicTag: "위로 / 따뜻한 안정",
         match: 95,
         songs: [
-            { title: "Soft Rain Letter", artist: "Nellin", note: "잔잔하지만 지나치게 무겁지 않은 위로의 결을 가졌습니다." },
-            { title: "Still Here", artist: "Poma", note: "감정을 눌러 덮지 않고 곁에 머물러 주는 곡입니다." },
-            { title: "Afterglow Room", artist: "Yune", note: "조용한 안정감을 주는 몽환적 앰비언트 사운드입니다." }
+            { title: "부드러운 비의 편지", artist: "넬린", note: "잔잔하지만 지나치게 무겁지 않은 위로의 결을 가졌습니다." },
+            { title: "여전히 여기", artist: "포마", note: "감정을 눌러 덮지 않고 곁에 머물러 주는 곡입니다." },
+            { title: "잔광의 방", artist: "윤", note: "조용한 안정감을 주는 몽환적 앰비언트 사운드입니다." }
         ],
         media: [
             { title: "잔잔한 애니메이션 단편", note: "서사가 크지 않아도 마음을 부드럽게 흔들어 주는 영상." },
@@ -91,12 +91,12 @@ const moodDatabase = {
         title: "심장을 깨우는 점화",
         summary: "움직이고 싶은 마음이 올라온 상태라, 시작 버튼을 눌러줄 수 있는 선명한 비트와 추진력 있는 추천으로 맞췄습니다.",
         quote: "분위기가 바뀌면 속도도 바뀌어요. 오늘은 당신 차례예요.",
-        musicTag: "Fire / Bold Drive",
+        musicTag: "에너지 / 강한 드라이브",
         match: 96,
         songs: [
-            { title: "Red Motion", artist: "Kiro", note: "첫 박부터 앞으로 끌고 가는 에너지가 강합니다." },
-            { title: "Starter Glow", artist: "Nova Nine", note: "운동 전이나 집중 전환용으로 잘 어울리는 리듬입니다." },
-            { title: "Rush Bloom", artist: "Tarn", note: "지친 흐름을 끊고 다시 움직이게 만드는 전개가 돋보입니다." }
+            { title: "붉은 움직임", artist: "키로", note: "첫 박부터 앞으로 끌고 가는 에너지가 강합니다." },
+            { title: "시동의 빛", artist: "노바 나인", note: "운동 전이나 집중 전환용으로 잘 어울리는 리듬입니다." },
+            { title: "질주의 개화", artist: "탄", note: "지친 흐름을 끊고 다시 움직이게 만드는 전개가 돋보입니다." }
         ],
         media: [
             { title: "짧은 퍼포먼스 영상", note: "몸을 깨우는 리듬과 장면 전환이 동기부여를 올려줍니다." },
@@ -163,7 +163,7 @@ function renderMood(data) {
 
     musicList.innerHTML = data.songs.map((song, index) => `
         <article class="music-item">
-            <span class="music-index">Track 0${index + 1}</span>
+            <span class="music-index">트랙 0${index + 1}</span>
             <div>
                 <h4>${escapeHtml(song.title)}</h4>
                 <p>${escapeHtml(song.note)}</p>
@@ -241,8 +241,8 @@ function normalizeAiMood(payload) {
         musicTag: String(payload.musicTag || fallbackMood.musicTag).trim(),
         match: Number.isFinite(Number(payload.match)) ? Math.min(99, Math.max(80, Math.round(Number(payload.match)))) : fallbackMood.match,
         songs: songs.length ? songs.map((song, index) => ({
-            title: String(song.title || fallbackMood.songs[index]?.title || `Track ${index + 1}`).trim(),
-            artist: String(song.artist || fallbackMood.songs[index]?.artist || "Mood Curator").trim(),
+            title: String(song.title || fallbackMood.songs[index]?.title || `트랙 ${index + 1}`).trim(),
+            artist: String(song.artist || fallbackMood.songs[index]?.artist || "무드 큐레이터").trim(),
             note: String(song.note || fallbackMood.songs[index]?.note || "현재 감정과 잘 맞는 사운드입니다.").trim()
         })) : fallbackMood.songs,
         media: media.length ? media.map((item, index) => ({

@@ -1,4 +1,4 @@
-﻿const INTERVIEW_ENDPOINT = "/api/interview-coach";
+const INTERVIEW_ENDPOINT = "/api/interview-coach";
 const roleFocus = {
   backend: ["대규모 트래픽 대응 경험을 소개해 주세요.", "장애를 발견하고 복구한 사례를 설명해 주세요.", "Spring, DB 설계에서 가장 신경 쓰는 기준은 무엇인가요?"],
   frontend: ["복잡한 UI 상태를 정리했던 경험을 말해 주세요.", "성능 개선이나 접근성 개선 사례가 있나요?", "사용자 경험을 위해 어떤 기준으로 의사결정했나요?"],
@@ -50,7 +50,7 @@ function setButtonLoading(button, isLoading, idleText, loadingText) {
 function setupVoice() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    voiceStatus.textContent = "Voice Unsupported";
+    voiceStatus.textContent = "음성 미지원";
     voiceBtn.disabled = true;
     return;
   }
@@ -58,13 +58,13 @@ function setupVoice() {
   recognition = new SpeechRecognition();
   recognition.lang = "ko-KR";
   recognition.interimResults = true;
-  recognition.onstart = () => { voiceStatus.textContent = "Listening..."; };
+  recognition.onstart = () => { voiceStatus.textContent = "듣는 중..."; };
   recognition.onresult = (event) => {
     const transcript = Array.from(event.results).map((result) => result[0].transcript).join("");
     introInput.value = transcript;
   };
-  recognition.onerror = () => { voiceStatus.textContent = "Voice Error"; };
-  recognition.onend = () => { voiceStatus.textContent = "Voice Ready"; };
+  recognition.onerror = () => { voiceStatus.textContent = "음성 오류"; };
+  recognition.onend = () => { voiceStatus.textContent = "음성 준비 완료"; };
 }
 
 function generateFallbackQuestions(text, role) {
@@ -117,10 +117,10 @@ function evaluateFallbackAnswer(answer) {
     total,
     summary: `질문의 의도에는 맞지만, 결과 수치와 본인의 행동을 조금 더 선명하게 말하면 훨씬 강한 답변이 됩니다. 현재 점수는 ${total}점입니다.`,
     metrics: [
-      { label: "Clarity", score: lengthScore, description: "답변 밀도와 전달력" },
-      { label: "Specificity", score: numberScore, description: "수치·사례 구체성" },
-      { label: "Structure", score: structureScore, description: "STAR 흐름 여부" },
-      { label: "Confidence", score: confidenceScore, description: "주도성 표현 강도" }
+      { label: "명확성", score: lengthScore, description: "답변 밀도와 전달력" },
+      { label: "구체성", score: numberScore, description: "수치·사례 구체성" },
+      { label: "구조", score: structureScore, description: "STAR 흐름 여부" },
+      { label: "자신감", score: confidenceScore, description: "주도성 표현 강도" }
     ],
     notes: [
       lengthScore < 70 ? "답변 길이가 짧아서 강점이 충분히 드러나지 않습니다." : "핵심 내용이 비교적 선명하게 전달됩니다.",
@@ -137,7 +137,7 @@ function normalizeReport(report) {
     total: Number.isFinite(Number(report.total)) ? Math.min(99, Math.max(40, Math.round(Number(report.total)))) : 84,
     summary: String(report.summary || "답변의 큰 방향은 좋습니다. 행동과 결과를 조금 더 선명하게 정리해 보세요.").trim(),
     metrics: (Array.isArray(report.metrics) ? report.metrics : []).map((metric) => ({
-      label: String(metric.label || "Metric").trim(),
+      label: String(metric.label || "지표").trim(),
       score: Number.isFinite(Number(metric.score)) ? Math.min(99, Math.max(40, Math.round(Number(metric.score)))) : 80,
       description: String(metric.description || "설명").trim()
     })),
@@ -232,7 +232,7 @@ voiceBtn.addEventListener("click", () => {
   try {
     recognition.start();
   } catch (error) {
-    voiceStatus.textContent = "Voice Busy";
+    voiceStatus.textContent = "음성 사용 중";
   }
 });
 
