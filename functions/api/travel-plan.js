@@ -1,4 +1,4 @@
-﻿import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody, HttpError } from "../_shared/http.js";
+import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody, HttpError } from "../_shared/http.js";
 import { generateStructuredJson } from "../_shared/gemini.js";
 
 const SLOT_TAGS = ["Morning", "Afternoon", "Evening"];
@@ -39,6 +39,140 @@ function createFallbackAmount(label, duration, travelers, budgetTone) {
     };
 
     return Math.round(total * (ratioMap[label] || 0.1));
+}
+
+function createTravelPlanSchema(duration, availableSpotNames) {
+    const spotNameSchema = {
+        type: "string",
+        enum: availableSpotNames,
+        description: "Use one of the provided spot names exactly as-is."
+    };
+
+    return {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            tripTitle: {
+                type: "string",
+                description: "A short Korean trip title suitable for a portfolio card."
+            },
+            tripNarrative: {
+                type: "string",
+                description: "One or two concise Korean sentences summarizing the trip mood and route."
+            },
+            styleLabel: {
+                type: "string",
+                description: "The Korean label for the selected travel style."
+            },
+            mapSpots: {
+                type: "array",
+                minItems: Math.min(3, availableSpotNames.length),
+                maxItems: Math.min(5, availableSpotNames.length),
+                items: spotNameSchema,
+                description: "Highlighted places for the map view."
+            },
+            dayPlans: {
+                type: "array",
+                minItems: duration,
+                maxItems: duration,
+                items: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                        day: {
+                            type: "integer",
+                            minimum: 1,
+                            maximum: duration
+                        },
+                        headline: {
+                            type: "string",
+                            description: "A short Korean heading for the day."
+                        },
+                        focus: {
+                            type: "string",
+                            description: "A concise Korean sentence explaining the day's flow."
+                        },
+                        slots: {
+                            type: "array",
+                            minItems: SLOT_TAGS.length,
+                            maxItems: SLOT_TAGS.length,
+                            items: {
+                                type: "object",
+                                additionalProperties: false,
+                                properties: {
+                                    tag: {
+                                        type: "string",
+                                        enum: SLOT_TAGS
+                                    },
+                                    spot: spotNameSchema,
+                                    title: {
+                                        type: "string",
+                                        description: "A short Korean slot title."
+                                    },
+                                    description: {
+                                        type: "string",
+                                        description: "A concise Korean sentence for the activity."
+                                    }
+                                },
+                                required: ["tag", "spot", "title", "description"]
+                            }
+                        }
+                    },
+                    required: ["day", "headline", "focus", "slots"]
+                }
+            },
+            budgetBreakdown: {
+                type: "array",
+                minItems: BUDGET_LABELS.length,
+                maxItems: BUDGET_LABELS.length,
+                items: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                        label: {
+                            type: "string",
+                            enum: BUDGET_LABELS
+                        },
+                        amount: {
+                            type: "integer",
+                            minimum: 50,
+                            maximum: 20000
+                        },
+                        note: {
+                            type: "string",
+                            description: "A short Korean note for the budget item."
+                        }
+                    },
+                    required: ["label", "amount", "note"]
+                }
+            },
+            checklist: {
+                type: "array",
+                minItems: 4,
+                maxItems: 5,
+                items: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                        title: {
+                            type: "string",
+                            description: "A concise Korean checklist title."
+                        },
+                        note: {
+                            type: "string",
+                            description: "A short Korean preparation note."
+                        },
+                        priority: {
+                            type: "string",
+                            description: "A short Korean priority label such as 우선 or 준비."
+                        }
+                    },
+                    required: ["title", "note", "priority"]
+                }
+            }
+        },
+        required: ["tripTitle", "tripNarrative", "styleLabel", "mapSpots", "dayPlans", "budgetBreakdown", "checklist"]
+    };
 }
 
 function normalizeTravelPlan(data, request) {
@@ -145,41 +279,24 @@ export async function onRequestPost(context) {
 
         const prompt = [
             "You are a travel itinerary planner for a Korean portfolio web app.",
-            "Return JSON only. Do not include markdown fences or explanation.",
             "Write every string in natural Korean.",
+            "Keep all copy concise, practical, and ready for a portfolio UI.",
+            "Prefer short titles, short notes, and compact descriptions over long paragraphs.",
             `Destination: ${cityName}, ${country}`,
             `Duration: ${duration} days`,
             `Travelers: ${travelers}`,
             `Travel style: ${styleLabel}`,
             `Budget tone: ${budgetTone}`,
             additionalRequest ? `Additional request: ${additionalRequest}` : "Additional request: none",
-            `Available spot names (use only these values for mapSpots and slot.spot): ${points.map((point) => point.name).join(", ")}`,
-            "JSON schema:",
-            JSON.stringify({
-                tripTitle: "string",
-                tripNarrative: "string",
-                styleLabel: "string",
-                mapSpots: ["spot name"],
-                dayPlans: [{
-                    day: 1,
-                    headline: "string",
-                    focus: "string",
-                    slots: [{ tag: "Morning", spot: "spot name", title: "string", description: "string" }]
-                }],
-                budgetBreakdown: [{ label: "항공/이동", amount: 0, note: "string" }],
-                checklist: [{ title: "string", note: "string", priority: "우선" }]
-            }),
-            "Rules:",
-            `- dayPlans must contain exactly ${duration} items.`,
-            "- Each day must have Morning, Afternoon, Evening slots.",
-            "- budgetBreakdown must contain exactly these labels: 항공/이동, 숙소, 식비, 입장권/기타.",
-            "- checklist should contain 4 or 5 practical items.",
-            "- Keep the plan realistic and presentation-ready for a portfolio demo."
+            `Available spot names: ${points.map((point) => point.name).join(", ")}`,
+            "Use only the provided spot names for mapSpots and slot.spot.",
+            "Return a realistic, family-friendly, presentation-ready trip plan."
         ].join("\n");
 
         const { data, model } = await generateStructuredJson(context, prompt, {
-            temperature: 0.9,
-            maxOutputTokens: 2400
+            temperature: 0.45,
+            maxOutputTokens: 2800,
+            schema: createTravelPlanSchema(duration, points.map((point) => point.name))
         });
 
         const normalized = normalizeTravelPlan(data, {

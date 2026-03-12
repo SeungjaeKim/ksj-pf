@@ -1,5 +1,76 @@
-﻿import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody } from "../_shared/http.js";
+import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody } from "../_shared/http.js";
 import { generateStructuredJson } from "../_shared/gemini.js";
+
+const MOOD_KEYS = ["calm", "joy", "focus", "blue", "fire"];
+const VIBE_NOTE_SCHEMA = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        moodKey: {
+            type: "string",
+            enum: MOOD_KEYS
+        },
+        title: {
+            type: "string",
+            description: "A concise Korean title for the current mood."
+        },
+        summary: {
+            type: "string",
+            description: "A short Korean summary of the mood curation."
+        },
+        quote: {
+            type: "string",
+            description: "A one-line Korean quote or sentence for the user."
+        },
+        musicTag: {
+            type: "string",
+            description: "A short label describing the recommended music mood."
+        },
+        match: {
+            type: "integer",
+            minimum: 80,
+            maximum: 99
+        },
+        songs: {
+            type: "array",
+            minItems: 3,
+            maxItems: 3,
+            items: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                    title: { type: "string" },
+                    artist: { type: "string" },
+                    note: { type: "string", description: "A short Korean explanation for why the song matches." }
+                },
+                required: ["title", "artist", "note"]
+            }
+        },
+        media: {
+            type: "array",
+            minItems: 2,
+            maxItems: 2,
+            items: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                    title: { type: "string" },
+                    note: { type: "string", description: "A short Korean recommendation note." }
+                },
+                required: ["title", "note"]
+            }
+        },
+        action: {
+            type: "string",
+            description: "A small Korean action tip for the user."
+        },
+        reason: {
+            type: "string",
+            description: "A concise Korean reason for the curation."
+        }
+    },
+    required: ["moodKey", "title", "summary", "quote", "musicTag", "match", "songs", "media", "action", "reason"]
+};
 
 function normalizeItems(items, minCount, defaults) {
     const result = normalizeList(items)
@@ -31,42 +102,24 @@ export async function onRequestPost(context) {
 
         const prompt = [
             "You are an emotional curator for a Korean mood recommendation app.",
-            "Return JSON only. Do not include markdown fences or explanation.",
-            "Write every string in Korean, but music titles and artist names may be English if natural.",
+            "Write every sentence in Korean, but song titles and artist names may stay in English if natural.",
+            "Keep the curation warm, specific, and concise enough for a portfolio UI.",
             `Selected mood key: ${moodKey}`,
             `Selected mood label: ${moodLabel}`,
             `Energy level: ${energy} / 100`,
-            `User note: ${note || "(empty)"}`,
-            "JSON schema:",
-            JSON.stringify({
-                moodKey: "string",
-                title: "string",
-                summary: "string",
-                quote: "string",
-                musicTag: "string",
-                match: 95,
-                songs: [{ title: "string", artist: "string", note: "string" }],
-                media: [{ title: "string", note: "string" }],
-                action: "string",
-                reason: "string"
-            }),
-            "Rules:",
-            "- songs must contain exactly 3 items.",
-            "- media must contain exactly 2 items.",
-            "- summary, action, reason should feel warm and specific.",
-            "- match should be between 80 and 99.",
-            "- Keep the tone portfolio-friendly and emotionally coherent."
+            `User note: ${note || "(empty)"}`
         ].join("\n");
 
         const { data, model } = await generateStructuredJson(context, prompt, {
-            temperature: 1,
-            maxOutputTokens: 1400
+            temperature: 0.6,
+            maxOutputTokens: 1200,
+            schema: VIBE_NOTE_SCHEMA
         });
 
         const normalized = {
             moodKey: cleanString(data.moodKey, moodKey),
             title: cleanString(data.title, `${moodLabel}의 리듬`),
-            summary: cleanString(data.summary, `지금 감정에 맞는 무드를 부드럽게 이어가도록 추천을 구성했습니다.`),
+            summary: cleanString(data.summary, "지금 감정에 맞는 무드를 부드럽게 이어가도록 추천을 구성했습니다."),
             quote: cleanString(data.quote, "지금의 기분도 충분히 하나의 아름다운 결이에요."),
             musicTag: cleanString(data.musicTag, `${moodLabel} / Gemini Curation`),
             match: clampNumber(data.match, { min: 80, max: 99, fallback: 92 }),

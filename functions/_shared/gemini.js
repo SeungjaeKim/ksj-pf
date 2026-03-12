@@ -1,10 +1,10 @@
-﻿import { HttpError } from "./http.js";
+import { HttpError } from "./http.js";
 
 const DEFAULT_MODEL = "gemini-2.5-flash";
 
 function extractText(payload) {
     return (payload?.candidates?.[0]?.content?.parts || [])
-        .map((part) => part?.text || "")
+        .map((part) => typeof part?.text === "string" ? part.text : "")
         .join("")
         .trim();
 }
@@ -36,6 +36,21 @@ function extractJsonCandidate(text) {
     return cleaned.slice(startIndex, endIndex + 1).trim();
 }
 
+function buildGenerationConfig(options = {}) {
+    const generationConfig = {
+        temperature: options.temperature ?? 0.7,
+        topP: options.topP ?? 0.9,
+        maxOutputTokens: options.maxOutputTokens ?? 2048,
+        responseMimeType: options.responseMimeType ?? "application/json"
+    };
+
+    if (options.schema) {
+        generationConfig.responseJsonSchema = options.schema;
+    }
+
+    return generationConfig;
+}
+
 export async function generateStructuredJson(context, prompt, options = {}) {
     const apiKey = context.env.GEMINI_API_KEY;
     const model = context.env.GEMINI_MODEL || DEFAULT_MODEL;
@@ -44,20 +59,17 @@ export async function generateStructuredJson(context, prompt, options = {}) {
         throw new HttpError(500, "Cloudflare secret GEMINI_API_KEY is not configured.");
     }
 
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
             contents: [{
                 parts: [{ text: prompt }]
             }],
-            generationConfig: {
-                temperature: options.temperature ?? 0.7,
-                topP: options.topP ?? 0.9,
-                maxOutputTokens: options.maxOutputTokens ?? 2048
-            }
+            generationConfig: buildGenerationConfig(options)
         })
     });
 

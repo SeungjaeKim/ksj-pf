@@ -1,4 +1,4 @@
-﻿import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody, HttpError } from "../_shared/http.js";
+import { clampNumber, cleanString, handleError, json, noContent, normalizeList, readJsonBody, HttpError } from "../_shared/http.js";
 import { generateStructuredJson } from "../_shared/gemini.js";
 
 const DEFAULT_METRICS = [
@@ -7,6 +7,99 @@ const DEFAULT_METRICS = [
     { label: "Structure", description: "STAR 흐름과 이야기 구조" },
     { label: "Confidence", description: "주도성, 책임감, 확신의 표현" }
 ];
+
+const QUESTIONS_SCHEMA = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        opening: {
+            type: "string",
+            description: "One or two warm Korean coaching sentences."
+        },
+        readinessScore: {
+            type: "integer",
+            minimum: 50,
+            maximum: 99
+        },
+        questions: {
+            type: "array",
+            minItems: 5,
+            maxItems: 7,
+            items: {
+                type: "string",
+                description: "A Korean interview question."
+            }
+        }
+    },
+    required: ["opening", "readinessScore", "questions"]
+};
+
+const REVIEW_SCHEMA = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        summary: {
+            type: "string",
+            description: "A concise Korean summary of the answer feedback."
+        },
+        total: {
+            type: "integer",
+            minimum: 40,
+            maximum: 99
+        },
+        metrics: {
+            type: "array",
+            minItems: DEFAULT_METRICS.length,
+            maxItems: DEFAULT_METRICS.length,
+            items: {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                    label: {
+                        type: "string",
+                        enum: DEFAULT_METRICS.map((metric) => metric.label)
+                    },
+                    score: {
+                        type: "integer",
+                        minimum: 40,
+                        maximum: 99
+                    },
+                    description: {
+                        type: "string",
+                        description: "A short Korean explanation for the metric."
+                    }
+                },
+                required: ["label", "score", "description"]
+            }
+        },
+        notes: {
+            type: "array",
+            minItems: 4,
+            maxItems: 4,
+            items: {
+                type: "string",
+                description: "A concise Korean coaching note."
+            }
+        },
+        starDraft: {
+            type: "string",
+            description: "A practical Korean STAR draft with line breaks."
+        }
+    },
+    required: ["summary", "total", "metrics", "notes", "starDraft"]
+};
+
+const DRAFT_SCHEMA = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        starDraft: {
+            type: "string",
+            description: "A concise Korean STAR draft with line breaks for 상황, 과제, 행동, 결과."
+        }
+    },
+    required: ["starDraft"]
+};
 
 function normalizeMetrics(metrics) {
     return DEFAULT_METRICS.map((defaultMetric, index) => {
@@ -37,80 +130,57 @@ export async function onRequestPost(context) {
         }
 
         let prompt = "";
+        let schema = null;
         if (mode === "questions") {
             if (!intro) {
                 throw new HttpError(400, "intro is required for questions mode.");
             }
 
+            schema = QUESTIONS_SCHEMA;
             prompt = [
                 "You are an experienced Korean interview coach.",
-                "Return JSON only. Do not include markdown fences or explanation.",
+                "Write every string in Korean.",
+                "Keep the opening warm and concise, and keep each interview question practical and interview-ready.",
                 `Target role: ${role}`,
-                `Candidate self introduction: ${intro}`,
-                "JSON schema:",
-                JSON.stringify({
-                    opening: "string",
-                    readinessScore: 85,
-                    questions: ["string"]
-                }),
-                "Rules:",
-                "- questions must contain 5 to 7 Korean interview questions.",
-                "- Mix role-fit, project, collaboration, and growth questions.",
-                "- opening should be 1 or 2 warm coach sentences."
+                `Candidate self introduction: ${intro}`
             ].join("\n");
         } else if (mode === "review") {
             if (!intro || !question || !answer) {
                 throw new HttpError(400, "intro, question, and answer are required for review mode.");
             }
 
+            schema = REVIEW_SCHEMA;
             prompt = [
                 "You are an experienced Korean interview coach.",
-                "Return JSON only. Do not include markdown fences or explanation.",
+                "Write every string in Korean.",
+                "Keep the review practical, concise, and immediately editable in a portfolio UI.",
                 `Target role: ${role}`,
                 `Candidate self introduction: ${intro}`,
                 `Interview question: ${question}`,
-                `Candidate answer: ${answer}`,
-                "JSON schema:",
-                JSON.stringify({
-                    summary: "string",
-                    total: 84,
-                    metrics: [{ label: "Clarity", score: 82, description: "string" }],
-                    notes: ["string"],
-                    starDraft: "상황: ..."
-                }),
-                "Rules:",
-                "- total must be between 40 and 99.",
-                "- metrics must contain Clarity, Specificity, Structure, Confidence.",
-                "- notes must contain exactly 4 concise Korean bullets without numbering.",
-                "- starDraft must be a practical Korean STAR draft with line breaks."
+                `Candidate answer: ${answer}`
             ].join("\n");
         } else if (mode === "draft") {
             if (!intro || !question) {
                 throw new HttpError(400, "intro and question are required for draft mode.");
             }
 
+            schema = DRAFT_SCHEMA;
             prompt = [
                 "You are an experienced Korean interview coach.",
-                "Return JSON only. Do not include markdown fences or explanation.",
+                "Write every string in Korean.",
+                "Return a concise, realistic STAR draft that is easy to edit in a UI.",
                 `Target role: ${role}`,
                 `Candidate self introduction: ${intro}`,
-                `Interview question: ${question}`,
-                "JSON schema:",
-                JSON.stringify({
-                    starDraft: "상황: ..."
-                }),
-                "Rules:",
-                "- starDraft must be in Korean.",
-                "- Format with line breaks for 상황, 과제, 행동, 결과.",
-                "- Keep it realistic and concise enough to edit in the UI."
+                `Interview question: ${question}`
             ].join("\n");
         } else {
             throw new HttpError(400, "Unsupported mode.");
         }
 
         const { data, model } = await generateStructuredJson(context, prompt, {
-            temperature: mode === "review" ? 0.5 : 0.8,
-            maxOutputTokens: 1800
+            temperature: mode === "review" ? 0.35 : 0.5,
+            maxOutputTokens: mode === "review" ? 1400 : 1000,
+            schema
         });
 
         if (mode === "questions") {
