@@ -276,12 +276,13 @@ export async function onRequestPost(context) {
         if (!cityName || !country || points.length < 3) {
             throw new HttpError(400, "cityName, country, and at least three points are required.");
         }
-
         const prompt = [
             "You are a travel itinerary planner for a Korean portfolio web app.",
             "Write every string in natural Korean.",
             "Keep all copy concise, practical, and ready for a portfolio UI.",
             "Prefer short titles, short notes, and compact descriptions over long paragraphs.",
+            "Keep tripNarrative to one or two short sentences.",
+            "Keep each headline, focus, slot title, slot description, budget note, and checklist note brief.",
             `Destination: ${cityName}, ${country}`,
             `Duration: ${duration} days`,
             `Travelers: ${travelers}`,
@@ -292,10 +293,9 @@ export async function onRequestPost(context) {
             "Use only the provided spot names for mapSpots and slot.spot.",
             "Return a realistic, family-friendly, presentation-ready trip plan."
         ].join("\n");
-
         const { data, model } = await generateStructuredJson(context, prompt, {
-            temperature: 0.45,
-            maxOutputTokens: 2800,
+            temperature: 0.35,
+            maxOutputTokens: 4096,
             schema: createTravelPlanSchema(duration, points.map((point) => point.name))
         });
 

@@ -51,14 +51,18 @@ function buildGenerationConfig(options = {}) {
     return generationConfig;
 }
 
-export async function generateStructuredJson(context, prompt, options = {}) {
-    const apiKey = context.env.GEMINI_API_KEY;
-    const model = context.env.GEMINI_MODEL || DEFAULT_MODEL;
+function buildRetryPrompt(prompt) {
+    return [
+        prompt,
+        "",
+        "The previous response may have been too long.",
+        "Return the same JSON schema again with much shorter strings.",
+        "Keep titles, summaries, notes, and descriptions compact and concise.",
+        "Do not omit required fields."
+    ].join("\n");
+}
 
-    if (!apiKey) {
-        throw new HttpError(500, "Cloudflare secret GEMINI_API_KEY is not configured.");
-    }
-
+async function requestGeneration(apiKey, model, prompt, options = {}) {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
         headers: {
@@ -78,19 +82,73 @@ export async function generateStructuredJson(context, prompt, options = {}) {
     }
 
     const payload = await response.json();
-    const rawText = extractText(payload);
+    return {
+        payload,
+        rawText: extractText(payload),
+        finishReason: payload?.candidates?.[0]?.finishReason || "UNKNOWN"
+    };
+}
 
-    if (!rawText) {
-        throw new HttpError(502, "Gemini returned an empty response.");
-    }
-
+function parseStructuredJson(rawText, finishReason) {
     try {
-        return {
-            data: JSON.parse(extractJsonCandidate(rawText)),
-            model,
-            rawText
-        };
+        return JSON.parse(extractJsonCandidate(rawText));
     } catch (error) {
-        throw new HttpError(502, "Gemini JSON parsing failed.", rawText.slice(0, 1200));
+        const message = finishReason === "MAX_TOKENS"
+            ? "Gemini JSON response was truncated by maxOutputTokens."
+            : "Gemini JSON parsing failed.";
+        throw new HttpError(502, message, rawText.slice(0, 1200));
     }
+}
+
+export async function generateStructuredJson(context, prompt, options = {}) {
+    const apiKey = context.env.GEMINI_API_KEY;
+    const model = context.env.GEMINI_MODEL || DEFAULT_MODEL;
+
+    if (!apiKey) {
+        throw new HttpError(500, "Cloudflare secret GEMINI_API_KEY is not configured.");
+    }
+
+    const attempts = [
+        {
+            prompt,
+            options
+        }
+    ];
+
+    if (options.allowCompactRetry !== false) {
+        attempts.push({
+            prompt: buildRetryPrompt(prompt),
+            options: {
+                ...options,
+                temperature: Math.min(options.temperature ?? 0.7, 0.35),
+                maxOutputTokens: Math.max(options.maxOutputTokens ?? 2048, 4096)
+            }
+        });
+    }
+
+    let lastError = null;
+    for (const attempt of attempts) {
+        const { rawText, finishReason } = await requestGeneration(apiKey, model, attempt.prompt, attempt.options);
+
+        if (!rawText) {
+            lastError = new HttpError(502, "Gemini returned an empty response.");
+            continue;
+        }
+
+        try {
+            return {
+                data: parseStructuredJson(rawText, finishReason),
+                model,
+                rawText
+            };
+        } catch (error) {
+            lastError = error;
+            const isTruncated = finishReason === "MAX_TOKENS";
+            if (!isTruncated) {
+                break;
+            }
+        }
+    }
+
+    throw lastError || new HttpError(502, "Gemini JSON parsing failed.");
 }
