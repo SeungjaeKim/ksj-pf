@@ -84,3 +84,30 @@ textarea { resize: vertical; min-height: 140px; }
   .hero-panel, .panel { padding: 22px; }
   .control-row, .action-row, .metric-grid { grid-template-columns: 1fr; flex-direction: column; }
 }
+
+.status-note {
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+.status-note[data-tone="success"] {
+  color: var(--cyan);
+  border-color: rgba(86, 212, 209, 0.28);
+}
+
+.status-note[data-tone="warn"] {
+  color: var(--gold);
+  border-color: rgba(255, 210, 127, 0.28);
+}
+
+.primary-btn:disabled,
+.ghost-btn:disabled {
+  opacity: 0.68;
+  cursor: wait;
+}

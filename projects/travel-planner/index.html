@@ -86,9 +86,14 @@
               <option value="4">4명</option>
             </select>
           </label>
+          <label class="wide-field">
+            <span>추가 요청</span>
+            <textarea id="travelPrompt" rows="4" placeholder="예: 첫날은 무리하지 않게 시작하고, 현지 맛집과 야경 코스를 꼭 넣어주세요."></textarea>
+          </label>
         </div>
 
-        <button id="generateBtn" class="generate-btn">일정 생성하기</button>
+        <button id="generateBtn" class="generate-btn">AI 일정 생성하기</button>
+        <div class="planner-feedback" id="plannerFeedback">Gemini가 연결되면 실제 여행 일정을 생성하고, 아니면 데모 플랜으로 바로 미리보기를 제공합니다.</div>
 
         <div class="logic-note">
           추천 로직은 도시별 명소 데이터, 여행 스타일 태그, 기간, 예산 톤을 조합해 하루 동선을 자동으로 배치합니다.
@@ -105,6 +110,7 @@
         </div>
 
         <div class="summary-stats" id="summaryStats"></div>
+        <p class="trip-narrative" id="tripNarrative"></p>
 
         <div class="map-card">
           <div class="map-topline">
@@ -142,5 +148,3 @@
   <script src="travel-planner.js"></script>
 </body>
 </html>
-
-

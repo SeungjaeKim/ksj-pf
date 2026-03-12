@@ -1,4 +1,20 @@
-﻿const moodDatabase = {
+﻿const VIBE_ENDPOINT = "/api/vibe-note";
+const moodLabels = {
+    calm: "차분함",
+    joy: "설렘",
+    focus: "집중",
+    blue: "위로",
+    fire: "에너지"
+};
+const defaultMoodPrompts = {
+    calm: "조용히 하루를 정리하고 싶은 밤이에요.",
+    joy: "기분 좋은 설렘을 조금 더 길게 가져가고 싶어요.",
+    focus: "오늘은 산만함 없이 몰입하고 싶어요.",
+    blue: "기분이 조금 가라앉아서 부드러운 위로가 필요해요.",
+    fire: "몸과 마음을 빠르게 깨우고 싶어요."
+};
+
+const moodDatabase = {
     calm: {
         title: "고요한 밤의 정리",
         summary: "생각이 많아진 저녁에 과하게 끌어올리기보다, 호흡을 정리해 주는 부드러운 흐름으로 추천을 맞췄습니다.",
@@ -97,6 +113,7 @@ const energyRange = document.getElementById("energyRange");
 const energyValue = document.getElementById("energyValue");
 const generateBtn = document.getElementById("generateBtn");
 const shuffleBtn = document.getElementById("shuffleBtn");
+const vibeStatus = document.getElementById("vibeStatus");
 
 const resultTitle = document.getElementById("resultTitle");
 const resultSummary = document.getElementById("resultSummary");
@@ -111,10 +128,28 @@ const resultCard = document.getElementById("resultCard");
 
 let activeMood = "calm";
 
-function setMood(mood) {
-    activeMood = mood;
-    chips.forEach((chip) => chip.classList.toggle("active", chip.dataset.mood === mood));
-    renderMood(moodDatabase[mood]);
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+function setActiveMood(mood) {
+    activeMood = moodDatabase[mood] ? mood : activeMood;
+    chips.forEach((chip) => chip.classList.toggle("active", chip.dataset.mood === activeMood));
+}
+
+function setVibeStatus(message, tone = "neutral") {
+    vibeStatus.textContent = message;
+    vibeStatus.dataset.tone = tone;
+}
+
+function setLoadingState(isLoading) {
+    generateBtn.disabled = isLoading;
+    generateBtn.textContent = isLoading ? "AI 추천 생성 중..." : "무드 추천 받기";
 }
 
 function renderMood(data) {
@@ -130,17 +165,17 @@ function renderMood(data) {
         <article class="music-item">
             <span class="music-index">Track 0${index + 1}</span>
             <div>
-                <h4>${song.title}</h4>
-                <p>${song.note}</p>
+                <h4>${escapeHtml(song.title)}</h4>
+                <p>${escapeHtml(song.note)}</p>
             </div>
-            <span class="music-meta">${song.artist}</span>
+            <span class="music-meta">${escapeHtml(song.artist)}</span>
         </article>
     `).join("");
 
     mediaList.innerHTML = data.media.map((item) => `
         <article class="stack-item">
-            <h4>${item.title}</h4>
-            <p>${item.note}</p>
+            <h4>${escapeHtml(item.title)}</h4>
+            <p>${escapeHtml(item.note)}</p>
         </article>
     `).join("");
 }
@@ -166,30 +201,108 @@ function inferMoodFromInput(text, energy) {
     return "fire";
 }
 
+async function requestAiVibe() {
+    const response = await fetch(VIBE_ENDPOINT, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            moodKey: activeMood,
+            moodLabel: moodLabels[activeMood],
+            note: moodInput.value.trim(),
+            energy: Number(energyRange.value)
+        })
+    });
+
+    let payload = null;
+    try {
+        payload = await response.json();
+    } catch (error) {
+        payload = null;
+    }
+
+    if (!response.ok) {
+        throw new Error(payload?.detail || payload?.error || `HTTP ${response.status}`);
+    }
+
+    return payload;
+}
+
+function normalizeAiMood(payload) {
+    const fallbackMood = moodDatabase[activeMood];
+    const songs = Array.isArray(payload.songs) ? payload.songs.slice(0, 3) : fallbackMood.songs;
+    const media = Array.isArray(payload.media) ? payload.media.slice(0, 2) : fallbackMood.media;
+
+    return {
+        title: String(payload.title || fallbackMood.title).trim(),
+        summary: String(payload.summary || fallbackMood.summary).trim(),
+        quote: String(payload.quote || fallbackMood.quote).trim(),
+        musicTag: String(payload.musicTag || fallbackMood.musicTag).trim(),
+        match: Number.isFinite(Number(payload.match)) ? Math.min(99, Math.max(80, Math.round(Number(payload.match)))) : fallbackMood.match,
+        songs: songs.length ? songs.map((song, index) => ({
+            title: String(song.title || fallbackMood.songs[index]?.title || `Track ${index + 1}`).trim(),
+            artist: String(song.artist || fallbackMood.songs[index]?.artist || "Mood Curator").trim(),
+            note: String(song.note || fallbackMood.songs[index]?.note || "현재 감정과 잘 맞는 사운드입니다.").trim()
+        })) : fallbackMood.songs,
+        media: media.length ? media.map((item, index) => ({
+            title: String(item.title || fallbackMood.media[index]?.title || `추천 ${index + 1}`).trim(),
+            note: String(item.note || fallbackMood.media[index]?.note || "현재 무드와 잘 맞는 추천입니다.").trim()
+        })) : fallbackMood.media,
+        action: String(payload.action || fallbackMood.action).trim(),
+        reason: String(payload.reason || fallbackMood.reason).trim()
+    };
+}
+
+async function generateMoodRecommendation() {
+    setLoadingState(true);
+    try {
+        const payload = await requestAiVibe();
+        setActiveMood(payload.moodKey || activeMood);
+        renderMood(normalizeAiMood(payload));
+        setVibeStatus("Gemini가 현재 감정과 에너지 흐름을 바탕으로 새로운 무드 큐레이션을 생성했습니다.", "success");
+    } catch (error) {
+        const inferredMood = inferMoodFromInput(moodInput.value, Number(energyRange.value));
+        setActiveMood(inferredMood);
+        renderMood(moodDatabase[inferredMood]);
+        setVibeStatus("Gemini 연결이 없어 데모 큐레이션으로 표시했습니다. 실제 AI 테스트는 wrangler pages dev 또는 Cloudflare Pages 배포 주소에서 가능합니다.", "warn");
+        console.error(error);
+    } finally {
+        setLoadingState(false);
+        resultCard.animate(
+            [
+                { transform: "translateY(12px)", opacity: 0.55 },
+                { transform: "translateY(0)", opacity: 1 }
+            ],
+            { duration: 360, easing: "ease-out" }
+        );
+    }
+}
+
 chips.forEach((chip) => {
-    chip.addEventListener("click", () => setMood(chip.dataset.mood));
+    chip.addEventListener("click", () => {
+        setActiveMood(chip.dataset.mood);
+        renderMood(moodDatabase[activeMood]);
+        setVibeStatus("칩 선택 기준의 데모 무드를 미리 보고 있습니다. 버튼을 누르면 Gemini 추천으로 갱신됩니다.", "neutral");
+    });
 });
 
 energyRange.addEventListener("input", () => {
     energyValue.textContent = energyRange.value;
 });
 
-generateBtn.addEventListener("click", () => {
-    const inferredMood = inferMoodFromInput(moodInput.value, Number(energyRange.value));
-    setMood(inferredMood);
-    resultCard.animate(
-        [
-            { transform: "translateY(12px)", opacity: 0.55 },
-            { transform: "translateY(0)", opacity: 1 }
-        ],
-        { duration: 360, easing: "ease-out" }
-    );
-});
-
+generateBtn.addEventListener("click", generateMoodRecommendation);
 shuffleBtn.addEventListener("click", () => {
     const moods = Object.keys(moodDatabase);
     const randomMood = moods[Math.floor(Math.random() * moods.length)];
-    setMood(randomMood);
+    setActiveMood(randomMood);
+    if (!moodInput.value.trim()) {
+        moodInput.value = defaultMoodPrompts[randomMood];
+    }
+    renderMood(moodDatabase[randomMood]);
+    setVibeStatus("랜덤 무드 프리뷰를 보여주고 있습니다. 버튼을 다시 누르면 Gemini 추천으로 갱신됩니다.", "neutral");
 });
 
+setActiveMood(activeMood);
 renderMood(moodDatabase[activeMood]);
+setVibeStatus(window.location.protocol === "file:" ? "현재는 정적 파일로 열려 있어 데모 큐레이션이 표시됩니다. 실제 Gemini 테스트는 wrangler pages dev 또는 Cloudflare Pages 배포 주소에서 가능합니다." : "기분을 입력하고 무드 추천 받기를 누르면 Gemini가 새로운 큐레이션을 생성합니다.", "neutral");

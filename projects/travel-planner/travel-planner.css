@@ -134,3 +134,65 @@ select, input[type="date"] {
   .control-grid { grid-template-columns: 1fr; }
   .slot-item { grid-template-columns: 1fr; }
 }
+
+textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.7);
+  font: inherit;
+  color: var(--ink);
+  resize: vertical;
+  min-height: 110px;
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.generate-btn:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.planner-feedback {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.56);
+  border: 1px solid rgba(68,55,45,0.08);
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.93rem;
+}
+
+.planner-feedback[data-tone="success"] {
+  background: rgba(47, 127, 141, 0.12);
+  color: var(--ocean);
+}
+
+.planner-feedback[data-tone="warn"] {
+  background: rgba(228, 105, 63, 0.12);
+  color: var(--accent-deep);
+}
+
+.trip-narrative {
+  margin: 18px 0 0;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+.day-focus {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.slot-card small,
+.budget-chip small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+  line-height: 1.5;
+}

@@ -43,13 +43,14 @@
               <option value="data">Data / AI</option>
             </select>
           </label>
-          <button id="voiceBtn" class="ghost-btn">음성 입력 시작</button>
+          <button id="voiceBtn" class="ghost-btn" type="button">음성 입력 시작</button>
         </div>
         <textarea id="introInput" rows="8" placeholder="예: 안녕하세요. 5년 차 백엔드 개발자이며, Spring Boot와 PostgreSQL 기반 서비스 운영 경험이 있습니다..."></textarea>
         <div class="action-row">
-          <button id="generateBtn" class="primary-btn">예상 질문 만들기</button>
-          <button id="sampleBtn" class="ghost-btn">샘플 자기소개 넣기</button>
+          <button id="generateBtn" class="primary-btn" type="button">예상 질문 만들기</button>
+          <button id="sampleBtn" class="ghost-btn" type="button">샘플 자기소개 넣기</button>
         </div>
+        <p id="coachStatusNote" class="status-note" data-tone="neutral">현재는 데모 질문이 보입니다. Gemini가 연결되면 실제 질문과 피드백을 생성합니다.</p>
       </section>
 
       <section class="panel questions-panel">
@@ -65,8 +66,8 @@
         <div id="chatPrompt" class="chat-bubble coach-bubble">자기소개를 바탕으로 예상 질문을 만들고, 질문 카드를 클릭하면 답변 피드백이 시작됩니다.</div>
         <textarea id="answerInput" rows="7" placeholder="선택한 질문에 대한 답변을 입력해 보세요."></textarea>
         <div class="action-row">
-          <button id="reviewBtn" class="primary-btn">답변 평가하기</button>
-          <button id="smartDraftBtn" class="ghost-btn">STAR 초안 보기</button>
+          <button id="reviewBtn" class="primary-btn" type="button">답변 평가하기</button>
+          <button id="smartDraftBtn" class="ghost-btn" type="button">STAR 초안 보기</button>
         </div>
         <div id="chatFeedback" class="chat-bubble user-bubble">아직 평가된 답변이 없습니다.</div>
       </section>
