@@ -1,4 +1,4 @@
-﻿const STAGE_ON_STORAGE_KEY = "stageon-liked-shows";
+const STAGE_ON_STORAGE_KEY = "stageon-liked-shows";
 const STAGE_ON_DATA_URL = "data/performance-data.json";
 
 async function loadStageOnData() {

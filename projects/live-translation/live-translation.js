@@ -1,4 +1,4 @@
-﻿const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.getElementById("startBtn");

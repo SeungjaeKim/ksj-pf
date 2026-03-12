@@ -1,4 +1,4 @@
-﻿const words = ["Scalable Systems.", "Stunning UI/UX.", "Innovative Solutions.", "Future Web Apps."];
+const words = ["Scalable Systems.", "Stunning UI/UX.", "Innovative Solutions.", "Future Web Apps."];
 let i = 0;
 let timer;
 

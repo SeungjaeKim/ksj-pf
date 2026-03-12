@@ -1,4 +1,4 @@
-﻿window.STAGE_ON_FALLBACK = {
+window.STAGE_ON_FALLBACK = {
   "brand": {
     "name": "STAGE ON",
     "tagline": "도심 한가운데서 터지는 리듬, 몸으로 기억되는 퍼포먼스",

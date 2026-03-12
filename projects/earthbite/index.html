@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EARTHBITE | Premium Worm Arcade</title>
+    <meta name="description" content="먹이를 먹을수록 길어지는 지렁이 아케이드 게임 EARTHBITE 데모입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="earthbite.css">
+</head>
+<body>
+    <div class="earthbite-shell">
+        <header class="topbar">
+            <a class="back-link" href="../index.html">프로젝트 목록으로 돌아가기</a>
+            <div class="topbar-badges">
+                <span class="mini-pill">Arcade Survival</span>
+                <span class="mini-pill">Keyboard Ready</span>
+                <span class="mini-pill">Local Highscore</span>
+            </div>
+        </header>
+
+        <main class="layout">
+            <section class="hero-panel panel">
+                <div class="hero-copy">
+                    <p class="eyebrow">Premium Portfolio Game</p>
+                    <h1>EARTHBITE</h1>
+                    <p class="hero-text">
+                        먹이를 먹을수록 몸집이 길어지고, 속도와 긴장감도 함께 치솟는 지렁이 생존 아케이드입니다.
+                        단순한 스네이크 규칙에 콤보, 먹이 타입, 장애물, 화면 연출을 더해 완성도를 끌어올렸습니다.
+                    </p>
+                    <div class="hero-actions">
+                        <button class="primary-btn" id="startRunBtn" type="button">게임 시작</button>
+                        <button class="ghost-btn" id="toggleSoundBtn" type="button">사운드 ON</button>
+                        <button class="ghost-btn" id="infoToggleBtn" type="button" aria-expanded="false">플레이 포인트</button>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <span>최고 점수</span>
+                        <strong id="bestScoreValue">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>최장 길이</span>
+                        <strong id="bestLengthValue">0</strong>
+                    </div>
+                    <div class="stat-card">
+                        <span>플레이 횟수</span>
+                        <strong id="runCountValue">0</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="game-panel panel">
+                <div class="hud">
+                    <div class="hud-group">
+                        <div class="hud-item">
+                            <span>Score</span>
+                            <strong id="scoreValue">0</strong>
+                        </div>
+                        <div class="hud-item">
+                            <span>Length</span>
+                            <strong id="lengthValue">4</strong>
+                        </div>
+                        <div class="hud-item">
+                            <span>Combo</span>
+                            <strong id="comboValue">x1</strong>
+                        </div>
+                    </div>
+                    <div class="hud-group right">
+                        <div class="hud-item compact">
+                            <span>Biome</span>
+                            <strong id="biomeValue">Loam Garden</strong>
+                        </div>
+                        <div class="hud-item compact">
+                            <span>Status</span>
+                            <strong id="statusValue">Ready</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="canvas-wrap" id="canvasWrap">
+                    <canvas id="gameCanvas" width="960" height="640" aria-label="EARTHBITE 게임 화면"></canvas>
+                    <div class="overlay active" id="menuOverlay">
+                        <div class="overlay-card title-card">
+                            <p class="overlay-eyebrow">Soil Pulse Edition</p>
+                            <h2>먹이 냄새를 따라가세요</h2>
+                            <p>
+                                화살표 키 또는 WASD로 이동합니다. 장애물과 자신의 몸통에 부딪히면 게임 종료.
+                                황금 먹이는 큰 점수, 푸른 먹이는 잠시 안정 효과를 줍니다.
+                            </p>
+                            <div class="overlay-actions">
+                                <button class="primary-btn" id="overlayStartBtn" type="button">Run 시작</button>
+                                <button class="ghost-btn" id="difficultyBtn" type="button">난이도: Normal</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overlay" id="pauseOverlay">
+                        <div class="overlay-card small-card">
+                            <h2>Paused</h2>
+                            <p>잠시 숨을 고르세요. 다시 시작하려면 `P` 또는 일시정지 버튼을 누르세요.</p>
+                        </div>
+                    </div>
+                    <div class="overlay" id="gameOverOverlay">
+                        <div class="overlay-card title-card">
+                            <p class="overlay-eyebrow">Run Report</p>
+                            <h2 id="gameOverTitle">Run Over</h2>
+                            <p id="gameOverSummary">점수와 기록이 여기에 표시됩니다.</p>
+                            <div class="overlay-actions">
+                                <button class="primary-btn" id="retryBtn" type="button">다시 시작</button>
+                                <button class="ghost-btn" id="backToMenuBtn" type="button">메뉴로</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <button class="ghost-btn" id="pauseBtn" type="button">일시정지</button>
+                    <button class="ghost-btn" id="restartBtn" type="button">런 재시작</button>
+                    <div class="legend">
+                        <span><i class="dot berry"></i> 일반 먹이</span>
+                        <span><i class="dot gold"></i> 황금 먹이</span>
+                        <span><i class="dot chill"></i> 안정 먹이</span>
+                        <span><i class="dot rock"></i> 장애물</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <aside class="insight-popover" id="insightPopover" aria-hidden="true">
+        <button class="popover-close-btn" id="closeInfoBtn" type="button" aria-label="플레이 포인트 닫기">닫기</button>
+        <section>
+            <p class="eyebrow">Run Brief</p>
+            <h2>플레이 포인트</h2>
+            <ul class="feature-list">
+                <li>먹이를 먹으면 꼬리가 길어지고 점수가 상승합니다.</li>
+                <li>콤보 타이머 안에 연속 섭취하면 배수가 올라갑니다.</li>
+                <li>시간이 지날수록 장애물이 추가되고 속도가 올라갑니다.</li>
+                <li>최고 점수와 최장 길이는 브라우저에 저장됩니다.</li>
+            </ul>
+        </section>
+
+        <section>
+            <p class="eyebrow">Controls</p>
+            <div class="control-grid">
+                <div class="control-key">W / ↑</div><div class="control-desc">위로 이동</div>
+                <div class="control-key">S / ↓</div><div class="control-desc">아래로 이동</div>
+                <div class="control-key">A / ←</div><div class="control-desc">왼쪽 이동</div>
+                <div class="control-key">D / →</div><div class="control-desc">오른쪽 이동</div>
+                <div class="control-key">P</div><div class="control-desc">일시정지</div>
+                <div class="control-key">R</div><div class="control-desc">즉시 재시작</div>
+                <div class="control-key">I</div><div class="control-desc">플레이 포인트 열기/닫기</div>
+            </div>
+        </section>
+
+        <section>
+            <p class="eyebrow">Feed Log</p>
+            <div class="feed-log" id="feedLog">
+                <div class="log-item">지렁이가 흙 냄새를 맡고 있습니다.</div>
+            </div>
+        </section>
+    </aside>
+
+    <script src="earthbite.js"></script>
+</body>
+</html>
