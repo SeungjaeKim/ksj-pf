@@ -67,6 +67,21 @@
             return false;
         }
 
+        if (!root.SquirrelRescueInput) {
+            pushResult("input namespace exists", false, "SquirrelRescueInput missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueInput.moveLaneByStep !== "function") {
+            pushResult("moveLaneByStep exists", false, "moveLaneByStep missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueInput.pointerToLane !== "function") {
+            pushResult("pointerToLane exists", false, "pointerToLane missing");
+            return false;
+        }
+
         return true;
     }
 
@@ -85,6 +100,9 @@
         assertEqual(runState.combo, 1, "run starts with combo x1");
         assertEqual(missedState.lives, 4, "miss drops one life");
         assertEqual(missedState.combo, 1, "miss resets combo");
+        assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
+        assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
+        assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
     }
 
     function renderBrowserReport() {
@@ -142,6 +160,7 @@
         loadScript("../modules/config.js");
         loadScript("../modules/storage.js");
         loadScript("../modules/rules-engine.js");
+        loadScript("../modules/input-controller.js");
     }
 
     runSmokeChecks();
