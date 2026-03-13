@@ -34,6 +34,22 @@
             next.rescueStage = 0;
 
             return next;
+        },
+
+        resolveCatch: function (state) {
+            var next = cloneState(state || {});
+            var nextStage = (next.rescueStage || 0) + 1;
+
+            if (nextStage >= config.requiredCatches) {
+                next.rescueStage = 0;
+                next.rescuedCount = (next.rescuedCount || 0) + 1;
+                next.score = (next.score || 0) + (config.baseRescueScore * (next.combo || 1));
+                next.combo = (next.combo || 1) + 1;
+                return next;
+            }
+
+            next.rescueStage = nextStage;
+            return next;
         }
     };
 })(typeof window !== "undefined" ? window : this);

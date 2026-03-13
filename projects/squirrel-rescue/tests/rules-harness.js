@@ -67,6 +67,11 @@
             return false;
         }
 
+        if (typeof root.SquirrelRescueRules.resolveCatch !== "function") {
+            pushResult("resolveCatch exists", false, "resolveCatch missing");
+            return false;
+        }
+
         if (!root.SquirrelRescueInput) {
             pushResult("input namespace exists", false, "SquirrelRescueInput missing");
             return false;
@@ -88,6 +93,9 @@
     function runSmokeChecks() {
         var runState;
         var missedState;
+        var afterCatch1;
+        var afterCatch2;
+        var afterCatch3;
 
         if (!ensureNamespaces()) {
             return;
@@ -95,11 +103,18 @@
 
         runState = root.SquirrelRescueRules.createRunState();
         missedState = root.SquirrelRescueRules.resolveMiss({ lives: 5, combo: 3 });
+        afterCatch1 = root.SquirrelRescueRules.resolveCatch(runState);
+        afterCatch2 = root.SquirrelRescueRules.resolveCatch(afterCatch1);
+        afterCatch3 = root.SquirrelRescueRules.resolveCatch(afterCatch2);
 
         assertEqual(runState.lives, 5, "run starts with 5 lives");
         assertEqual(runState.combo, 1, "run starts with combo x1");
         assertEqual(missedState.lives, 4, "miss drops one life");
         assertEqual(missedState.combo, 1, "miss resets combo");
+        assertEqual(afterCatch1.rescueStage, 1, "first catch moves to stage 1");
+        assertEqual(afterCatch2.rescueStage, 2, "second catch moves to stage 2");
+        assertEqual(afterCatch3.rescueStage, 0, "third catch resets stage after rescue");
+        assertEqual(afterCatch3.rescuedCount, 1, "third catch increments rescued count");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
         assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
