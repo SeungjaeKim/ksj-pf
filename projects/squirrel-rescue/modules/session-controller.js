@@ -14,11 +14,26 @@
             world.waveState = rules.createWaveState();
             world.waveLabel = "Warm Up";
             world.powerLabel = "None";
+            world.isPaused = false;
+            world.feedbackEvent = null;
 
             function refreshBestScore() {
+                var saveResult;
+
                 if (world.runState.score > world.bestScore) {
                     world.bestScore = world.runState.score;
+                    if (storage && typeof storage.writeBestScore === "function") {
+                        saveResult = storage.writeBestScore(world.bestScore);
+                        world.bestScore = saveResult.bestScore;
+                    }
                 }
+            }
+
+            function emitFeedback(type, label) {
+                world.feedbackEvent = {
+                    type: type,
+                    label: label
+                };
             }
 
             function syncWavePresentation() {
@@ -51,10 +66,12 @@
                 world.teamLane = config.initialLane;
                 world.pendingSpawnMs = 0;
                 world.activeSquirrel = null;
+                world.isPaused = false;
                 if (waveManager) {
                     world.waveState = waveManager.tick(world.waveState, 0, waveCatalog, rules);
                 }
                 syncWavePresentation();
+                emitFeedback("resume", "Rescue!");
                 spawnSquirrel();
             }
 
@@ -65,6 +82,7 @@
             function handleCatch() {
                 var stageAfterCatch;
                 var bounceBoost;
+                var completedWaveId;
                 var squirrel = world.activeSquirrel;
 
                 world.runState = rules.resolveCatch(world.runState);
@@ -78,10 +96,16 @@
                         world.waveState = waveManager.recordRescue(world.waveState, waveCatalog, config, rules);
                         syncWavePresentation();
                     }
+                    completedWaveId = world.waveState.completedWaveId;
                     refreshBestScore();
-                    world.message = world.waveState.activePowerUp
-                        ? world.powerLabel + " active. Prepare for the next drop."
-                        : "Squirrel rescued. Prepare for the next drop.";
+                    if (completedWaveId) {
+                        world.message = world.powerLabel + " active. Prepare for the next drop.";
+                        emitFeedback("wave", world.powerLabel);
+                        world.waveState.completedWaveId = null;
+                    } else {
+                        world.message = "Squirrel rescued. Prepare for the next drop.";
+                        emitFeedback("rescue", "Rescue!");
+                    }
                     queueNextSquirrel(680);
                     return;
                 }
@@ -92,14 +116,17 @@
                 squirrel.vx = 2.8 + (stageAfterCatch * 0.55);
                 squirrel.vy = bounceBoost;
                 world.message = "Catch " + stageAfterCatch + " confirmed. Keep the chain alive.";
+                emitFeedback("catch", "Catch " + stageAfterCatch);
             }
 
             function handleMiss() {
                 world.runState = rules.resolveMiss(world.runState);
                 refreshBestScore();
+                emitFeedback("miss", "Miss!");
 
                 if (world.runState.lives <= 0) {
                     world.mode = "over";
+                    world.isPaused = false;
                     world.message = "Run over after the fifth miss.";
                     world.activeSquirrel = null;
                     syncWavePresentation();
@@ -117,7 +144,7 @@
                 var catchWindow;
                 var gravity;
 
-                if (world.mode !== "playing") {
+                if (world.mode !== "playing" || world.isPaused) {
                     return world;
                 }
 
@@ -167,7 +194,30 @@
                 setLane: setLane,
                 startRun: startRun,
                 restart: startRun,
-                tick: tick
+                tick: tick,
+                pause: function (reason) {
+                    if (world.mode !== "playing" || world.isPaused) {
+                        return;
+                    }
+
+                    world.isPaused = true;
+                    world.message = reason || "Run paused.";
+                    emitFeedback("pause", "Paused");
+                },
+                resume: function () {
+                    if (world.mode !== "playing" || !world.isPaused) {
+                        return;
+                    }
+
+                    world.isPaused = false;
+                    world.message = "Run resumed. Keep the chain alive.";
+                    emitFeedback("resume", "Resume");
+                },
+                consumeFeedbackEvent: function () {
+                    var event = world.feedbackEvent;
+                    world.feedbackEvent = null;
+                    return event;
+                }
             };
         }
     };

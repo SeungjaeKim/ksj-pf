@@ -57,6 +57,16 @@
             return false;
         }
 
+        if (!root.SquirrelRescueStorage) {
+            pushResult("storage namespace exists", false, "SquirrelRescueStorage missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueStorage.writeBestScore !== "function") {
+            pushResult("writeBestScore exists", false, "writeBestScore missing");
+            return false;
+        }
+
         if (typeof root.SquirrelRescueRules.createRunState !== "function") {
             pushResult("createRunState exists", false, "createRunState missing");
             return false;
@@ -127,6 +137,16 @@
             return false;
         }
 
+        if (!root.SquirrelRescueFeedback) {
+            pushResult("feedback namespace exists", false, "SquirrelRescueFeedback missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueFeedback.nextSoundState !== "function") {
+            pushResult("nextSoundState exists", false, "nextSoundState missing");
+            return false;
+        }
+
         return true;
     }
 
@@ -143,6 +163,8 @@
         var completedWave;
         var activatedPowerUp;
         var expiredPowerUp;
+        var blockedWrite;
+        var toggledSound;
 
         if (!ensureNamespaces()) {
             return;
@@ -165,6 +187,10 @@
         );
         activatedPowerUp = root.SquirrelRescueRules.activatePowerUp({ activePowerUp: null, powerUpRemainingMs: 0 }, "wide-trampoline", 8000);
         expiredPowerUp = root.SquirrelRescueRules.tickPowerUp({ activePowerUp: "wide-trampoline", powerUpRemainingMs: 0 }, 16);
+        blockedWrite = root.SquirrelRescueStorage.writeBestScore(420, function () {
+            throw new Error("storage blocked");
+        });
+        toggledSound = root.SquirrelRescueFeedback.nextSoundState(false);
 
         assertEqual(runState.lives, 5, "run starts with 5 lives");
         assertEqual(runState.combo, 1, "run starts with combo x1");
@@ -180,6 +206,8 @@
         assertEqual(completedWave.activePowerUp, "wide-trampoline", "completed wave grants its reward");
         assertEqual(activatedPowerUp.activePowerUp, "wide-trampoline", "power-up activates immediately");
         assertEqual(expiredPowerUp.activePowerUp, null, "expired power-up clears itself");
+        assertEqual(blockedWrite.saved, false, "storage write fallback reports blocked save");
+        assertEqual(toggledSound, true, "sound toggle helper flips to enabled");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
         assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
@@ -242,6 +270,7 @@
         loadScript("../modules/rules-engine.js");
         loadScript("../modules/input-controller.js");
         loadScript("../modules/wave-manager.js");
+        loadScript("../modules/feedback.js");
     }
 
     runSmokeChecks();

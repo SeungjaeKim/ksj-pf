@@ -73,7 +73,16 @@
                             <span class="rescue-kicker">Playable Stage</span>
                             <h2>Catch, Bounce, Rescue</h2>
                         </div>
-                        <p id="stageStatus" class="stage-status">Stage shell ready. Core systems will be wired next.</p>
+                        <div class="stage-meta">
+                            <p id="stageStatus" class="stage-status">Start a run to begin the rescue loop.</p>
+                            <div class="stage-tools">
+                                <div class="best-pill" aria-label="Best score">
+                                    <span>Best</span>
+                                    <strong id="bestValue">0</strong>
+                                </div>
+                                <button type="button" class="sound-toggle-btn" id="soundToggleBtn" aria-pressed="true">Sound On</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="stage-hud" aria-label="Game heads-up display">
@@ -109,6 +118,7 @@
 
                     <div class="stage-shell">
                         <canvas id="rescueCanvas" width="960" height="540" aria-label="Squirrel Rescue Brigade game stage"></canvas>
+                        <div class="feedback-layer" id="feedbackLayer" aria-hidden="true"></div>
                         <div class="overlay active" id="introOverlay">
                             <div class="overlay-card">
                                 <span class="rescue-kicker">Stage Preview</span>
@@ -118,7 +128,7 @@
                                 </p>
                                 <div class="overlay-actions">
                                     <button type="button" class="rescue-primary-btn" id="startRunBtn">Start Rescue</button>
-                                    <span class="overlay-note">Mobile drag and keyboard lane controls are next in the build.</span>
+                                    <span class="overlay-note">Drag on mobile or use the keyboard arrow keys on desktop.</span>
                                 </div>
                             </div>
                         </div>
@@ -173,6 +183,7 @@
     <script src="./modules/wave-manager.js"></script>
     <script src="./modules/session-controller.js"></script>
     <script src="./modules/renderer.js"></script>
+    <script src="./modules/feedback.js"></script>
     <script src="./squirrel-rescue.js"></script>
 </body>
 </html>

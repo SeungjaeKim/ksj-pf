@@ -12,6 +12,7 @@
             var comboValue = options.comboValue;
             var waveValue = options.waveValue;
             var powerValue = options.powerValue;
+            var bestValue = options.bestValue;
             var gameOverOverlay = options.gameOverOverlay;
             var gameOverSummary = options.gameOverSummary;
             var laneToX = options.laneToX;
@@ -26,6 +27,9 @@
                 waveValue.textContent = world.waveLabel || (world.mode === "playing" ? "Rescue Loop" : "Warm Up");
                 if (powerValue) {
                     powerValue.textContent = world.powerLabel || "None";
+                }
+                if (bestValue) {
+                    bestValue.textContent = String(world.bestScore || 0);
                 }
                 stageStatus.textContent = world.message;
 
