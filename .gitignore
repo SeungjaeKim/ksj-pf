@@ -4,3 +4,4 @@
 .env.*
 !.env.example
 !.dev.vars.example
+.worktrees/
