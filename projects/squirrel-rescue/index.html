@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Squirrel Rescue Brigade | My Portfolio</title>
+    <meta name="description" content="고전 구조 아케이드 감성을 모바일 친화적인 카툰 액션으로 재해석한 포트폴리오 게임 프로젝트입니다.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="./squirrel-rescue.css">
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+    <div class="glow-blob blob-3"></div>
+
+    <nav class="glass-nav">
+        <div class="logo"><a href="../../index.html" class="logo-link">PORT<span>FOLIO</span></a></div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Home</a></li>
+            <li><a href="../../about/index.html">About</a></li>
+            <li><a href="../../projects/index.html" class="active">Projects</a></li>
+            <li><a href="../../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="rescue-page">
+        <section class="rescue-hero">
+            <div class="container rescue-hero-grid">
+                <article class="glass-card rescue-intro">
+                    <span class="rescue-kicker">Game / Arcade / Portfolio Demo</span>
+                    <h1>Squirrel Rescue Brigade</h1>
+                    <p class="rescue-lead">
+                        불타는 건물에서 떨어지는 다람쥐를 연속으로 받아 구급차까지 연결하는 구조 아케이드 게임입니다.
+                        모바일 드래그와 데스크톱 레인 이동을 함께 고려한 입력 UX를 한 화면 안에 담는 것을 목표로 합니다.
+                    </p>
+                    <div class="rescue-tags">
+                        <span>Landscape-first playfield</span>
+                        <span>Three-bounce rescue loop</span>
+                        <span>Portfolio-ready arcade framing</span>
+                    </div>
+                </article>
+
+                <aside class="glass-card rescue-signal">
+                    <span class="signal-label">Portfolio Positioning</span>
+                    <div class="signal-stack">
+                        <div>
+                            <span>Reference</span>
+                            <strong>Classic rescue arcade reimagined</strong>
+                        </div>
+                        <div>
+                            <span>What It Shows</span>
+                            <strong>Game feel, input design, UI packaging</strong>
+                        </div>
+                        <div>
+                            <span>Target Session</span>
+                            <strong>Fast, readable, replayable</strong>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="rescue-stage-section">
+            <div class="container">
+                <article class="glass-card rescue-stage-card">
+                    <div class="stage-header">
+                        <div>
+                            <span class="rescue-kicker">Playable Stage</span>
+                            <h2>Catch, Bounce, Rescue</h2>
+                        </div>
+                        <p id="stageStatus" class="stage-status">Stage shell ready. Core systems will be wired next.</p>
+                    </div>
+
+                    <div class="stage-hud" aria-label="Game heads-up display">
+                        <div class="hud-pill">
+                            <span>Score</span>
+                            <strong id="scoreValue">0</strong>
+                        </div>
+                        <div class="hud-pill">
+                            <span>Lives</span>
+                            <strong id="livesValue">5</strong>
+                        </div>
+                        <div class="hud-pill">
+                            <span>Rescued</span>
+                            <strong id="rescuedValue">0</strong>
+                        </div>
+                        <div class="hud-pill">
+                            <span>Wave</span>
+                            <strong id="waveValue">Warm Up</strong>
+                        </div>
+                    </div>
+
+                    <div class="orientation-guard" aria-live="polite">
+                        <p>Rotate your device to landscape for the full rescue playfield.</p>
+                    </div>
+
+                    <div class="stage-shell">
+                        <canvas id="rescueCanvas" width="960" height="540" aria-label="Squirrel Rescue Brigade game stage"></canvas>
+                        <div class="overlay active" id="introOverlay">
+                            <div class="overlay-card">
+                                <span class="rescue-kicker">Stage Preview</span>
+                                <h3>Three catches to safety</h3>
+                                <p>
+                                    Catch each squirrel across three rescue beats and send it into the ambulance before your five lives run out.
+                                </p>
+                                <div class="overlay-actions">
+                                    <button type="button" class="rescue-primary-btn" id="startRunBtn">Start Rescue</button>
+                                    <span class="overlay-note">Mobile drag and keyboard lane controls are next in the build.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="overlay" id="gameOverOverlay">
+                            <div class="overlay-card compact">
+                                <span class="rescue-kicker">Run Summary</span>
+                                <h3>Game Over</h3>
+                                <p id="gameOverSummary">Detailed run reporting will appear here once the core loop is active.</p>
+                                <button type="button" class="rescue-secondary-btn" id="retryBtn">Play Again</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="rescue-notes-section">
+            <div class="container rescue-notes-grid">
+                <article class="glass-card note-card">
+                    <span class="rescue-kicker">Concept</span>
+                    <h3>Modern arcade readability</h3>
+                    <p>
+                        The page combines a familiar left-to-right rescue fantasy with a landscape layout that feels comfortable on both phone and desktop.
+                    </p>
+                </article>
+
+                <article class="glass-card note-card">
+                    <span class="rescue-kicker">Controls</span>
+                    <h3>One game, two input styles</h3>
+                    <p>
+                        Mobile focuses on smooth drag targeting, while desktop uses discrete lane steps to preserve arcade precision and fairness.
+                    </p>
+                </article>
+
+                <article class="glass-card note-card">
+                    <span class="rescue-kicker">Build Goal</span>
+                    <h3>Playable portfolio packaging</h3>
+                    <p>
+                        The final page will pair a polished canvas demo with design notes so recruiters can understand both the gameplay and the product thinking.
+                    </p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="../../script.js"></script>
+    <script src="./squirrel-rescue.js"></script>
+</body>
+</html>
