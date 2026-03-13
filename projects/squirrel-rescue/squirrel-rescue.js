@@ -11,12 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const rescuedValue = document.getElementById("rescuedValue");
     const comboValue = document.getElementById("comboValue");
     const waveValue = document.getElementById("waveValue");
+    const powerValue = document.getElementById("powerValue");
     const inputReady = typeof window.SquirrelRescueInput !== "undefined";
     const config = window.SquirrelRescueConfig || { laneCount: 5, initialLane: 2, startingLives: 5 };
     const previewState = { dragActive: false };
     let lastFrameTime = 0;
 
-    if (!canvas || !stageStatus || !startRunBtn || !window.SquirrelRescueSession || !window.SquirrelRescueEntities || !window.SquirrelRescueRenderer) {
+    if (!canvas || !stageStatus || !startRunBtn || !window.SquirrelRescueSession || !window.SquirrelRescueEntities || !window.SquirrelRescueRenderer || !window.SquirrelRescueWaveManager) {
         return;
     }
 
@@ -32,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rules: window.SquirrelRescueRules,
         entities: window.SquirrelRescueEntities,
         storage: window.SquirrelRescueStorage,
+        waveManager: window.SquirrelRescueWaveManager,
         laneToX: laneToX,
         trampolineY: canvas.height - 92
     });
@@ -46,6 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
         rescuedValue: rescuedValue,
         comboValue: comboValue,
         waveValue: waveValue,
+        powerValue: powerValue,
         gameOverOverlay: gameOverOverlay,
         gameOverSummary: gameOverSummary,
         laneToX: laneToX

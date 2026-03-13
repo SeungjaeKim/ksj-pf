@@ -59,6 +59,45 @@
                 rescuedLabel: String(state.rescuedCount || 0),
                 comboLabel: "x" + String(state.combo || 1)
             };
+        },
+
+        createWaveState: function () {
+            return {
+                activeWave: null,
+                waveProgress: 0,
+                waveIndex: 0,
+                waveCooldownMs: 0,
+                activePowerUp: null,
+                powerUpRemainingMs: 0,
+                completedWaveId: null
+            };
+        },
+
+        activatePowerUp: function (state, powerUpId, durationMs) {
+            var next = cloneState(state || {});
+
+            next.activePowerUp = powerUpId;
+            next.powerUpRemainingMs = Math.max(0, durationMs || 0);
+
+            return next;
+        },
+
+        tickPowerUp: function (state, deltaMs) {
+            var next = cloneState(state || {});
+
+            if (!next.activePowerUp) {
+                next.powerUpRemainingMs = Math.max(0, next.powerUpRemainingMs || 0);
+                return next;
+            }
+
+            next.powerUpRemainingMs = Math.max(0, (next.powerUpRemainingMs || 0) - (deltaMs || 0));
+
+            if (next.powerUpRemainingMs <= 0) {
+                next.activePowerUp = null;
+                next.powerUpRemainingMs = 0;
+            }
+
+            return next;
         }
     };
 })(typeof window !== "undefined" ? window : this);

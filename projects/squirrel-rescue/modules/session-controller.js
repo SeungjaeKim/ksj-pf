@@ -5,14 +5,31 @@
             var rules = options.rules;
             var entities = options.entities;
             var storage = options.storage;
+            var waveManager = options.waveManager;
             var laneToX = options.laneToX;
             var trampolineY = options.trampolineY;
             var world = entities.createWorld(config, storage);
+            var waveCatalog = waveManager ? waveManager.getWaveCatalog(config) : [];
+
+            world.waveState = rules.createWaveState();
+            world.waveLabel = "Warm Up";
+            world.powerLabel = "None";
 
             function refreshBestScore() {
                 if (world.runState.score > world.bestScore) {
                     world.bestScore = world.runState.score;
                 }
+            }
+
+            function syncWavePresentation() {
+                if (!waveManager) {
+                    world.waveLabel = world.mode === "playing" ? "Rescue Loop" : "Warm Up";
+                    world.powerLabel = "None";
+                    return;
+                }
+
+                world.waveLabel = waveManager.formatWaveLabel(world.waveState);
+                world.powerLabel = waveManager.formatPowerLabel(world.waveState, config);
             }
 
             function queueNextSquirrel(delayMs) {
@@ -30,9 +47,14 @@
                 world.mode = "playing";
                 world.message = "Run started. Catch each squirrel three times.";
                 world.runState = rules.createRunState();
+                world.waveState = rules.createWaveState();
                 world.teamLane = config.initialLane;
                 world.pendingSpawnMs = 0;
                 world.activeSquirrel = null;
+                if (waveManager) {
+                    world.waveState = waveManager.tick(world.waveState, 0, waveCatalog, rules);
+                }
+                syncWavePresentation();
                 spawnSquirrel();
             }
 
@@ -49,8 +71,17 @@
                 stageAfterCatch = world.runState.rescueStage;
 
                 if (stageAfterCatch === 0) {
+                    if (world.waveState.activePowerUp === "bonus-points") {
+                        world.runState.score += config.powerUpScoreBonus;
+                    }
+                    if (waveManager) {
+                        world.waveState = waveManager.recordRescue(world.waveState, waveCatalog, config, rules);
+                        syncWavePresentation();
+                    }
                     refreshBestScore();
-                    world.message = "Squirrel rescued. Prepare for the next drop.";
+                    world.message = world.waveState.activePowerUp
+                        ? world.powerLabel + " active. Prepare for the next drop."
+                        : "Squirrel rescued. Prepare for the next drop.";
                     queueNextSquirrel(680);
                     return;
                 }
@@ -71,6 +102,7 @@
                     world.mode = "over";
                     world.message = "Run over after the fifth miss.";
                     world.activeSquirrel = null;
+                    syncWavePresentation();
                     return;
                 }
 
@@ -82,9 +114,16 @@
                 var squirrel;
                 var frameScale;
                 var laneCenter;
+                var catchWindow;
+                var gravity;
 
                 if (world.mode !== "playing") {
                     return world;
+                }
+
+                if (waveManager) {
+                    world.waveState = waveManager.tick(world.waveState, deltaMs, waveCatalog, rules);
+                    syncWavePresentation();
                 }
 
                 if (!world.activeSquirrel) {
@@ -97,13 +136,19 @@
 
                 squirrel = world.activeSquirrel;
                 frameScale = deltaMs / 16.6667;
-                squirrel.vy += 0.17 * frameScale;
+                gravity = world.waveState.activePowerUp === "slow-fall"
+                    ? config.slowFallGravityPerFrame
+                    : config.gravityPerFrame;
+                catchWindow = world.waveState.activePowerUp === "wide-trampoline"
+                    ? config.wideCatchWindow
+                    : config.baseCatchWindow;
+                squirrel.vy += gravity * frameScale;
                 squirrel.x += squirrel.vx * frameScale;
                 squirrel.y += squirrel.vy * frameScale;
                 laneCenter = laneToX(world.teamLane);
 
                 if (squirrel.vy > 0 && squirrel.y + squirrel.radius >= trampolineY - 10) {
-                    if (Math.abs(squirrel.x - laneCenter) <= 64) {
+                    if (Math.abs(squirrel.x - laneCenter) <= catchWindow) {
                         handleCatch();
                     }
                 }

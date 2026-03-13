@@ -11,6 +11,7 @@
             var rescuedValue = options.rescuedValue;
             var comboValue = options.comboValue;
             var waveValue = options.waveValue;
+            var powerValue = options.powerValue;
             var gameOverOverlay = options.gameOverOverlay;
             var gameOverSummary = options.gameOverSummary;
             var laneToX = options.laneToX;
@@ -22,7 +23,10 @@
                 livesValue.textContent = hudSnapshot.livesLabel;
                 rescuedValue.textContent = hudSnapshot.rescuedLabel;
                 comboValue.textContent = hudSnapshot.comboLabel;
-                waveValue.textContent = world.mode === "playing" ? "Rescue Loop" : "Warm Up";
+                waveValue.textContent = world.waveLabel || (world.mode === "playing" ? "Rescue Loop" : "Warm Up");
+                if (powerValue) {
+                    powerValue.textContent = world.powerLabel || "None";
+                }
                 stageStatus.textContent = world.message;
 
                 if (world.mode === "over") {
@@ -38,6 +42,7 @@
                 var laneIndex;
                 var laneX;
                 var trampolineX;
+                var trampolineRadius = world.waveState && world.waveState.activePowerUp === "wide-trampoline" ? 70 : 54;
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -85,13 +90,13 @@
                 trampolineX = laneToX(world.teamLane);
                 ctx.fillStyle = "#fff3d2";
                 ctx.beginPath();
-                ctx.ellipse(trampolineX, canvas.height - 92, 54, 18, 0, 0, Math.PI * 2);
+                ctx.ellipse(trampolineX, canvas.height - 92, trampolineRadius, 18, 0, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.strokeStyle = "#ff7f50";
                 ctx.lineWidth = 6;
                 ctx.beginPath();
-                ctx.moveTo(trampolineX - 48, canvas.height - 92);
-                ctx.quadraticCurveTo(trampolineX, canvas.height - 120, trampolineX + 48, canvas.height - 92);
+                ctx.moveTo(trampolineX - (trampolineRadius - 6), canvas.height - 92);
+                ctx.quadraticCurveTo(trampolineX, canvas.height - 120, trampolineX + (trampolineRadius - 6), canvas.height - 92);
                 ctx.stroke();
 
                 ctx.fillStyle = "#ff7f50";

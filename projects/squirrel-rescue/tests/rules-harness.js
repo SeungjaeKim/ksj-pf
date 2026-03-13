@@ -77,6 +77,21 @@
             return false;
         }
 
+        if (typeof root.SquirrelRescueRules.createWaveState !== "function") {
+            pushResult("createWaveState exists", false, "createWaveState missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueRules.activatePowerUp !== "function") {
+            pushResult("activatePowerUp exists", false, "activatePowerUp missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueRules.tickPowerUp !== "function") {
+            pushResult("tickPowerUp exists", false, "tickPowerUp missing");
+            return false;
+        }
+
         if (!root.SquirrelRescueInput) {
             pushResult("input namespace exists", false, "SquirrelRescueInput missing");
             return false;
@@ -92,6 +107,26 @@
             return false;
         }
 
+        if (!root.SquirrelRescueWaveManager) {
+            pushResult("wave manager namespace exists", false, "SquirrelRescueWaveManager missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueWaveManager.getWaveCatalog !== "function") {
+            pushResult("getWaveCatalog exists", false, "getWaveCatalog missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueWaveManager.tick !== "function") {
+            pushResult("wave tick exists", false, "wave manager tick missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueWaveManager.recordRescue !== "function") {
+            pushResult("recordRescue exists", false, "recordRescue missing");
+            return false;
+        }
+
         return true;
     }
 
@@ -102,6 +137,12 @@
         var afterCatch2;
         var afterCatch3;
         var hudSnapshot;
+        var waveCatalog;
+        var waveState;
+        var warmedWave;
+        var completedWave;
+        var activatedPowerUp;
+        var expiredPowerUp;
 
         if (!ensureNamespaces()) {
             return;
@@ -113,6 +154,17 @@
         afterCatch2 = root.SquirrelRescueRules.resolveCatch(afterCatch1);
         afterCatch3 = root.SquirrelRescueRules.resolveCatch(afterCatch2);
         hudSnapshot = root.SquirrelRescueRules.buildHudSnapshot({ score: 240, lives: 3, rescuedCount: 2, combo: 4 });
+        waveCatalog = root.SquirrelRescueWaveManager.getWaveCatalog(root.SquirrelRescueConfig);
+        waveState = root.SquirrelRescueRules.createWaveState();
+        warmedWave = root.SquirrelRescueWaveManager.tick(waveState, 16, waveCatalog, root.SquirrelRescueRules);
+        completedWave = root.SquirrelRescueWaveManager.recordRescue(
+            root.SquirrelRescueWaveManager.recordRescue(warmedWave, waveCatalog, root.SquirrelRescueConfig, root.SquirrelRescueRules),
+            waveCatalog,
+            root.SquirrelRescueConfig,
+            root.SquirrelRescueRules
+        );
+        activatedPowerUp = root.SquirrelRescueRules.activatePowerUp({ activePowerUp: null, powerUpRemainingMs: 0 }, "wide-trampoline", 8000);
+        expiredPowerUp = root.SquirrelRescueRules.tickPowerUp({ activePowerUp: "wide-trampoline", powerUpRemainingMs: 0 }, 16);
 
         assertEqual(runState.lives, 5, "run starts with 5 lives");
         assertEqual(runState.combo, 1, "run starts with combo x1");
@@ -124,6 +176,10 @@
         assertEqual(afterCatch3.rescuedCount, 1, "third catch increments rescued count");
         assertEqual(hudSnapshot.scoreLabel, "240", "HUD score label formats value");
         assertEqual(hudSnapshot.livesLabel, "3", "HUD lives label formats value");
+        assertEqual(warmedWave.activeWave.id, "quick-pickup", "wave manager seeds first wave");
+        assertEqual(completedWave.activePowerUp, "wide-trampoline", "completed wave grants its reward");
+        assertEqual(activatedPowerUp.activePowerUp, "wide-trampoline", "power-up activates immediately");
+        assertEqual(expiredPowerUp.activePowerUp, null, "expired power-up clears itself");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
         assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
@@ -185,6 +241,7 @@
         loadScript("../modules/storage.js");
         loadScript("../modules/rules-engine.js");
         loadScript("../modules/input-controller.js");
+        loadScript("../modules/wave-manager.js");
     }
 
     runSmokeChecks();
