@@ -50,6 +50,15 @@
 
             next.rescueStage = nextStage;
             return next;
+        },
+
+        buildHudSnapshot: function (state) {
+            return {
+                scoreLabel: String(state.score || 0),
+                livesLabel: String(state.lives || 0),
+                rescuedLabel: String(state.rescuedCount || 0),
+                comboLabel: "x" + String(state.combo || 1)
+            };
         }
     };
 })(typeof window !== "undefined" ? window : this);

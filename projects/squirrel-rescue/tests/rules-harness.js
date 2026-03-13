@@ -72,6 +72,11 @@
             return false;
         }
 
+        if (typeof root.SquirrelRescueRules.buildHudSnapshot !== "function") {
+            pushResult("buildHudSnapshot exists", false, "buildHudSnapshot missing");
+            return false;
+        }
+
         if (!root.SquirrelRescueInput) {
             pushResult("input namespace exists", false, "SquirrelRescueInput missing");
             return false;
@@ -96,6 +101,7 @@
         var afterCatch1;
         var afterCatch2;
         var afterCatch3;
+        var hudSnapshot;
 
         if (!ensureNamespaces()) {
             return;
@@ -106,6 +112,7 @@
         afterCatch1 = root.SquirrelRescueRules.resolveCatch(runState);
         afterCatch2 = root.SquirrelRescueRules.resolveCatch(afterCatch1);
         afterCatch3 = root.SquirrelRescueRules.resolveCatch(afterCatch2);
+        hudSnapshot = root.SquirrelRescueRules.buildHudSnapshot({ score: 240, lives: 3, rescuedCount: 2, combo: 4 });
 
         assertEqual(runState.lives, 5, "run starts with 5 lives");
         assertEqual(runState.combo, 1, "run starts with combo x1");
@@ -115,6 +122,8 @@
         assertEqual(afterCatch2.rescueStage, 2, "second catch moves to stage 2");
         assertEqual(afterCatch3.rescueStage, 0, "third catch resets stage after rescue");
         assertEqual(afterCatch3.rescuedCount, 1, "third catch increments rescued count");
+        assertEqual(hudSnapshot.scoreLabel, "240", "HUD score label formats value");
+        assertEqual(hudSnapshot.livesLabel, "3", "HUD lives label formats value");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
         assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
