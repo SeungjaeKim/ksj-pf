@@ -47,6 +47,35 @@
         (0, eval)(source);
     }
 
+    function readText(relativePath) {
+        var fso;
+        var harnessFolder;
+        var normalizedPath;
+        var filePath;
+        var file;
+
+        if (!isWScript) {
+            return "";
+        }
+
+        fso = new ActiveXObject("Scripting.FileSystemObject");
+        harnessFolder = fso.GetParentFolderName(WScript.ScriptFullName);
+        normalizedPath = relativePath.replace(/\//g, "\\");
+        filePath = fso.BuildPath(harnessFolder, normalizedPath);
+
+        if (!fso.FileExists(filePath)) {
+            pushResult("read " + relativePath, false, "missing file");
+            return "";
+        }
+
+        file = fso.OpenTextFile(filePath, 1);
+        try {
+            return file.ReadAll();
+        } finally {
+            file.Close();
+        }
+    }
+
     function ensureNamespaces() {
         if (!root.SquirrelRescueConfig) {
             pushResult("config namespace exists", false, "SquirrelRescueConfig missing");
@@ -147,15 +176,59 @@
             return false;
         }
 
+        if (!root.SquirrelRescueEntities) {
+            pushResult("entities namespace exists", false, "SquirrelRescueEntities missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueEntities.createWorld !== "function") {
+            pushResult("createWorld exists", false, "createWorld missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueEntities.createItem !== "function") {
+            pushResult("createItem exists", false, "createItem missing");
+            return false;
+        }
+
+        if (!root.SquirrelRescueSession) {
+            pushResult("session namespace exists", false, "SquirrelRescueSession missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueSession.createController !== "function") {
+            pushResult("createController exists", false, "createController missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueSession.resolveDifficultyProfile !== "function") {
+            pushResult("resolveDifficultyProfile exists", false, "resolveDifficultyProfile missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueSession.resolveCatchLanes !== "function") {
+            pushResult("resolveCatchLanes exists", false, "resolveCatchLanes missing");
+            return false;
+        }
+
+        if (!root.SquirrelRescueRenderer) {
+            pushResult("renderer namespace exists", false, "SquirrelRescueRenderer missing");
+            return false;
+        }
+
+        if (typeof root.SquirrelRescueRenderer.createRenderer !== "function") {
+            pushResult("createRenderer exists", false, "createRenderer missing");
+            return false;
+        }
+
         return true;
     }
 
     function runSmokeChecks() {
         var runState;
         var missedState;
-        var afterCatch1;
-        var afterCatch2;
-        var afterCatch3;
+        var catchStates = [];
+        var catchIndex;
         var hudSnapshot;
         var waveCatalog;
         var waveState;
@@ -165,6 +238,19 @@
         var expiredPowerUp;
         var blockedWrite;
         var toggledSound;
+        var difficultyStart;
+        var difficultyMid;
+        var difficultyLate;
+        var difficultyEnd;
+        var singleLaneCatch;
+        var wideLaneCatch;
+        var edgeWideLaneCatch;
+        var indexHtml;
+        var asideStart;
+        var asideEnd;
+        var stageShellPos;
+        var scoreValuePos;
+        var stageHudPos;
 
         if (!ensureNamespaces()) {
             return;
@@ -172,9 +258,10 @@
 
         runState = root.SquirrelRescueRules.createRunState();
         missedState = root.SquirrelRescueRules.resolveMiss({ lives: 5, combo: 3 });
-        afterCatch1 = root.SquirrelRescueRules.resolveCatch(runState);
-        afterCatch2 = root.SquirrelRescueRules.resolveCatch(afterCatch1);
-        afterCatch3 = root.SquirrelRescueRules.resolveCatch(afterCatch2);
+        catchStates[0] = root.SquirrelRescueRules.resolveCatch(runState);
+        for (catchIndex = 1; catchIndex < 8; catchIndex += 1) {
+            catchStates[catchIndex] = root.SquirrelRescueRules.resolveCatch(catchStates[catchIndex - 1]);
+        }
         hudSnapshot = root.SquirrelRescueRules.buildHudSnapshot({ score: 240, lives: 3, rescuedCount: 2, combo: 4 });
         waveCatalog = root.SquirrelRescueWaveManager.getWaveCatalog(root.SquirrelRescueConfig);
         waveState = root.SquirrelRescueRules.createWaveState();
@@ -191,15 +278,38 @@
             throw new Error("storage blocked");
         });
         toggledSound = root.SquirrelRescueFeedback.nextSoundState(false);
+        difficultyStart = root.SquirrelRescueSession.resolveDifficultyProfile(root.SquirrelRescueConfig, 0);
+        difficultyMid = root.SquirrelRescueSession.resolveDifficultyProfile(root.SquirrelRescueConfig, 450);
+        difficultyLate = root.SquirrelRescueSession.resolveDifficultyProfile(root.SquirrelRescueConfig, 950);
+        difficultyEnd = root.SquirrelRescueSession.resolveDifficultyProfile(root.SquirrelRescueConfig, 1800);
+        singleLaneCatch = root.SquirrelRescueSession.resolveCatchLanes(root.SquirrelRescueConfig, 2, null);
+        wideLaneCatch = root.SquirrelRescueSession.resolveCatchLanes(root.SquirrelRescueConfig, 2, "wide-trampoline");
+        edgeWideLaneCatch = root.SquirrelRescueSession.resolveCatchLanes(root.SquirrelRescueConfig, 6, "wide-trampoline");
+        indexHtml = readText("../index.html");
+        asideStart = indexHtml.indexOf("<aside");
+        asideEnd = indexHtml.indexOf("</aside>");
+        stageShellPos = indexHtml.indexOf("class=\"stage-shell\"");
+        scoreValuePos = indexHtml.indexOf("id=\"scoreValue\"");
+        stageHudPos = indexHtml.indexOf("class=\"stage-hud\"");
 
         assertEqual(runState.lives, 5, "run starts with 5 lives");
         assertEqual(runState.combo, 1, "run starts with combo x1");
+        assertEqual(root.SquirrelRescueConfig.laneCount, 7, "game uses 7 lanes");
+        assertEqual(root.SquirrelRescueConfig.playableCatchCount, 7, "game keeps 7 playable catches");
+        assertEqual(root.SquirrelRescueConfig.requiredCatches, 8, "rescue resolves on the ambulance arrival step");
+        assertEqual(root.SquirrelRescueConfig.spawnIntervalMinMs, 5000, "squirrel spawn minimum is 5 seconds");
+        assertEqual(root.SquirrelRescueConfig.spawnIntervalMaxMs, 7000, "squirrel spawn maximum is 7 seconds");
+        assertEqual(root.SquirrelRescueConfig.itemSpawnMinMs, 10000, "item spawn minimum is 10 seconds");
+        assertEqual(root.SquirrelRescueConfig.itemSpawnMaxMs, 15000, "item spawn maximum is 15 seconds");
+        assertEqual(root.SquirrelRescueConfig.ambulanceLaneIndex, 7, "ambulance sits on the fixed eighth lane");
         assertEqual(missedState.lives, 4, "miss drops one life");
         assertEqual(missedState.combo, 1, "miss resets combo");
-        assertEqual(afterCatch1.rescueStage, 1, "first catch moves to stage 1");
-        assertEqual(afterCatch2.rescueStage, 2, "second catch moves to stage 2");
-        assertEqual(afterCatch3.rescueStage, 0, "third catch resets stage after rescue");
-        assertEqual(afterCatch3.rescuedCount, 1, "third catch increments rescued count");
+        assertEqual(catchStates[0].rescueStage, 1, "first catch moves to stage 1");
+        assertEqual(catchStates[5].rescueStage, 6, "sixth catch moves to stage 6");
+        assertEqual(catchStates[6].rescueStage, 7, "seventh catch enters the ambulance arrival step");
+        assertEqual(catchStates[6].rescuedCount, 0, "seventh catch does not score before ambulance arrival");
+        assertEqual(catchStates[7].rescueStage, 0, "eighth arrival resets stage after rescue");
+        assertEqual(catchStates[7].rescuedCount, 1, "eighth arrival increments rescued count");
         assertEqual(hudSnapshot.scoreLabel, "240", "HUD score label formats value");
         assertEqual(hudSnapshot.livesLabel, "3", "HUD lives label formats value");
         assertEqual(warmedWave.activeWave.id, "quick-pickup", "wave manager seeds first wave");
@@ -208,9 +318,18 @@
         assertEqual(expiredPowerUp.activePowerUp, null, "expired power-up clears itself");
         assertEqual(blockedWrite.saved, false, "storage write fallback reports blocked save");
         assertEqual(toggledSound, true, "sound toggle helper flips to enabled");
-        assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 5), 3, "right arrow moves one lane");
+        assertEqual(difficultyStart.spawnMinMs, 5800, "opening band uses the slowest spawn floor");
+        assertEqual(difficultyMid.speedMultiplier, 1.08, "second band increases speed slightly");
+        assertEqual(difficultyLate.spawnMaxMs, 5400, "third band shortens the spawn ceiling");
+        assertEqual(difficultyEnd.speedMultiplier, 1.24, "final band uses the fastest speed multiplier");
+        assertEqual(singleLaneCatch.join(","), "2", "default trampoline covers one lane");
+        assertEqual(wideLaneCatch.join(","), "2,3", "wide trampoline covers the current lane and the next lane");
+        assertEqual(edgeWideLaneCatch.join(","), "5,6", "wide trampoline clamps to the final two lanes");
+        assertEqual(scoreValuePos > asideEnd, true, "HUD values render outside the sidebar");
+        assertEqual(stageHudPos > stageShellPos, true, "HUD container sits below the stage shell in the game card");
+        assertEqual(root.SquirrelRescueInput.moveLaneByStep(2, 1, 7), 3, "right arrow moves one lane");
         assertEqual(root.SquirrelRescueInput.moveLaneByStep(0, -1, 5), 0, "lane clamps at zero");
-        assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 5), 4, "pointer maps to final lane");
+        assertEqual(root.SquirrelRescueInput.pointerToLane(0.92, 7), 6, "pointer maps to the final lane");
     }
 
     function renderBrowserReport() {
@@ -270,6 +389,9 @@
         loadScript("../modules/rules-engine.js");
         loadScript("../modules/input-controller.js");
         loadScript("../modules/wave-manager.js");
+        loadScript("../modules/entity-manager.js");
+        loadScript("../modules/session-controller.js");
+        loadScript("../modules/renderer.js");
         loadScript("../modules/feedback.js");
     }
 

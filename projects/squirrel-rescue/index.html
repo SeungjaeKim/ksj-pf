@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Squirrel Rescue Brigade | My Portfolio</title>
-    <meta name="description" content="고전 구조 아케이드 감성을 모바일 친화적인 카툰 액션으로 재해석한 포트폴리오 게임 프로젝트입니다.">
+    <meta name="description" content="A cute arcade rescue game where squirrels bounce across seven lanes and auto-load into an ambulance dock on lane eight.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -29,58 +29,93 @@
     </nav>
 
     <main class="rescue-page">
-        <section class="rescue-hero">
-            <div class="container rescue-hero-grid">
-                <article class="glass-card rescue-intro">
-                    <span class="rescue-kicker">Game / Arcade / Portfolio Demo</span>
-                    <h1>Squirrel Rescue Brigade</h1>
-                    <p class="rescue-lead">
-                        불타는 건물에서 떨어지는 다람쥐를 연속으로 받아 구급차까지 연결하는 구조 아케이드 게임입니다.
-                        모바일 드래그와 데스크톱 레인 이동을 함께 고려한 입력 UX를 한 화면 안에 담는 것을 목표로 합니다.
-                    </p>
-                    <div class="rescue-tags">
-                        <span>Landscape-first playfield</span>
-                        <span>Three-bounce rescue loop</span>
-                        <span>Portfolio-ready arcade framing</span>
+        <section class="rescue-main-shell">
+            <div class="container rescue-main-grid">
+                <aside class="glass-card rescue-side-panel">
+                    <div class="side-top">
+                        <span class="rescue-kicker">Game / Arcade / Portfolio Demo</span>
+                        <h1>Squirrel Rescue Brigade</h1>
+                        <p class="rescue-lead">
+                            Catch falling squirrels across seven playable lanes, then auto-load them into the fixed ambulance dock on lane eight. Random supply drops give the run short, readable power spikes.
+                        </p>
                     </div>
-                </article>
 
-                <aside class="glass-card rescue-signal">
-                    <span class="signal-label">Portfolio Positioning</span>
-                    <div class="signal-stack">
-                        <div>
-                            <span>Reference</span>
-                            <strong>Classic rescue arcade reimagined</strong>
+                    <div class="rescue-quick-grid">
+                        <div class="quick-card">
+                            <span>Desktop</span>
+                            <strong>Left / Right one lane at a time</strong>
                         </div>
-                        <div>
-                            <span>What It Shows</span>
-                            <strong>Game feel, input design, UI packaging</strong>
+                        <div class="quick-card">
+                            <span>Mobile</span>
+                            <strong>Drag the trampoline across the route</strong>
                         </div>
-                        <div>
-                            <span>Target Session</span>
-                            <strong>Fast, readable, replayable</strong>
+                        <div class="quick-card">
+                            <span>Goal</span>
+                            <strong>Catch 7 times, then bounce into lane 8</strong>
+                        </div>
+                        <div class="quick-card">
+                            <span>Danger</span>
+                            <strong>5 misses ends the run</strong>
                         </div>
                     </div>
+
+                    <div class="control-block">
+                        <span class="rescue-kicker">How To Play</span>
+                        <ul class="control-list">
+                            <li>Squirrels spawn at random 5 to 7 second intervals instead of waiting for the previous rescue to finish.</li>
+                            <li>Each bounce climbs to a random high arc near the apartment top, then bends back toward the next target lane.</li>
+                            <li>The 7th catch launches the squirrel into a final lane 8 ambulance bounce, and rescue only scores on arrival.</li>
+                            <li>Supply drops appear every 10 to 15 seconds. The wide trampoline power-up now covers two lanes at once.</li>
+                        </ul>
+                    </div>
+
+                    <div class="stage-tools">
+                        <div class="best-pill" aria-label="Best score">
+                            <span>Best</span>
+                            <strong id="bestValue">0</strong>
+                        </div>
+                        <button type="button" class="sound-toggle-btn" id="soundToggleBtn" aria-pressed="true">Sound On</button>
+                    </div>
+
+                    <p id="stageStatus" class="stage-status">Start a run to begin the rescue loop.</p>
+
                 </aside>
-            </div>
-        </section>
 
-        <section class="rescue-stage-section">
-            <div class="container">
                 <article class="glass-card rescue-stage-card">
-                    <div class="stage-header">
+                    <div class="stage-card-head">
                         <div>
                             <span class="rescue-kicker">Playable Stage</span>
-                            <h2>Catch, Bounce, Rescue</h2>
+                            <h2>Burning Building To Ambulance</h2>
                         </div>
-                        <div class="stage-meta">
-                            <p id="stageStatus" class="stage-status">Start a run to begin the rescue loop.</p>
-                            <div class="stage-tools">
-                                <div class="best-pill" aria-label="Best score">
-                                    <span>Best</span>
-                                    <strong id="bestValue">0</strong>
+                        <p class="stage-caption">Seven playable lanes lead into a final lane 8 ambulance arrival, while supply drops fall into the route between rescues.</p>
+                    </div>
+
+                    <div class="orientation-guard" aria-live="polite">
+                        <p>Rotate your device to landscape for the full rescue playfield.</p>
+                    </div>
+
+                    <div class="stage-shell">
+                        <canvas id="rescueCanvas" width="1440" height="900" aria-label="Squirrel Rescue Brigade game stage"></canvas>
+                        <div class="feedback-layer" id="feedbackLayer" aria-hidden="true"></div>
+                        <div class="overlay active" id="introOverlay">
+                            <div class="overlay-card">
+                                <span class="rescue-kicker">Stage Preview</span>
+                                <h3>7 catches, then lane 8</h3>
+                                <p>
+                                    Squirrels fall every 5 to 7 seconds, supplies drop every 10 to 15, and the 7th catch sends each rescue into a final lane 8 ambulance arrival.
+                                </p>
+                                <div class="overlay-actions">
+                                    <button type="button" class="rescue-primary-btn" id="startRunBtn">Start Rescue</button>
+                                    <span class="overlay-note">Desktop uses one-lane keyboard steps. Mobile uses drag targeting.</span>
                                 </div>
-                                <button type="button" class="sound-toggle-btn" id="soundToggleBtn" aria-pressed="true">Sound On</button>
+                            </div>
+                        </div>
+                        <div class="overlay" id="gameOverOverlay">
+                            <div class="overlay-card compact">
+                                <span class="rescue-kicker">Run Summary</span>
+                                <h3>Game Over</h3>
+                                <p id="gameOverSummary">Final score and rescued squirrels appear here when the run ends.</p>
+                                <button type="button" class="rescue-secondary-btn" id="retryBtn">Play Again</button>
                             </div>
                         </div>
                     </div>
@@ -103,42 +138,12 @@
                             <strong id="comboValue">x1</strong>
                         </div>
                         <div class="hud-pill">
-                            <span>Wave</span>
-                            <strong id="waveValue">Warm Up</strong>
+                            <span>Supply</span>
+                            <strong id="waveValue">Stand By</strong>
                         </div>
                         <div class="hud-pill">
                             <span>Power</span>
                             <strong id="powerValue">None</strong>
-                        </div>
-                    </div>
-
-                    <div class="orientation-guard" aria-live="polite">
-                        <p>Rotate your device to landscape for the full rescue playfield.</p>
-                    </div>
-
-                    <div class="stage-shell">
-                        <canvas id="rescueCanvas" width="960" height="540" aria-label="Squirrel Rescue Brigade game stage"></canvas>
-                        <div class="feedback-layer" id="feedbackLayer" aria-hidden="true"></div>
-                        <div class="overlay active" id="introOverlay">
-                            <div class="overlay-card">
-                                <span class="rescue-kicker">Stage Preview</span>
-                                <h3>Three catches to safety</h3>
-                                <p>
-                                    Catch each squirrel across three rescue beats and send it into the ambulance before your five lives run out.
-                                </p>
-                                <div class="overlay-actions">
-                                    <button type="button" class="rescue-primary-btn" id="startRunBtn">Start Rescue</button>
-                                    <span class="overlay-note">Drag on mobile or use the keyboard arrow keys on desktop.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="overlay" id="gameOverOverlay">
-                            <div class="overlay-card compact">
-                                <span class="rescue-kicker">Run Summary</span>
-                                <h3>Game Over</h3>
-                                <p id="gameOverSummary">Detailed run reporting will appear here once the core loop is active.</p>
-                                <button type="button" class="rescue-secondary-btn" id="retryBtn">Play Again</button>
-                            </div>
                         </div>
                     </div>
                 </article>
@@ -149,25 +154,25 @@
             <div class="container rescue-notes-grid">
                 <article class="glass-card note-card">
                     <span class="rescue-kicker">Concept</span>
-                    <h3>Modern arcade readability</h3>
+                    <h3>Seven lanes plus one dock</h3>
                     <p>
-                        The page combines a familiar left-to-right rescue fantasy with a landscape layout that feels comfortable on both phone and desktop.
+                        The trampoline only plays inside seven clear lanes, while the ambulance lives in its own eighth dock so the ending read is much cleaner.
                     </p>
                 </article>
 
                 <article class="glass-card note-card">
-                    <span class="rescue-kicker">Controls</span>
-                    <h3>One game, two input styles</h3>
+                    <span class="rescue-kicker">Feel</span>
+                    <h3>High arcs, guided landings</h3>
                     <p>
-                        Mobile focuses on smooth drag targeting, while desktop uses discrete lane steps to preserve arcade precision and fairness.
+                        Every bounce now picks a different high apex near the building roof, then converges toward the next lane so the motion feels lively without becoming random noise.
                     </p>
                 </article>
 
                 <article class="glass-card note-card">
-                    <span class="rescue-kicker">Build Goal</span>
-                    <h3>Playable portfolio packaging</h3>
+                    <span class="rescue-kicker">Presentation</span>
+                    <h3>Power-ups are physical drops</h3>
                     <p>
-                        The final page will pair a polished canvas demo with design notes so recruiters can understand both the gameplay and the product thinking.
+                        Power-ups no longer trigger invisibly. They appear as real falling pickups on the stage and activate only if the trampoline catches them.
                     </p>
                 </article>
             </div>

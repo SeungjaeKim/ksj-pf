@@ -27,10 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function laneToX(laneIndex) {
-        const gutter = 120;
-        const availableWidth = canvas.width - (gutter * 2);
-        const spacing = availableWidth / (config.laneCount - 1);
-        return gutter + (spacing * laneIndex);
+        const playfieldLeft = canvas.width * 0.27;
+        const playfieldRight = canvas.width * 0.82;
+        const spacing = (playfieldRight - playfieldLeft) / (config.laneCount - 1);
+        return playfieldLeft + (spacing * laneIndex);
     }
 
     const controller = window.SquirrelRescueSession.createController({
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         storage: window.SquirrelRescueStorage,
         waveManager: window.SquirrelRescueWaveManager,
         laneToX: laneToX,
-        trampolineY: canvas.height - 92
+        trampolineY: canvas.height - 104
     });
 
     const renderer = window.SquirrelRescueRenderer.createRenderer({
