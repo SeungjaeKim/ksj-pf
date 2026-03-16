@@ -334,6 +334,27 @@
         assertIncludes(root.EduFlowAdminView.renderBranchView(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), "\uB300\uCE58 \uCEA0\uD37C\uC2A4", "branch comparison row");
     }
 
+    function runPortalChecks() {
+        var store = root.EduFlowState.createStore();
+        var portalHome;
+        var reportDetail;
+
+        loadScript("../modules/portal-view.js");
+
+        if (!root.EduFlowPortalView) {
+            pushResult("EduFlowPortalView namespace exists", false, "EduFlowPortalView missing");
+            return;
+        }
+
+        portalHome = root.EduFlowPortalView.renderPortalHome(root.EduFlowData.snapshot(), store, "student-minseo");
+        reportDetail = root.EduFlowPortalView.renderReportDetail(root.EduFlowData.snapshot(), store, "student-minseo");
+
+        assertIncludes(portalHome, "\uC624\uB298 \uC218\uC5C5", "portal home card");
+        assertIncludes(portalHome, "\uC0C1\uB2F4 \uC608\uC57D", "portal booking CTA");
+        assertIncludes(reportDetail, "\uAC15\uC0AC \uCF54\uBA58\uD2B8", "report detail teacher comment block");
+        assertIncludes(reportDetail, "\uB2E4\uC74C \uC8FC \uC9D1\uC911 \uD3EC\uC778\uD2B8", "report detail next focus block");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
@@ -341,6 +362,7 @@
     runConversionChecks();
     runAdminOperationsChecks();
     runAdminSecondaryChecks();
+    runPortalChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));

@@ -535,3 +535,130 @@ body {
         grid-template-columns: 1fr;
     }
 }
+
+.portal-shell {
+    display: grid;
+    gap: 20px;
+}
+
+.portal-header,
+.portal-nav,
+.portal-panel-stack,
+.portal-card,
+.portal-highlight {
+    border: 1px solid var(--ef-border);
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: var(--ef-shadow);
+}
+
+.portal-header {
+    padding: 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.portal-header h1 {
+    margin: 10px 0 6px;
+}
+
+.portal-header p {
+    margin: 0;
+    color: var(--ef-muted);
+}
+
+.portal-nav {
+    padding: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.portal-tab {
+    border: 0;
+    border-radius: 999px;
+    padding: 10px 16px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--ef-text);
+    cursor: pointer;
+}
+
+.portal-tab.is-active {
+    background: var(--ef-signal);
+    color: #1b130f;
+    font-weight: 700;
+}
+
+.portal-panel-stack {
+    padding: 28px;
+    display: grid;
+    gap: 20px;
+}
+
+.portal-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.portal-hero h1 {
+    margin: 10px 0 8px;
+}
+
+.portal-hero p {
+    margin: 0;
+    color: var(--ef-muted);
+}
+
+.portal-highlight {
+    min-width: 180px;
+    padding: 18px 20px;
+}
+
+.portal-highlight strong {
+    display: block;
+    margin-top: 10px;
+    font-size: 1.3rem;
+}
+
+.portal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.portal-grid-wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.portal-card {
+    padding: 22px;
+}
+
+.portal-card strong {
+    display: block;
+    margin: 10px 0 8px;
+    font-size: 1.35rem;
+}
+
+.portal-card p {
+    margin: 0;
+    color: var(--ef-muted);
+}
+
+.portal-wide-card {
+    min-height: 180px;
+}
+
+@media (max-width: 960px) {
+    .portal-header,
+    .portal-hero,
+    .portal-grid,
+    .portal-grid-wide {
+        grid-template-columns: 1fr;
+        display: grid;
+    }
+}

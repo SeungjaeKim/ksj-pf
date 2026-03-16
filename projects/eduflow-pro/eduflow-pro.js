@@ -5,6 +5,8 @@
     var store = window.EduFlowState ? window.EduFlowState.createStore() : null;
     var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
+    var portalView = "home";
+    var portalStudentId = "student-minseo";
     var titles = {
         landing: "EduFlow Pro \uB79C\uB529",
         admin: "EduFlow Pro \uAD00\uB9AC\uC790",
@@ -63,6 +65,24 @@
         bindAdminEvents();
     }
 
+    function bindPortalEvents() {
+        var tabButtons;
+        var index;
+
+        tabButtons = root.querySelectorAll("[data-portal-view]");
+        for (index = 0; index < tabButtons.length; index += 1) {
+            tabButtons[index].addEventListener("click", function () {
+                portalView = this.getAttribute("data-portal-view");
+                renderPortal();
+            });
+        }
+    }
+
+    function renderPortal() {
+        root.innerHTML = window.EduFlowPortalView.renderPortalShell(snapshot, store, portalStudentId, portalView);
+        bindPortalEvents();
+    }
+
     if (!root) {
         return;
     }
@@ -74,6 +94,11 @@
 
     if (surface === "admin" && window.EduFlowAdminView && snapshot && window.EduFlowState) {
         renderAdmin();
+        return;
+    }
+
+    if (surface === "portal" && window.EduFlowPortalView && snapshot && window.EduFlowState) {
+        renderPortal();
         return;
     }
 
