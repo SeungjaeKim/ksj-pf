@@ -81,7 +81,11 @@
             return;
         }
 
-        (0, eval)(text);
+        try {
+            (0, eval)(text);
+        } catch (error) {
+            pushResult("load " + relativePath, false, error.message || String(error));
+        }
     }
 
     function assertFileExists(relativePath, label) {
@@ -226,10 +230,40 @@
         assertIncludes(crmHtml, "Choi Min-seo", "featured lead card");
     }
 
+    function runConversionChecks() {
+        var store = root.EduFlowState.createStore();
+
+        if (typeof root.EduFlowState.convertLead !== "function") {
+            pushResult("convertLead exists", false, "convertLead missing");
+            return;
+        }
+
+        if (typeof root.EduFlowState.getLinkedStudentId !== "function") {
+            pushResult("getLinkedStudentId exists", false, "getLinkedStudentId missing");
+            return;
+        }
+
+        if (typeof root.EduFlowState.getDraftInvoice !== "function") {
+            pushResult("getDraftInvoice exists", false, "getDraftInvoice missing");
+            return;
+        }
+
+        if (typeof root.EduFlowState.getLeadStage !== "function") {
+            pushResult("getLeadStage exists", false, "getLeadStage missing");
+            return;
+        }
+
+        root.EduFlowState.convertLead(store, "lead-minseo");
+        assertEqual(root.EduFlowState.getLinkedStudentId(store, "lead-minseo"), "student-minseo", "student record created");
+        assertEqual(root.EduFlowState.getDraftInvoice(store, "student-minseo").status, "pending", "invoice draft created");
+        assertEqual(root.EduFlowState.getLeadStage(store, "lead-minseo"), "enrolled", "lead moved to enrolled stage");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
     runAdminShellChecks();
+    runConversionChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));

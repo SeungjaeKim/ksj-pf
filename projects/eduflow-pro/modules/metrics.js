@@ -1,15 +1,27 @@
 (function (root) {
-    function getCrmSnapshot(snapshot) {
+    function getCrmSnapshot(snapshot, store) {
         var stages = [];
         var index;
         var stage;
+        var leadIndex;
+        var leadId;
+        var count;
 
         for (index = 0; index < snapshot.crmStages.length; index += 1) {
             stage = snapshot.crmStages[index];
+            count = 0;
+
+            for (leadIndex = 0; leadIndex < stage.leadIds.length; leadIndex += 1) {
+                leadId = stage.leadIds[leadIndex];
+                if (!store || !store.leadStages || store.leadStages[leadId] === stage.id) {
+                    count += 1;
+                }
+            }
+
             stages.push({
                 id: stage.id,
                 label: stage.label,
-                count: stage.leadIds.length
+                count: count
             });
         }
 

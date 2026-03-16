@@ -415,3 +415,9 @@ body {
     color: var(--ef-muted);
     line-height: 1.7;
 }
+
+.detail-actions {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+}

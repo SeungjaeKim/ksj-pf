@@ -2,6 +2,7 @@
     var surface = document.body.getAttribute("data-surface");
     var root = document.getElementById("appRoot");
     var snapshot = window.EduFlowData ? window.EduFlowData.snapshot() : null;
+    var store = window.EduFlowState ? window.EduFlowState.createStore() : null;
     var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var titles = {
@@ -17,6 +18,33 @@
         mobile: "Mobile owner mode shell is ready for the executive daily summary."
     };
 
+    function bindAdminEvents() {
+        var leadButtons;
+        var convertButton;
+        var index;
+
+        leadButtons = root.querySelectorAll("[data-lead-id]");
+        for (index = 0; index < leadButtons.length; index += 1) {
+            leadButtons[index].addEventListener("click", function () {
+                window.EduFlowState.selectLead(store, this.getAttribute("data-lead-id"));
+                renderAdmin();
+            });
+        }
+
+        convertButton = root.querySelector('[data-action="convert-lead"]');
+        if (convertButton) {
+            convertButton.addEventListener("click", function () {
+                window.EduFlowState.convertLead(store, store.selectedLeadId);
+                renderAdmin();
+            });
+        }
+    }
+
+    function renderAdmin() {
+        root.innerHTML = window.EduFlowAdminView.renderAdminShell(snapshot, store);
+        bindAdminEvents();
+    }
+
     if (!root) {
         return;
     }
@@ -27,7 +55,7 @@
     }
 
     if (surface === "admin" && window.EduFlowAdminView && snapshot && window.EduFlowState) {
-        root.innerHTML = window.EduFlowAdminView.renderAdminShell(snapshot, window.EduFlowState.createStore());
+        renderAdmin();
         return;
     }
 
