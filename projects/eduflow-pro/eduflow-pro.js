@@ -1,6 +1,8 @@
 (function () {
     var surface = document.body.getAttribute("data-surface");
     var root = document.getElementById("appRoot");
+    var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
+    var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var titles = {
         landing: "EduFlow Pro Landing Shell",
         admin: "EduFlow Pro Admin Shell",
@@ -22,6 +24,7 @@
         '<section class="shell-placeholder">',
         "<h1>" + (titles[surface] || "EduFlow Pro Shell") + "</h1>",
         "<p>" + (descriptions[surface] || "Surface shell is ready.") + "</p>",
+        academy ? "<p><strong>" + academy.name + "</strong> is loaded with " + branches.length + " branches of shared demo data.</p>" : "",
         "</section>"
     ].join("");
 }());

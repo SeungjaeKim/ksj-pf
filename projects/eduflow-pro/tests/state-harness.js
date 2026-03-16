@@ -68,6 +68,22 @@
         }
     }
 
+    function loadScript(relativePath) {
+        var text;
+
+        if (!isWScript) {
+            return;
+        }
+
+        text = readText(relativePath);
+        if (!text) {
+            pushResult("load " + relativePath, false, "missing file");
+            return;
+        }
+
+        (0, eval)(text);
+    }
+
     function assertFileExists(relativePath, label) {
         var fso;
         var filePath;
@@ -155,7 +171,34 @@
         assertFileContains("../mobile.html", 'data-surface="mobile"', "mobile surface tag");
     }
 
+    function runDataChecks() {
+        loadScript("../modules/sample-data.js");
+        loadScript("../modules/state-store.js");
+        loadScript("../modules/metrics.js");
+
+        if (!root.EduFlowData) {
+            pushResult("EduFlowData namespace exists", false, "EduFlowData missing");
+            return;
+        }
+
+        if (!root.EduFlowState) {
+            pushResult("EduFlowState namespace exists", false, "EduFlowState missing");
+            return;
+        }
+
+        if (!root.EduFlowMetrics) {
+            pushResult("EduFlowMetrics namespace exists", false, "EduFlowMetrics missing");
+            return;
+        }
+
+        assertEqual(root.EduFlowData.getAcademy().name, "Apex Admissions Lab", "academy name");
+        assertEqual(root.EduFlowData.getBranches().length, 3, "three branches loaded");
+        assertEqual(root.EduFlowMetrics.getCrmSnapshot(root.EduFlowData.snapshot()).stages.length, 6, "crm stage count");
+        assertEqual(root.EduFlowMetrics.getOwnerKpis(root.EduFlowData.snapshot()).cards.length, 5, "owner KPI card count");
+    }
+
     runShellChecks();
+    runDataChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
