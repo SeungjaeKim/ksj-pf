@@ -26,6 +26,11 @@
         return;
     }
 
+    if (surface === "admin" && window.EduFlowAdminView && snapshot && window.EduFlowState) {
+        root.innerHTML = window.EduFlowAdminView.renderAdminShell(snapshot, window.EduFlowState.createStore());
+        return;
+    }
+
     root.innerHTML = [
         '<section class="shell-placeholder">',
         "<h1>" + (titles[surface] || "EduFlow Pro Shell") + "</h1>",

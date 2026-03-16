@@ -211,9 +211,25 @@
         assertIncludes(root.EduFlowLandingView.renderPreviewStats(root.EduFlowData.snapshot()), "Inquiry to Enrollment", "landing preview stats copy");
     }
 
+    function runAdminShellChecks() {
+        var crmHtml;
+
+        loadScript("../modules/admin-view.js");
+        if (!root.EduFlowAdminView) {
+            pushResult("EduFlowAdminView namespace exists", false, "EduFlowAdminView missing");
+            return;
+        }
+
+        crmHtml = root.EduFlowAdminView.renderCrmBoard(root.EduFlowData.snapshot(), root.EduFlowState.createStore());
+        assertIncludes(crmHtml, "Inquiry Received", "crm stage heading");
+        assertIncludes(crmHtml, "Trial Completed", "trial completed heading");
+        assertIncludes(crmHtml, "Choi Min-seo", "featured lead card");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
+    runAdminShellChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
