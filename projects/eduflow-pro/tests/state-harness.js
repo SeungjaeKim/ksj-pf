@@ -266,6 +266,11 @@
         var paymentHtml;
         var reportHtml;
 
+        if (!root.EduFlowAdminView) {
+            pushResult("EduFlowAdminView namespace for operations", false, "EduFlowAdminView missing");
+            return;
+        }
+
         if (typeof root.EduFlowAdminView.renderOwnerDashboard !== "function") {
             pushResult("renderOwnerDashboard exists", false, "renderOwnerDashboard missing");
             return;
@@ -297,12 +302,45 @@
         assertIncludes(reportHtml, "AI \uCD08\uC548 \uC0DD\uC131", "report editor AI draft button");
     }
 
+    function runAdminSecondaryChecks() {
+        if (!root.EduFlowAdminView) {
+            pushResult("EduFlowAdminView namespace for secondary views", false, "EduFlowAdminView missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderAttendanceView !== "function") {
+            pushResult("renderAttendanceView exists", false, "renderAttendanceView missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderTimetableView !== "function") {
+            pushResult("renderTimetableView exists", false, "renderTimetableView missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderAnalyticsView !== "function") {
+            pushResult("renderAnalyticsView exists", false, "renderAnalyticsView missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderBranchView !== "function") {
+            pushResult("renderBranchView exists", false, "renderBranchView missing");
+            return;
+        }
+
+        assertIncludes(root.EduFlowAdminView.renderAttendanceView(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), "\uACB0\uC11D", "attendance status label");
+        assertIncludes(root.EduFlowAdminView.renderTimetableView(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), "\uAC15\uB0A8 \uBCF8\uC6D0", "timetable branch label");
+        assertIncludes(root.EduFlowAdminView.renderAnalyticsView(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), "\uB4F1\uB85D \uC804\uD658\uC728", "analytics metric");
+        assertIncludes(root.EduFlowAdminView.renderBranchView(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), "\uB300\uCE58 \uCEA0\uD37C\uC2A4", "branch comparison row");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
     runAdminShellChecks();
     runConversionChecks();
     runAdminOperationsChecks();
+    runAdminSecondaryChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
