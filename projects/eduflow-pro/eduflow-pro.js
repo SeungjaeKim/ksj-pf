@@ -1,8 +1,9 @@
 (function () {
     var surface = document.body.getAttribute("data-surface");
     var root = document.getElementById("appRoot");
+    var storageKey = "eduflow-pro-store-v1";
     var snapshot = window.EduFlowData ? window.EduFlowData.snapshot() : null;
-    var store = window.EduFlowState ? window.EduFlowState.createStore() : null;
+    var store = window.EduFlowState ? hydrateStore(window.EduFlowState.createStore()) : null;
     var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var portalView = "home";
@@ -20,6 +21,54 @@
         mobile: "\uC6D0\uC7A5\uC774 \uC624\uB298\uC758 \uD575\uC2EC \uC6B4\uC601 \uC9C0\uD45C\uB97C \uBE60\uB974\uAC8C \uD655\uC778\uD558\uB294 \uBAA8\uBC14\uC77C \uBAA8\uB4DC \uBAA9\uC5C5\uC785\uB2C8\uB2E4."
     };
 
+    function canUseStorage() {
+        try {
+            return !!window.localStorage;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function hydrateStore(baseStore) {
+        var saved;
+        var parsed;
+        var key;
+
+        if (!canUseStorage()) {
+            return baseStore;
+        }
+
+        saved = window.localStorage.getItem(storageKey);
+        if (!saved) {
+            return baseStore;
+        }
+
+        try {
+            parsed = JSON.parse(saved);
+            for (key in parsed) {
+                if (Object.prototype.hasOwnProperty.call(parsed, key)) {
+                    baseStore[key] = parsed[key];
+                }
+            }
+        } catch (error) {
+            return baseStore;
+        }
+
+        return baseStore;
+    }
+
+    function persistStore() {
+        if (!store || !canUseStorage()) {
+            return;
+        }
+
+        try {
+            window.localStorage.setItem(storageKey, JSON.stringify(store));
+        } catch (error) {
+            return;
+        }
+    }
+
     function bindAdminEvents() {
         var leadButtons;
         var navButtons;
@@ -31,6 +80,7 @@
         for (index = 0; index < navButtons.length; index += 1) {
             navButtons[index].addEventListener("click", function () {
                 window.EduFlowState.setAdminView(store, this.getAttribute("data-admin-view"));
+                persistStore();
                 renderAdmin();
             });
         }
@@ -39,6 +89,7 @@
         for (index = 0; index < leadButtons.length; index += 1) {
             leadButtons[index].addEventListener("click", function () {
                 window.EduFlowState.selectLead(store, this.getAttribute("data-lead-id"));
+                persistStore();
                 renderAdmin();
             });
         }
@@ -47,6 +98,7 @@
         if (convertButton) {
             convertButton.addEventListener("click", function () {
                 window.EduFlowState.convertLead(store, store.selectedLeadId);
+                persistStore();
                 renderAdmin();
             });
         }
@@ -55,6 +107,7 @@
         if (publishButton) {
             publishButton.addEventListener("click", function () {
                 window.EduFlowState.publishReport(store, store.selectedStudentId);
+                persistStore();
                 renderAdmin();
             });
         }
@@ -66,6 +119,7 @@
     }
 
     function bindPortalEvents() {
+        var bookingButtons;
         var tabButtons;
         var index;
 
@@ -73,6 +127,16 @@
         for (index = 0; index < tabButtons.length; index += 1) {
             tabButtons[index].addEventListener("click", function () {
                 portalView = this.getAttribute("data-portal-view");
+                renderPortal();
+            });
+        }
+
+        bookingButtons = root.querySelectorAll("[data-booking-slot]");
+        for (index = 0; index < bookingButtons.length; index += 1) {
+            bookingButtons[index].addEventListener("click", function () {
+                window.EduFlowState.bookConsultation(store, portalStudentId, this.getAttribute("data-booking-slot"));
+                persistStore();
+                portalView = "home";
                 renderPortal();
             });
         }

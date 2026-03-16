@@ -43,8 +43,7 @@
 
     function renderPortalHome(snapshot, store, studentId) {
         var student = findStudent(snapshot, studentId);
-        var bookingText = store.portalBookings[studentId] || "\uC9C0\uAE08 \uC2AC\uB86F \uC120\uD0DD \uAC00\uB2A5";
-        var reportState = store.publishedReports[studentId] ? "\uBC1C\uD589 \uC644\uB8CC" : "\uC791\uC131 \uC911";
+        var summary = root.EduFlowMetrics.getPortalSummary(snapshot, store, studentId);
 
         return "" +
             '<section class="portal-panel-stack">' +
@@ -55,12 +54,12 @@
                 '<div class="portal-grid">' +
                     '<article class="portal-card"><span class="panel-label">\uC624\uB298 \uC218\uC5C5</span><strong>\uACE02 \uC0AC\uD0D0 \uCEE8\uC124\uD305</strong><p>19:00 | \uCEE8\uC124\uD305\uC2E4 2 | \uCD9C\uC11D \uC608\uC815</p></article>' +
                     '<article class="portal-card"><span class="panel-label">\uCD5C\uADFC \uCD9C\uACB0</span><strong>\uC815\uC0C1 \uCD9C\uC11D</strong><p>\uC9C0\uB09C 2\uC8FC \uAE30\uC900 \uACB0\uC11D \uC5C6\uC74C, \uC9C0\uAC01 1\uD68C</p></article>' +
-                    '<article class="portal-card"><span class="panel-label">\uD559\uC2B5 \uB9AC\uD3EC\uD2B8</span><strong>' + reportState + '</strong><p>\uAC15\uC0AC \uCF54\uBA58\uD2B8\uC640 \uB2E4\uC74C \uC8FC \uD3EC\uC778\uD2B8\uB97C \uD655\uC778\uD558\uC138\uC694.</p></article>' +
+                    '<article class="portal-card"><span class="panel-label">\uD559\uC2B5 \uB9AC\uD3EC\uD2B8</span><strong>' + summary.reportState + '</strong><p>\uAC15\uC0AC \uCF54\uBA58\uD2B8\uC640 \uB2E4\uC74C \uC8FC \uD3EC\uC778\uD2B8\uB97C \uD655\uC778\uD558\uC138\uC694.</p></article>' +
                     '<article class="portal-card"><span class="panel-label">\uACB0\uC81C \uC0C1\uD0DC</span><strong>\uB0A9\uBD80 \uC608\uC815 890,000\uC6D0</strong><p>\uB9D0\uC77C \uCCAD\uAD6C \uAE30\uC900 | \uBBF8\uB0A9 \uC5C6\uC74C</p></article>' +
                 "</div>" +
                 '<div class="portal-grid portal-grid-wide">' +
                     '<article class="portal-card portal-wide-card"><span class="panel-label">\uCD5C\uADFC \uCF54\uBA58\uD2B8</span><strong>\uAC15\uC0AC \uCF54\uBA58\uD2B8</strong><p>\uB17C\uC220 \uAD6C\uC131\uC774 \uD55C \uC8FC \uC0AC\uC774 \uD55C\uCE35 \uC548\uC815\uB418\uC5C8\uACE0, \uADFC\uAC70 \uC81C\uC2DC \uC18D\uB3C4\uB3C4 \uC88B\uC544\uC84C\uC2B5\uB2C8\uB2E4.</p></article>' +
-                    '<article class="portal-card portal-wide-card"><span class="panel-label">\uC0C1\uB2F4 \uC608\uC57D</span><strong>\uC0C1\uB2F4 \uC608\uC57D</strong><p>' + bookingText + '</p></article>' +
+                    '<article class="portal-card portal-wide-card"><span class="panel-label">\uC0C1\uB2F4 \uC608\uC57D</span><strong>\uC0C1\uB2F4 \uC608\uC57D</strong><p>' + summary.bookingText + '</p></article>' +
                 "</div>" +
             "</section>";
     }
@@ -134,14 +133,14 @@
     }
 
     function renderBookingView(snapshot, store, studentId) {
-        var bookingText = store.portalBookings[studentId] || "2026-03-21 19:00";
+        var bookingText = store.portalBookings[studentId] || "2026-03-21T19:00";
 
         return "" +
             '<section class="portal-panel-stack">' +
                 '<div class="portal-hero"><div><span class="panel-label">\uC0C1\uB2F4 \uC608\uC57D</span><h1>\uBCF4\uD638\uC790 \uC0C1\uB2F4 \uC2AC\uB86F</h1><p>\uAC00\uB2A5 \uC2DC\uAC04\uC744 \uD655\uC778\uD558\uACE0 \uC694\uCCAD \uBA54\uBAA8\uB97C \uB0A8\uAE38 \uC218 \uC788\uC2B5\uB2C8\uB2E4.</p></div></div>' +
                 '<div class="portal-grid">' +
                     '<article class="portal-card"><span class="panel-label">\uCD94\uCC9C \uC2AC\uB86F</span><strong>' + bookingText + '</strong><p>\uC785\uC2DC \uC804\uB7B5 \uC0C1\uB2F4 30\uBD84 \uC608\uC57D \uAC00\uB2A5</p></article>' +
-                    '<article class="portal-card"><span class="panel-label">\uC694\uCCAD \uC0AC\uD56D</span><strong>\uC0C1\uB2F4 \uC608\uC57D</strong><p>\uC0AC\uD68C\uD0D0\uAD6C \uC57D\uC810 \uBCF4\uC644\uACFC \uB17C\uC220 \uC804\uD615 \uC900\uBE44 \uC0C1\uB2F4 \uD76C\uB9DD</p></article>' +
+                    '<article class="portal-card"><span class="panel-label">\uC694\uCCAD \uC0AC\uD56D</span><strong>\uC0C1\uB2F4 \uC608\uC57D</strong><p>\uC0AC\uD68C\uD0D0\uAD6C \uC57D\uC810 \uBCF4\uC644\uACFC \uB17C\uC220 \uC804\uD615 \uC900\uBE44 \uC0C1\uB2F4 \uD76C\uB9DD</p><div class="portal-slot-actions"><button type="button" class="landing-btn primary" data-booking-slot="2026-03-21T19:00">03-21 19:00 \uC608\uC57D</button><button type="button" class="landing-btn secondary" data-booking-slot="2026-03-22T14:00">03-22 14:00 \uC608\uC57D</button></div></article>' +
                 "</div>" +
             "</section>";
     }

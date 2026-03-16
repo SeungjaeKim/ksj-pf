@@ -1,4 +1,16 @@
 (function (root) {
+    function findStudent(snapshot, studentId) {
+        var index;
+
+        for (index = 0; index < snapshot.students.length; index += 1) {
+            if (snapshot.students[index].id === studentId) {
+                return snapshot.students[index];
+            }
+        }
+
+        return snapshot.students[0];
+    }
+
     function getCrmSnapshot(snapshot, store) {
         var stages = [];
         var index;
@@ -49,8 +61,20 @@
         };
     }
 
+    function getPortalSummary(snapshot, store, studentId) {
+        var student = findStudent(snapshot, studentId);
+
+        return {
+            studentName: student.name,
+            className: student.currentClass,
+            reportState: store && store.publishedReports[studentId] ? "\uBC1C\uD589 \uC644\uB8CC" : "\uC791\uC131 \uC911",
+            bookingText: store && store.portalBookings[studentId] ? store.portalBookings[studentId] : "\uC9C0\uAE08 \uC2AC\uB86F \uC120\uD0DD \uAC00\uB2A5"
+        };
+    }
+
     root.EduFlowMetrics = {
         getCrmSnapshot: getCrmSnapshot,
-        getOwnerKpis: getOwnerKpis
+        getOwnerKpis: getOwnerKpis,
+        getPortalSummary: getPortalSummary
     };
 }(this));

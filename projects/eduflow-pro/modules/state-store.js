@@ -66,6 +66,9 @@
         },
         publishReport: function (store, studentId) {
             store.publishedReports[studentId] = true;
+        },
+        bookConsultation: function (store, studentId, slotId) {
+            store.portalBookings[studentId] = slotId;
         }
     };
 }(this));

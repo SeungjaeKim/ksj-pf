@@ -355,6 +355,29 @@
         assertIncludes(reportDetail, "\uB2E4\uC74C \uC8FC \uC9D1\uC911 \uD3EC\uC778\uD2B8", "report detail next focus block");
     }
 
+    function runPortalStateChecks() {
+        var store;
+        var portalAfter;
+
+        if (!root.EduFlowPortalView) {
+            pushResult("EduFlowPortalView namespace for state flow", false, "EduFlowPortalView missing");
+            return;
+        }
+
+        if (typeof root.EduFlowState.bookConsultation !== "function") {
+            pushResult("bookConsultation exists", false, "bookConsultation missing");
+            return;
+        }
+
+        store = root.EduFlowState.createStore();
+        root.EduFlowState.publishReport(store, "student-minseo");
+        root.EduFlowState.bookConsultation(store, "student-minseo", "2026-03-21T19:00");
+        portalAfter = root.EduFlowPortalView.renderPortalHome(root.EduFlowData.snapshot(), store, "student-minseo");
+
+        assertIncludes(portalAfter, "\uBC1C\uD589 \uC644\uB8CC", "portal reflects report publication");
+        assertIncludes(portalAfter, "2026-03-21", "portal reflects booking date");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
@@ -363,6 +386,7 @@
     runAdminOperationsChecks();
     runAdminSecondaryChecks();
     runPortalChecks();
+    runPortalStateChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
