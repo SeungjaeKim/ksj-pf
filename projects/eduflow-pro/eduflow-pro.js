@@ -8,6 +8,7 @@
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var portalView = "home";
     var portalStudentId = "student-minseo";
+    var mobileView = "today";
     var titles = {
         landing: "EduFlow Pro \uB79C\uB529",
         admin: "EduFlow Pro \uAD00\uB9AC\uC790",
@@ -147,6 +148,24 @@
         bindPortalEvents();
     }
 
+    function bindMobileEvents() {
+        var tabButtons;
+        var index;
+
+        tabButtons = root.querySelectorAll("[data-mobile-view]");
+        for (index = 0; index < tabButtons.length; index += 1) {
+            tabButtons[index].addEventListener("click", function () {
+                mobileView = this.getAttribute("data-mobile-view");
+                renderMobile();
+            });
+        }
+    }
+
+    function renderMobile() {
+        root.innerHTML = window.EduFlowMobileView.renderMobileShell(snapshot, store, mobileView);
+        bindMobileEvents();
+    }
+
     if (!root) {
         return;
     }
@@ -163,6 +182,11 @@
 
     if (surface === "portal" && window.EduFlowPortalView && snapshot && window.EduFlowState) {
         renderPortal();
+        return;
+    }
+
+    if (surface === "mobile" && window.EduFlowMobileView && snapshot && window.EduFlowState) {
+        renderMobile();
         return;
     }
 

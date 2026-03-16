@@ -378,6 +378,29 @@
         assertIncludes(portalAfter, "2026-03-21", "portal reflects booking date");
     }
 
+    function runMobileChecks() {
+        var store = root.EduFlowState.createStore();
+        var todayHtml;
+        var leadsHtml;
+        var alertsHtml;
+
+        loadScript("../modules/mobile-view.js");
+
+        if (!root.EduFlowMobileView) {
+            pushResult("EduFlowMobileView namespace exists", false, "EduFlowMobileView missing");
+            return;
+        }
+
+        todayHtml = root.EduFlowMobileView.renderToday(root.EduFlowData.snapshot(), store);
+        leadsHtml = root.EduFlowMobileView.renderLeads(root.EduFlowData.snapshot(), store);
+        alertsHtml = root.EduFlowMobileView.renderAlerts(root.EduFlowData.snapshot(), store);
+
+        assertIncludes(todayHtml, "\uC624\uB298 \uC2E0\uADDC \uBB38\uC758", "mobile today metric");
+        assertIncludes(todayHtml, "\uAE34\uAE09 \uC54C\uB9BC", "mobile alert metric");
+        assertIncludes(leadsHtml, "\uB4F1\uB85D \uAC00\uB2A5\uC131", "mobile lead confidence tag");
+        assertIncludes(alertsHtml, "\uD6C4\uC18D \uC0C1\uB2F4 \uD544\uC694", "mobile alert feed text");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
@@ -387,6 +410,7 @@
     runAdminSecondaryChecks();
     runPortalChecks();
     runPortalStateChecks();
+    runMobileChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
