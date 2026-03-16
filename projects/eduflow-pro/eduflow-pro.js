@@ -1,6 +1,7 @@
 (function () {
     var surface = document.body.getAttribute("data-surface");
     var root = document.getElementById("appRoot");
+    var snapshot = window.EduFlowData ? window.EduFlowData.snapshot() : null;
     var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var titles = {
@@ -17,6 +18,11 @@
     };
 
     if (!root) {
+        return;
+    }
+
+    if (surface === "landing" && window.EduFlowLandingView && snapshot) {
+        root.innerHTML = window.EduFlowLandingView.renderLanding(snapshot);
         return;
     }
 

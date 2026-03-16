@@ -197,8 +197,23 @@
         assertEqual(root.EduFlowMetrics.getOwnerKpis(root.EduFlowData.snapshot()).cards.length, 5, "owner KPI card count");
     }
 
+    function runLandingChecks() {
+        loadScript("../modules/landing-view.js");
+        assertFileContains("../index.html", 'id="landingHero"', "landing hero section");
+        assertFileContains("../index.html", 'data-cta-target="admin"', "admin CTA exists");
+        assertFileContains("../index.html", 'data-cta-target="portal"', "portal CTA exists");
+
+        if (!root.EduFlowLandingView) {
+            pushResult("EduFlowLandingView namespace exists", false, "EduFlowLandingView missing");
+            return;
+        }
+
+        assertIncludes(root.EduFlowLandingView.renderPreviewStats(root.EduFlowData.snapshot()), "Inquiry to Enrollment", "landing preview stats copy");
+    }
+
     runShellChecks();
     runDataChecks();
+    runLandingChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));
