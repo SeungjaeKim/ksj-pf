@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduFlow Pro State Harness</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding: 32px;
+            font-family: "Segoe UI", sans-serif;
+            color: #f3f7ff;
+            background: linear-gradient(180deg, #132238 0%, #0b1420 100%);
+        }
+
+        .shell {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2rem;
+        }
+
+        #summaryText {
+            color: rgba(243, 247, 255, 0.78);
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .pass {
+            color: #90f0a4;
+        }
+
+        .fail {
+            color: #ff9797;
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <h1>EduFlow Pro State Harness</h1>
+        <p id="summaryText">Running smoke checks for the shared EduFlow Pro surfaces.</p>
+        <ul id="resultsList"></ul>
+    </main>
+    <script src="./state-harness.js"></script>
+</body>
+</html>
