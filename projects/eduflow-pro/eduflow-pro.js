@@ -6,22 +6,32 @@
     var academy = window.EduFlowData ? window.EduFlowData.getAcademy() : null;
     var branches = window.EduFlowData ? window.EduFlowData.getBranches() : [];
     var titles = {
-        landing: "EduFlow Pro Landing Shell",
-        admin: "EduFlow Pro Admin Shell",
-        portal: "EduFlow Pro Portal Shell",
-        mobile: "EduFlow Pro Mobile Shell"
+        landing: "EduFlow Pro \uB79C\uB529",
+        admin: "EduFlow Pro \uAD00\uB9AC\uC790",
+        portal: "EduFlow Pro \uD559\uBD80\uBAA8 \uD3EC\uD138",
+        mobile: "EduFlow Pro \uBAA8\uBC14\uC77C \uC6D0\uC7A5 \uBAA8\uB4DC"
     };
     var descriptions = {
-        landing: "CRM-first academy SaaS mockup landing page will render here.",
-        admin: "Admin workspace shell is ready for the CRM-first operating dashboard.",
-        portal: "Parent and student portal shell is ready for trust-focused views.",
-        mobile: "Mobile owner mode shell is ready for the executive daily summary."
+        landing: "CRM \uC911\uC2EC \uD559\uC6D0 SaaS \uB79C\uB529 \uBAA9\uC5C5 \uD654\uBA74\uC785\uB2C8\uB2E4.",
+        admin: "\uC0C1\uB2F4 CRM \uAE30\uBC18 \uC6B4\uC601 \uB300\uC2DC\uBCF4\uB4DC\uB97C \uC704\uD55C \uAD00\uB9AC\uC790 \uC6CC\uD06C\uC2A4\uD398\uC774\uC2A4\uC785\uB2C8\uB2E4.",
+        portal: "\uD559\uBD80\uBAA8\uC640 \uD559\uC0DD\uC774 \uCD9C\uACB0, \uC219\uC81C, \uB9AC\uD3EC\uD2B8, \uC218\uB0A9 \uD604\uD669\uC744 \uD655\uC778\uD558\uB294 \uD3EC\uD138 \uBAA9\uC5C5\uC785\uB2C8\uB2E4.",
+        mobile: "\uC6D0\uC7A5\uC774 \uC624\uB298\uC758 \uD575\uC2EC \uC6B4\uC601 \uC9C0\uD45C\uB97C \uBE60\uB974\uAC8C \uD655\uC778\uD558\uB294 \uBAA8\uBC14\uC77C \uBAA8\uB4DC \uBAA9\uC5C5\uC785\uB2C8\uB2E4."
     };
 
     function bindAdminEvents() {
         var leadButtons;
+        var navButtons;
         var convertButton;
+        var publishButton;
         var index;
+
+        navButtons = root.querySelectorAll("[data-admin-view]");
+        for (index = 0; index < navButtons.length; index += 1) {
+            navButtons[index].addEventListener("click", function () {
+                window.EduFlowState.setAdminView(store, this.getAttribute("data-admin-view"));
+                renderAdmin();
+            });
+        }
 
         leadButtons = root.querySelectorAll("[data-lead-id]");
         for (index = 0; index < leadButtons.length; index += 1) {
@@ -35,6 +45,14 @@
         if (convertButton) {
             convertButton.addEventListener("click", function () {
                 window.EduFlowState.convertLead(store, store.selectedLeadId);
+                renderAdmin();
+            });
+        }
+
+        publishButton = root.querySelector('[data-action="publish-report"]');
+        if (publishButton) {
+            publishButton.addEventListener("click", function () {
+                window.EduFlowState.publishReport(store, store.selectedStudentId);
                 renderAdmin();
             });
         }
@@ -61,9 +79,9 @@
 
     root.innerHTML = [
         '<section class="shell-placeholder">',
-        "<h1>" + (titles[surface] || "EduFlow Pro Shell") + "</h1>",
-        "<p>" + (descriptions[surface] || "Surface shell is ready.") + "</p>",
-        academy ? "<p><strong>" + academy.name + "</strong> is loaded with " + branches.length + " branches of shared demo data.</p>" : "",
+        "<h1>" + (titles[surface] || "EduFlow Pro") + "</h1>",
+        "<p>" + (descriptions[surface] || "\uD654\uBA74 \uBAA9\uC5C5\uC774 \uC900\uBE44\uB418\uC5C8\uC2B5\uB2C8\uB2E4.") + "</p>",
+        academy ? "<p><strong>" + academy.name + "</strong> \uB354\uBBF8 \uB370\uC774\uD130\uAC00 " + branches.length + "\uAC1C \uC9C0\uC810\uACFC \uC5F0\uACB0\uB418\uC5B4 \uC788\uC2B5\uB2C8\uB2E4.</p>" : "",
         "</section>"
     ].join("");
 }());

@@ -60,6 +60,12 @@
         },
         selectLead: function (store, leadId) {
             store.selectedLeadId = leadId;
+        },
+        setAdminView: function (store, viewId) {
+            store.currentAdminView = viewId;
+        },
+        publishReport: function (store, studentId) {
+            store.publishedReports[studentId] = true;
         }
     };
 }(this));

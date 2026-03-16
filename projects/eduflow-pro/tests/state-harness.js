@@ -195,7 +195,7 @@
             return;
         }
 
-        assertEqual(root.EduFlowData.getAcademy().name, "Apex Admissions Lab", "academy name");
+        assertEqual(root.EduFlowData.getAcademy().name, "\uC5D0\uC774\uD399\uC2A4 \uC785\uC2DC\uC804\uB7B5 \uD559\uC6D0", "academy name");
         assertEqual(root.EduFlowData.getBranches().length, 3, "three branches loaded");
         assertEqual(root.EduFlowMetrics.getCrmSnapshot(root.EduFlowData.snapshot()).stages.length, 6, "crm stage count");
         assertEqual(root.EduFlowMetrics.getOwnerKpis(root.EduFlowData.snapshot()).cards.length, 5, "owner KPI card count");
@@ -212,7 +212,7 @@
             return;
         }
 
-        assertIncludes(root.EduFlowLandingView.renderPreviewStats(root.EduFlowData.snapshot()), "Inquiry to Enrollment", "landing preview stats copy");
+        assertIncludes(root.EduFlowLandingView.renderPreviewStats(root.EduFlowData.snapshot()), "\uBB38\uC758 \uB300\uBE44 \uB4F1\uB85D \uC804\uD658\uC728", "landing preview stats copy");
     }
 
     function runAdminShellChecks() {
@@ -225,9 +225,9 @@
         }
 
         crmHtml = root.EduFlowAdminView.renderCrmBoard(root.EduFlowData.snapshot(), root.EduFlowState.createStore());
-        assertIncludes(crmHtml, "Inquiry Received", "crm stage heading");
-        assertIncludes(crmHtml, "Trial Completed", "trial completed heading");
-        assertIncludes(crmHtml, "Choi Min-seo", "featured lead card");
+        assertIncludes(crmHtml, "\uBB38\uC758 \uC811\uC218", "crm stage heading");
+        assertIncludes(crmHtml, "\uCCB4\uD5D8 \uC644\uB8CC", "trial completed heading");
+        assertIncludes(crmHtml, "\uCD5C\uBBFC\uC11C", "featured lead card");
     }
 
     function runConversionChecks() {
@@ -259,11 +259,50 @@
         assertEqual(root.EduFlowState.getLeadStage(store, "lead-minseo"), "enrolled", "lead moved to enrolled stage");
     }
 
+    function runAdminOperationsChecks() {
+        var store = root.EduFlowState.createStore();
+        var dashboardHtml;
+        var studentHtml;
+        var paymentHtml;
+        var reportHtml;
+
+        if (typeof root.EduFlowAdminView.renderOwnerDashboard !== "function") {
+            pushResult("renderOwnerDashboard exists", false, "renderOwnerDashboard missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderStudentDetail !== "function") {
+            pushResult("renderStudentDetail exists", false, "renderStudentDetail missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderPaymentCenter !== "function") {
+            pushResult("renderPaymentCenter exists", false, "renderPaymentCenter missing");
+            return;
+        }
+
+        if (typeof root.EduFlowAdminView.renderReportEditor !== "function") {
+            pushResult("renderReportEditor exists", false, "renderReportEditor missing");
+            return;
+        }
+
+        dashboardHtml = root.EduFlowAdminView.renderOwnerDashboard(root.EduFlowData.snapshot(), store);
+        studentHtml = root.EduFlowAdminView.renderStudentDetail(root.EduFlowData.snapshot(), store, "student-minseo");
+        paymentHtml = root.EduFlowAdminView.renderPaymentCenter(root.EduFlowData.snapshot(), store);
+        reportHtml = root.EduFlowAdminView.renderReportEditor(root.EduFlowData.snapshot(), store, "student-minseo");
+
+        assertIncludes(dashboardHtml, "\uC624\uB298 \uC2E0\uADDC \uBB38\uC758", "dashboard KPI label");
+        assertIncludes(studentHtml, "\uBAA9\uD45C \uD559\uAD50/\uD2B8\uB799", "student 360 goal block");
+        assertIncludes(paymentHtml, "\uBBF8\uB0A9 \uAD00\uB9AC", "payment overdue block");
+        assertIncludes(reportHtml, "AI \uCD08\uC548 \uC0DD\uC131", "report editor AI draft button");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
     runAdminShellChecks();
     runConversionChecks();
+    runAdminOperationsChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));

@@ -239,6 +239,7 @@ body {
 .admin-sidebar,
 .admin-topbar,
 .admin-stage,
+.admin-panel-stack,
 .crm-column,
 .admin-detail-panel {
     border: 1px solid var(--ef-border);
@@ -284,6 +285,7 @@ body {
 
 .admin-topbar,
 .admin-stage,
+.admin-panel-stack,
 .crm-column,
 .admin-detail-panel {
     border-radius: 28px;
@@ -302,6 +304,12 @@ body {
 }
 
 .admin-stage {
+    padding: 24px;
+    display: grid;
+    gap: 18px;
+}
+
+.admin-panel-stack {
     padding: 24px;
     display: grid;
     gap: 18px;
@@ -420,4 +428,23 @@ body {
     display: grid;
     gap: 12px;
     margin-top: 18px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.metric-card {
+    padding: 18px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.metric-card strong {
+    display: block;
+    margin-top: 10px;
+    font-size: 1.8rem;
 }

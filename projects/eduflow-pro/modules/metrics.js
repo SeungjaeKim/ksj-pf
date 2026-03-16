@@ -40,11 +40,11 @@
 
         return {
             cards: [
-                { id: "new-inquiries", label: "New Inquiries Today", value: 12 },
-                { id: "today-consults", label: "Today's Consultations", value: 8 },
-                { id: "conversion-rate", label: "Conversion Rate", value: "31%" },
-                { id: "overdue", label: "Overdue Payments", value: 16 },
-                { id: "students", label: "Active Students", value: totalStudents }
+                { id: "new-inquiries", label: "\uC624\uB298 \uC2E0\uADDC \uBB38\uC758", value: 12 },
+                { id: "today-consults", label: "\uC624\uB298 \uC0C1\uB2F4 \uC77C\uC815", value: 8 },
+                { id: "conversion-rate", label: "\uB4F1\uB85D \uC804\uD658\uC728", value: "31%" },
+                { id: "overdue", label: "\uBBF8\uB0A9 \uAD00\uB9AC", value: 16 },
+                { id: "students", label: "\uC7AC\uC6D0 \uD559\uC0DD \uC218", value: totalStudents }
             ]
         };
     }
