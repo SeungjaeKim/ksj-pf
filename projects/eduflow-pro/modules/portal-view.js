@@ -26,11 +26,12 @@
     function renderPortalTabs(activeView) {
         function renderTab(label, viewId) {
             var activeClass = activeView === viewId ? " is-active" : "";
-            return '<button type="button" class="portal-tab' + activeClass + '" data-portal-view="' + viewId + '">' + label + "</button>";
+            var pressed = activeView === viewId ? "true" : "false";
+            return '<button type="button" class="portal-tab' + activeClass + '" data-portal-view="' + viewId + '" aria-pressed="' + pressed + '">' + label + "</button>";
         }
 
         return "" +
-            '<div class="portal-nav">' +
+            '<nav class="portal-nav" aria-label="\uD3EC\uD138 \uD0D0\uC0C9">' +
                 renderTab("\uD648", "home") +
                 renderTab("\uB9AC\uD3EC\uD2B8", "report") +
                 renderTab("\uACB0\uC81C", "payments") +
@@ -38,7 +39,7 @@
                 renderTab("\uC219\uC81C", "homework") +
                 renderTab("\uACF5\uC9C0", "notices") +
                 renderTab("\uC0C1\uB2F4 \uC608\uC57D", "booking") +
-            "</div>";
+            "</nav>";
     }
 
     function renderPortalHome(snapshot, store, studentId) {

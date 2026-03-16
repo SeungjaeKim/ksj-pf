@@ -148,11 +148,12 @@
     function renderSidebar() {
         function renderNavItem(label, viewId, store) {
             var activeClass = store.currentAdminView === viewId ? " is-active" : "";
-            return '<button type="button" class="admin-nav-item' + activeClass + '" data-admin-view="' + viewId + '">' + label + "</button>";
+            var pressed = store.currentAdminView === viewId ? "true" : "false";
+            return '<button type="button" class="admin-nav-item' + activeClass + '" data-admin-view="' + viewId + '" aria-pressed="' + pressed + '">' + label + "</button>";
         }
 
         return "" +
-            '<nav class="admin-sidebar">' +
+            '<nav class="admin-sidebar" aria-label="\uAD00\uB9AC\uC790 \uD0D0\uC0C9">' +
                 '<a href="#" class="admin-brand">EduFlow Pro</a>' +
                 renderNavItem("\uC0C1\uB2F4 CRM", "crm", root.__eduFlowActiveStore) +
                 renderNavItem("\uC6D0\uC7A5 \uB300\uC2DC\uBCF4\uB4DC", "dashboard", root.__eduFlowActiveStore) +

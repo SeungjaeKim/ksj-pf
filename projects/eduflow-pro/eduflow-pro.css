@@ -536,6 +536,23 @@ body {
     }
 }
 
+@media (max-width: 980px) {
+    .admin-shell,
+    .admin-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-sidebar {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+    }
+
+    .admin-brand {
+        grid-column: 1 / -1;
+    }
+}
+
 .portal-shell {
     display: grid;
     gap: 20px;
@@ -749,5 +766,28 @@ body {
     .portal-grid-wide {
         grid-template-columns: 1fr;
         display: grid;
+    }
+}
+
+@media (max-width: 640px) {
+    .portal-header,
+    .portal-panel-stack,
+    .mobile-header,
+    .mobile-card {
+        border-radius: 22px;
+    }
+
+    .landing-section.split-showcase,
+    .feature-band,
+    .pricing-band,
+    .portal-grid,
+    .portal-grid-wide,
+    .mobile-stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .portal-header .landing-btn {
+        width: 100%;
+        text-align: center;
     }
 }

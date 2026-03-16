@@ -401,6 +401,19 @@
         assertIncludes(alertsHtml, "\uD6C4\uC18D \uC0C1\uB2F4 \uD544\uC694", "mobile alert feed text");
     }
 
+    function runPolishChecks() {
+        assertFileContains("../index.html", "<main", "landing main landmark");
+
+        if (!root.EduFlowAdminView || !root.EduFlowPortalView || !root.EduFlowMobileView) {
+            pushResult("surface namespaces for polish", false, "one or more surface namespaces missing");
+            return;
+        }
+
+        assertIncludes(root.EduFlowAdminView.renderAdminShell(root.EduFlowData.snapshot(), root.EduFlowState.createStore()), 'aria-label="\uAD00\uB9AC\uC790 \uD0D0\uC0C9"', "admin nav label");
+        assertIncludes(root.EduFlowPortalView.renderPortalShell(root.EduFlowData.snapshot(), root.EduFlowState.createStore(), "student-minseo", "home"), 'aria-label="\uD3EC\uD138 \uD0D0\uC0C9"', "portal nav label");
+        assertIncludes(root.EduFlowMobileView.renderMobileShell(root.EduFlowData.snapshot(), root.EduFlowState.createStore(), "today"), 'aria-label="\uBAA8\uBC14\uC77C \uC6D0\uC7A5 \uD0D0\uC0C9"', "mobile nav label");
+    }
+
     runShellChecks();
     runDataChecks();
     runLandingChecks();
@@ -411,6 +424,7 @@
     runPortalChecks();
     runPortalStateChecks();
     runMobileChecks();
+    runPolishChecks();
     printWScriptResults();
     renderBrowserResults();
 }(this));

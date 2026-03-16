@@ -2,16 +2,17 @@
     function renderMobileTabs(activeView) {
         function renderTab(label, viewId) {
             var activeClass = activeView === viewId ? " is-active" : "";
-            return '<button type="button" class="mobile-tab' + activeClass + '" data-mobile-view="' + viewId + '">' + label + "</button>";
+            var pressed = activeView === viewId ? "true" : "false";
+            return '<button type="button" class="mobile-tab' + activeClass + '" data-mobile-view="' + viewId + '" aria-pressed="' + pressed + '">' + label + "</button>";
         }
 
         return "" +
-            '<div class="mobile-nav">' +
+            '<nav class="mobile-nav" aria-label="\uBAA8\uBC14\uC77C \uC6D0\uC7A5 \uD0D0\uC0C9">' +
                 renderTab("\uC624\uB298", "today") +
                 renderTab("\uB9AC\uB4DC", "leads") +
                 renderTab("\uC218\uB0A9", "payments") +
                 renderTab("\uC54C\uB9BC", "alerts") +
-            "</div>";
+            "</nav>";
     }
 
     function renderToday(snapshot) {
