@@ -77,13 +77,57 @@
 
     function renderLeadCard(lead, store) {
         var selectedClass = lead.id === store.selectedLeadId ? " is-selected" : "";
+        var currentStage = root.EduFlowState.getLeadStage(store, lead.id);
 
         return "" +
-            '<button type="button" class="crm-lead-card' + selectedClass + '" data-lead-id="' + lead.id + '">' +
+            '<button type="button" class="crm-lead-card' + selectedClass + '" data-lead-id="' + lead.id + '" data-stage-id="' + currentStage + '" draggable="true">' +
                 '<span class="crm-lead-grade">' + lead.grade + "</span>" +
                 '<strong class="crm-lead-name">' + lead.name + "</strong>" +
                 '<span class="crm-lead-source">' + lead.source + "</span>" +
             "</button>";
+    }
+
+    function renderStageActions(snapshot, currentStage) {
+        var actions = [];
+        var index;
+        var stage;
+        var activeClass;
+
+        for (index = 0; index < snapshot.crmStages.length; index += 1) {
+            stage = snapshot.crmStages[index];
+            activeClass = stage.id === currentStage ? " is-active" : "";
+            actions.push(
+                '<button type="button" class="crm-stage-action' + activeClass + '" data-stage-action="' + stage.id + '">' + stage.label + "</button>"
+            );
+        }
+
+        return '<div class="crm-stage-actions">' + actions.join("") + "</div>";
+    }
+
+    function renderPendingStageOverlay(snapshot, store) {
+        var pending = store.pendingStageChange;
+        var lead;
+        var stageLabel;
+
+        if (!pending) {
+            return "";
+        }
+
+        lead = findLead(snapshot, pending.leadId);
+        stageLabel = findStageLabel(snapshot, pending.stageId);
+
+        return "" +
+            '<div class="crm-confirm-overlay" role="presentation">' +
+                '<div class="crm-confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="crmStageConfirmTitle">' +
+                    '<span class="panel-label">\uC911\uC694 \uB2E8\uACC4 \uC774\uB3D9</span>' +
+                    '<h2 id="crmStageConfirmTitle">\uB2E8\uACC4 \uBCC0\uACBD \uD655\uC778</h2>' +
+                    '<p class="detail-muted">' + (lead ? lead.name : "\uC120\uD0DD\uD55C \uB9AC\uB4DC") + ' \uB9AC\uB4DC\uB97C "' + stageLabel + '" \uB2E8\uACC4\uB85C \uC774\uB3D9\uD560\uAE4C\uC694?</p>' +
+                    '<div class="detail-actions">' +
+                        '<button type="button" class="landing-btn secondary" data-confirm-stage-change="cancel">\uCDE8\uC18C</button>' +
+                        '<button type="button" class="landing-btn primary" data-confirm-stage-change="confirm">\uC774\uB3D9 \uD655\uC778</button>' +
+                    "</div>" +
+                "</div>" +
+            "</div>";
     }
 
     function renderCrmBoard(snapshot, store) {
@@ -106,7 +150,7 @@
             }
 
             columns.push("" +
-                '<section class="crm-column">' +
+                '<section class="crm-column" data-stage-id="' + stage.id + '">' +
                     '<header class="crm-column-header"><h3>' + stage.label + "</h3><span>" + String(cards.length) + "</span></header>" +
                     '<div class="crm-column-body">' + cards.join("") + "</div>" +
                 "</section>");
@@ -131,6 +175,7 @@
                 '<span class="panel-label">\uC120\uD0DD \uB9AC\uB4DC</span>' +
                 "<h2>" + lead.name + "</h2>" +
                 '<p class="detail-muted">' + lead.grade + " | " + lead.source + "</p>" +
+                renderStageActions(snapshot, currentStage) +
                 '<div class="detail-stack">' +
                     "<article><strong>\uD604\uC7AC \uB2E8\uACC4</strong><p>" + findStageLabel(snapshot, currentStage) + "</p></article>" +
                     "<article><strong>\uBAA9\uD45C \uAD00\uB9AC \uCF54\uC2A4</strong><p>" + (lead.targetTrack || "\uC785\uC2DC \uCEE8\uC124\uD305") + "</p></article>" +
@@ -403,6 +448,7 @@
                     renderCrmBoard(snapshot, store) +
                     renderLeadDetail(snapshot, store) +
                 "</div>" +
+                renderPendingStageOverlay(snapshot, store) +
             "</section>";
     }
 

@@ -275,6 +275,18 @@
         assertEqual(root.EduFlowState.requiresLeadStageConfirmation("scheduled"), false, "scheduled does not require confirmation");
     }
 
+    function runCrmDragMarkupChecks() {
+        var store = root.EduFlowState.createStore();
+        var crmShell = root.EduFlowAdminView.renderAdminShell(root.EduFlowData.snapshot(), store);
+
+        assertIncludes(crmShell, 'draggable="true"', "crm lead draggable marker");
+        assertIncludes(crmShell, 'data-stage-id="scheduled"', "crm drop target marker");
+        assertIncludes(crmShell, 'data-stage-action="scheduled"', "mobile fallback stage action");
+
+        store.pendingStageChange = { leadId: "lead-minseo", stageId: "enrolled" };
+        assertIncludes(root.EduFlowAdminView.renderAdminShell(root.EduFlowData.snapshot(), store), "\uB2E8\uACC4 \uBCC0\uACBD \uD655\uC778", "crm confirmation overlay");
+    }
+
     function runAdminOperationsChecks() {
         var store = root.EduFlowState.createStore();
         var dashboardHtml;
@@ -436,6 +448,7 @@
     runAdminShellChecks();
     runConversionChecks();
     runCrmDragStateChecks();
+    runCrmDragMarkupChecks();
     runAdminOperationsChecks();
     runAdminSecondaryChecks();
     runPortalChecks();
