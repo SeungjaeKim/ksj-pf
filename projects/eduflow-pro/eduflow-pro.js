@@ -9,6 +9,7 @@
     var portalView = "home";
     var portalStudentId = "student-minseo";
     var mobileView = "today";
+    var draggedLeadId = "";
     var titles = {
         landing: "EduFlow Pro \uB79C\uB529",
         admin: "EduFlow Pro \uAD00\uB9AC\uC790",
@@ -70,9 +71,73 @@
         }
     }
 
+    function clearCrmDragState() {
+        var activeDropTargets;
+        var draggingCards;
+        var index;
+
+        activeDropTargets = root.querySelectorAll(".crm-column.is-drop-target");
+        for (index = 0; index < activeDropTargets.length; index += 1) {
+            activeDropTargets[index].classList.remove("is-drop-target");
+        }
+
+        draggingCards = root.querySelectorAll(".crm-lead-card.is-dragging");
+        for (index = 0; index < draggingCards.length; index += 1) {
+            draggingCards[index].classList.remove("is-dragging");
+        }
+
+        draggedLeadId = "";
+    }
+
+    function applyLeadStageChange(leadId, stageId) {
+        if (!leadId || !stageId) {
+            return;
+        }
+
+        window.EduFlowState.selectLead(store, leadId);
+
+        if (window.EduFlowState.getLeadStage(store, leadId) === stageId) {
+            return;
+        }
+
+        if (stageId === "enrolled") {
+            window.EduFlowState.convertLead(store, leadId);
+            return;
+        }
+
+        window.EduFlowState.moveLeadToStage(store, leadId, stageId);
+    }
+
+    function requestLeadStageChange(leadId, stageId) {
+        if (!leadId || !stageId) {
+            return;
+        }
+
+        window.EduFlowState.selectLead(store, leadId);
+
+        if (window.EduFlowState.getLeadStage(store, leadId) === stageId) {
+            persistStore();
+            renderAdmin();
+            return;
+        }
+
+        if (window.EduFlowState.requiresLeadStageConfirmation(stageId)) {
+            window.EduFlowState.startPendingStageChange(store, leadId, stageId);
+        } else {
+            window.EduFlowState.clearPendingStageChange(store);
+            applyLeadStageChange(leadId, stageId);
+        }
+
+        persistStore();
+        renderAdmin();
+    }
+
     function bindAdminEvents() {
         var leadButtons;
         var navButtons;
+        var stageColumns;
+        var stageActionButtons;
+        var confirmButtons;
         var convertButton;
         var publishButton;
         var index;
@@ -90,6 +155,82 @@
         for (index = 0; index < leadButtons.length; index += 1) {
             leadButtons[index].addEventListener("click", function () {
                 window.EduFlowState.selectLead(store, this.getAttribute("data-lead-id"));
+                persistStore();
+                renderAdmin();
+            });
+
+            leadButtons[index].addEventListener("dragstart", function (event) {
+                draggedLeadId = this.getAttribute("data-lead-id");
+                this.classList.add("is-dragging");
+                if (event.dataTransfer) {
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setData("text/plain", draggedLeadId);
+                }
+            });
+
+            leadButtons[index].addEventListener("dragend", function () {
+                clearCrmDragState();
+            });
+        }
+
+        stageColumns = root.querySelectorAll(".crm-column[data-stage-id]");
+        for (index = 0; index < stageColumns.length; index += 1) {
+            stageColumns[index].addEventListener("dragover", function (event) {
+                event.preventDefault();
+                this.classList.add("is-drop-target");
+                if (event.dataTransfer) {
+                    event.dataTransfer.dropEffect = "move";
+                }
+            });
+
+            stageColumns[index].addEventListener("dragenter", function (event) {
+                event.preventDefault();
+                this.classList.add("is-drop-target");
+            });
+
+            stageColumns[index].addEventListener("dragleave", function () {
+                this.classList.remove("is-drop-target");
+            });
+
+            stageColumns[index].addEventListener("drop", function (event) {
+                var leadId = draggedLeadId;
+
+                event.preventDefault();
+                clearCrmDragState();
+
+                if (!leadId && event.dataTransfer) {
+                    leadId = event.dataTransfer.getData("text/plain");
+                }
+
+                requestLeadStageChange(leadId, this.getAttribute("data-stage-id"));
+            });
+        }
+
+        stageActionButtons = root.querySelectorAll("[data-stage-action]");
+        for (index = 0; index < stageActionButtons.length; index += 1) {
+            stageActionButtons[index].addEventListener("click", function () {
+                requestLeadStageChange(store.selectedLeadId, this.getAttribute("data-stage-action"));
+            });
+        }
+
+        confirmButtons = root.querySelectorAll("[data-confirm-stage-change]");
+        for (index = 0; index < confirmButtons.length; index += 1) {
+            confirmButtons[index].addEventListener("click", function () {
+                var pending = store.pendingStageChange;
+
+                if (this.getAttribute("data-confirm-stage-change") === "cancel") {
+                    window.EduFlowState.clearPendingStageChange(store);
+                    persistStore();
+                    renderAdmin();
+                    return;
+                }
+
+                if (!pending) {
+                    return;
+                }
+
+                applyLeadStageChange(pending.leadId, pending.stageId);
+                window.EduFlowState.clearPendingStageChange(store);
                 persistStore();
                 renderAdmin();
             });

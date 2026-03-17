@@ -287,6 +287,22 @@
         assertIncludes(root.EduFlowAdminView.renderAdminShell(root.EduFlowData.snapshot(), store), "\uB2E8\uACC4 \uBCC0\uACBD \uD655\uC778", "crm confirmation overlay");
     }
 
+    function runCrmPendingStageChecks() {
+        var store = root.EduFlowState.createStore();
+
+        pushResult("startPendingStageChange exists", typeof root.EduFlowState.startPendingStageChange === "function", "startPendingStageChange missing");
+        pushResult("clearPendingStageChange exists", typeof root.EduFlowState.clearPendingStageChange === "function", "clearPendingStageChange missing");
+
+        if (typeof root.EduFlowState.startPendingStageChange !== "function" || typeof root.EduFlowState.clearPendingStageChange !== "function") {
+            return;
+        }
+
+        root.EduFlowState.startPendingStageChange(store, "lead-minseo", "enrolled");
+        assertEqual(store.pendingStageChange.stageId, "enrolled", "pending stage stored");
+        root.EduFlowState.clearPendingStageChange(store);
+        assertEqual(store.pendingStageChange, null, "pending stage cleared");
+    }
+
     function runAdminOperationsChecks() {
         var store = root.EduFlowState.createStore();
         var dashboardHtml;
@@ -449,6 +465,7 @@
     runConversionChecks();
     runCrmDragStateChecks();
     runCrmDragMarkupChecks();
+    runCrmPendingStageChecks();
     runAdminOperationsChecks();
     runAdminSecondaryChecks();
     runPortalChecks();

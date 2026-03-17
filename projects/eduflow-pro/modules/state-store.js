@@ -28,6 +28,7 @@
                 selectedLeadId: "lead-minseo",
                 selectedStudentId: "student-donghyun",
                 leadStages: buildDefaultLeadStages(),
+                pendingStageChange: null,
                 convertedLeadIds: {},
                 createdInvoices: {},
                 draftReports: {},
@@ -49,6 +50,15 @@
         requiresLeadStageConfirmation: function (stageId) {
             return stageId === "enrolled" || stageId === "lost";
         },
+        startPendingStageChange: function (store, leadId, stageId) {
+            store.pendingStageChange = {
+                leadId: leadId,
+                stageId: stageId
+            };
+        },
+        clearPendingStageChange: function (store) {
+            store.pendingStageChange = null;
+        },
         getLinkedStudentId: function (store, leadId) {
             return store.convertedLeadIds[leadId] || "";
         },
@@ -67,6 +77,7 @@
                 status: "draft"
             };
             store.leadStages[leadId] = "enrolled";
+            store.pendingStageChange = null;
             store.selectedStudentId = studentId;
         },
         selectLead: function (store, leadId) {
