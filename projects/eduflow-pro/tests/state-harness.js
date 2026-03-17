@@ -259,6 +259,22 @@
         assertEqual(root.EduFlowState.getLeadStage(store, "lead-minseo"), "enrolled", "lead moved to enrolled stage");
     }
 
+    function runCrmDragStateChecks() {
+        var store = root.EduFlowState.createStore();
+
+        pushResult("moveLeadToStage exists", typeof root.EduFlowState.moveLeadToStage === "function", "moveLeadToStage missing");
+        pushResult("requiresLeadStageConfirmation exists", typeof root.EduFlowState.requiresLeadStageConfirmation === "function", "requiresLeadStageConfirmation missing");
+
+        if (typeof root.EduFlowState.moveLeadToStage !== "function" || typeof root.EduFlowState.requiresLeadStageConfirmation !== "function") {
+            return;
+        }
+
+        root.EduFlowState.moveLeadToStage(store, "lead-minseo", "scheduled");
+        assertEqual(root.EduFlowState.getLeadStage(store, "lead-minseo"), "scheduled", "lead moved immediately");
+        assertEqual(root.EduFlowState.requiresLeadStageConfirmation("enrolled"), true, "enrolled requires confirmation");
+        assertEqual(root.EduFlowState.requiresLeadStageConfirmation("scheduled"), false, "scheduled does not require confirmation");
+    }
+
     function runAdminOperationsChecks() {
         var store = root.EduFlowState.createStore();
         var dashboardHtml;
@@ -419,6 +435,7 @@
     runLandingChecks();
     runAdminShellChecks();
     runConversionChecks();
+    runCrmDragStateChecks();
     runAdminOperationsChecks();
     runAdminSecondaryChecks();
     runPortalChecks();

@@ -38,6 +38,17 @@
         getLeadStage: function (store, leadId) {
             return store.leadStages[leadId] || "inquiry";
         },
+        moveLeadToStage: function (store, leadId, stageId) {
+            if (!leadId || !stageId) {
+                return false;
+            }
+
+            store.leadStages[leadId] = stageId;
+            return true;
+        },
+        requiresLeadStageConfirmation: function (stageId) {
+            return stageId === "enrolled" || stageId === "lost";
+        },
         getLinkedStudentId: function (store, leadId) {
             return store.convertedLeadIds[leadId] || "";
         },
