@@ -174,7 +174,59 @@ function setupCanvasBackground() {
     animateCanvas();
 }
 
+function setupMobileNav() {
+    const toggle = document.querySelector("[data-mobile-nav-toggle]");
+    const panel = document.querySelector("[data-mobile-nav-panel]");
+    const nav = document.querySelector(".glass-nav");
+    let isOpen = false;
+
+    if (!toggle || !panel || !nav) {
+        return;
+    }
+
+    const setMenuState = function(nextOpen) {
+        isOpen = !!nextOpen;
+        toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        toggle.setAttribute("aria-label", isOpen ? "메뉴 닫기" : "메뉴 열기");
+
+        if (isOpen) {
+            panel.hidden = false;
+            panel.classList.add("is-open");
+            return;
+        }
+
+        panel.classList.remove("is-open");
+        panel.hidden = true;
+    };
+
+    toggle.addEventListener("click", function() {
+        setMenuState(!isOpen);
+    });
+
+    panel.querySelectorAll("a").forEach(function(link) {
+        link.addEventListener("click", function() {
+            setMenuState(false);
+        });
+    });
+
+    document.addEventListener("click", function(event) {
+        if (!isOpen || nav.contains(event.target)) {
+            return;
+        }
+
+        setMenuState(false);
+    });
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape" && isOpen) {
+            setMenuState(false);
+        }
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    setupMobileNav();
+
     const typewriter = document.getElementById("typewriter");
     if (typewriter) {
         typingEffect(typewriter);

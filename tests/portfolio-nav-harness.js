@@ -98,7 +98,16 @@
         assertIncludes(styles, "@media (max-width: 768px)", "mobile nav responsive breakpoint");
     }
 
+    function runScriptChecks() {
+        var script = readText("../script.js");
+
+        assertIncludes(script, "data-mobile-nav-toggle", "mobile nav toggle query");
+        assertIncludes(script, "keydown", "mobile nav escape handling");
+        assertIncludes(script, "aria-expanded", "mobile nav aria update");
+    }
+
     runMarkupChecks();
     runStyleChecks();
+    runScriptChecks();
     printResults();
 }(this));
