@@ -90,6 +90,15 @@
         assertIncludes(readText("../index.html"), 'aria-controls=\"mobileNavPanel\"', "mobile nav aria controls");
     }
 
+    function runStyleChecks() {
+        var styles = readText("../styles.css");
+
+        assertIncludes(styles, ".mobile-nav-toggle", "mobile nav toggle style");
+        assertIncludes(styles, ".mobile-nav-panel.is-open", "mobile nav open state style");
+        assertIncludes(styles, "@media (max-width: 768px)", "mobile nav responsive breakpoint");
+    }
+
     runMarkupChecks();
+    runStyleChecks();
     printResults();
 }(this));

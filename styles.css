@@ -151,6 +151,69 @@ h1, h2, h3, .logo {
     color: var(--secondary-color);
 }
 
+.mobile-nav-toggle {
+    display: none;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-main);
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.mobile-nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.mobile-nav-panel {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 20px;
+    min-width: 220px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    background: rgba(10, 10, 16, 0.92);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.mobile-nav-panel[hidden] {
+    display: none;
+}
+
+.mobile-nav-panel.is-open {
+    display: grid;
+    gap: 6px;
+}
+
+.mobile-nav-panel a {
+    color: var(--text-main);
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 16px;
+    transition: background 0.25s ease, color 0.25s ease;
+}
+
+.mobile-nav-panel a:hover,
+.mobile-nav-panel a.active {
+    color: var(--secondary-color);
+    background: rgba(255, 255, 255, 0.06);
+}
+
 /* Hero Section */
 .hero-section {
     min-height: 100vh;
@@ -290,6 +353,9 @@ h1, h2, h3, .logo {
     }
     .nav-links {
         display: none; /* 모바일 메뉴는 차후 구현 */
+    }
+    .mobile-nav-toggle {
+        display: inline-flex;
     }
     .name {
         font-size: 3rem;
