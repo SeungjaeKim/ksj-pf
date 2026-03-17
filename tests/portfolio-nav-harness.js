@@ -83,7 +83,9 @@
 
     function runMarkupChecks() {
         assertIncludes(readText("../index.html"), 'data-mobile-nav-toggle', "home mobile nav toggle");
-        assertIncludes(readText("../about/index.html"), '../about/index.html', "about mobile nav link");
+        assertIncludes(readText("../index.html"), 'href="about/index.html"', "home about link in mobile nav");
+        assertIncludes(readText("../about/index.html"), 'href="index.html"', "about self link in mobile nav");
+        assertIncludes(readText("../projects/index.html"), 'href="../about/index.html"', "projects about link in mobile nav");
         assertIncludes(readText("../projects/index.html"), 'data-mobile-nav-panel', "projects mobile nav panel");
         assertIncludes(readText("../index.html"), 'aria-controls=\"mobileNavPanel\"', "mobile nav aria controls");
     }
