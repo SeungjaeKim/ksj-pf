@@ -1,4 +1,5 @@
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const SpeechRecognitionHelper = window.LiveTranslationRecognition;
 
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.getElementById("startBtn");
@@ -15,9 +16,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let recognition = null;
     let isListening = false;
     let isTranslating = false;
-    let finalTranscript = [];
-    let translatedTranscript = [];
-    let pendingSegments = [];
+    let recognitionBuffer = SpeechRecognitionHelper ? SpeechRecognitionHelper.createRecognitionBuffer() : null;
+    let translationQueue = [];
+    let translationTimers = {};
     let availableVoices = [];
 
     function getRecognitionLanguage() {
@@ -43,11 +44,9 @@ document.addEventListener("DOMContentLoaded", () => {
         speechState.textContent = message;
     }
 
-    function updateTextareas(interimText) {
-        sourceText.value = [finalTranscript.join("\n"), interimText]
-            .filter((part) => part && part.trim() !== "")
-            .join("\n");
-        translatedText.value = translatedTranscript.join("\n");
+    function renderTextareas() {
+        sourceText.value = recognitionBuffer ? SpeechRecognitionHelper.getSourceText(recognitionBuffer) : "";
+        translatedText.value = recognitionBuffer ? SpeechRecognitionHelper.getTranslatedText(recognitionBuffer) : "";
         sourceText.scrollTop = sourceText.scrollHeight;
         translatedText.scrollTop = translatedText.scrollHeight;
     }
@@ -58,10 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function clearTranslationTimers() {
+        Object.keys(translationTimers).forEach((key) => {
+            window.clearTimeout(translationTimers[key]);
+        });
+        translationTimers = {};
+    }
+
     function resetSession() {
-        finalTranscript = [];
-        translatedTranscript = [];
-        pendingSegments = [];
+        recognitionBuffer = SpeechRecognitionHelper ? SpeechRecognitionHelper.createRecognitionBuffer() : null;
+        translationQueue = [];
+        clearTranslationTimers();
         sourceText.value = "";
         translatedText.value = "";
         cancelSpeech();
@@ -156,29 +162,82 @@ document.addEventListener("DOMContentLoaded", () => {
         window.speechSynthesis.speak(utterance);
     }
 
+    function queueTranslation(index) {
+        if (translationQueue.indexOf(index) === -1) {
+            translationQueue.push(index);
+        }
+        drainTranslationQueue();
+    }
+
+    function scheduleTranslation(index) {
+        if (!recognitionBuffer) {
+            return;
+        }
+
+        if (translationTimers[index]) {
+            window.clearTimeout(translationTimers[index]);
+        }
+
+        translationTimers[index] = window.setTimeout(() => {
+            delete translationTimers[index];
+            queueTranslation(index);
+        }, 700);
+    }
+
     async function drainTranslationQueue() {
-        if (isTranslating || pendingSegments.length === 0) {
+        if (isTranslating || translationQueue.length === 0 || !recognitionBuffer) {
+            return;
+        }
+
+        const nextIndex = translationQueue.shift();
+        const nextSegment = SpeechRecognitionHelper.getStableFinalTranscript(recognitionBuffer, nextIndex);
+
+        if (!nextSegment) {
+            drainTranslationQueue();
+            return;
+        }
+
+        if (SpeechRecognitionHelper.getTranslatedSourceTranscript(recognitionBuffer, nextIndex) === nextSegment) {
+            drainTranslationQueue();
             return;
         }
 
         isTranslating = true;
-        const nextSegment = pendingSegments.shift();
         setStatus("번역 중", "working");
 
         try {
             const translatedSegment = await translateText(nextSegment);
-            translatedTranscript.push(translatedSegment || "[번역 결과 없음]");
-            updateTextareas("");
-            speakText(translatedSegment);
+            const stableSegment = SpeechRecognitionHelper.getStableFinalTranscript(recognitionBuffer, nextIndex);
+
+            if (stableSegment !== nextSegment) {
+                scheduleTranslation(nextIndex);
+            } else {
+                SpeechRecognitionHelper.updateTranslatedSegment(
+                    recognitionBuffer,
+                    nextIndex,
+                    nextSegment,
+                    translatedSegment || "[번역 결과 없음]"
+                );
+                renderTextareas();
+                speakText(translatedSegment);
+            }
+
             setStatus("실시간 통역 중", "live");
         } catch (error) {
-            translatedTranscript.push("[번역 실패] " + nextSegment);
-            updateTextareas("");
+            const stableSegment = SpeechRecognitionHelper.getStableFinalTranscript(recognitionBuffer, nextIndex);
+            const failedText = stableSegment || nextSegment;
+            SpeechRecognitionHelper.updateTranslatedSegment(
+                recognitionBuffer,
+                nextIndex,
+                failedText,
+                "[번역 실패] " + failedText
+            );
+            renderTextareas();
             setStatus("번역 서비스 오류", "error");
             setSpeechState("ready");
         } finally {
             isTranslating = false;
-            if (pendingSegments.length > 0) {
+            if (translationQueue.length > 0) {
                 drainTranslationQueue();
             }
         }
@@ -187,6 +246,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function ensureRecognition() {
         if (!SpeechRecognition) {
             setStatus("이 브라우저는 음성 인식을 지원하지 않습니다", "error");
+            startBtn.disabled = true;
+            stopBtn.disabled = true;
+            return null;
+        }
+
+        if (!SpeechRecognitionHelper) {
+            setStatus("음성 처리 모듈을 불러오지 못했습니다", "error");
             startBtn.disabled = true;
             stopBtn.disabled = true;
             return null;
@@ -205,28 +271,23 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         recognition.onresult = (event) => {
-            let interimText = "";
+            const entries = [];
+            let index;
 
-            for (let index = event.resultIndex; index < event.results.length; index += 1) {
-                const result = event.results[index];
-                const transcript = result[0].transcript.trim();
-
-                if (!transcript) {
-                    continue;
-                }
-
-                if (result.isFinal) {
-                    finalTranscript.push(transcript);
-                    pendingSegments.push(transcript);
-                } else {
-                    interimText += transcript + " ";
-                }
+            for (index = 0; index < event.results.length; index += 1) {
+                entries.push({
+                    index: index,
+                    transcript: event.results[index][0].transcript,
+                    isFinal: event.results[index].isFinal
+                });
             }
 
-            updateTextareas(interimText.trim());
-            if (pendingSegments.length > 0) {
-                drainTranslationQueue();
-            }
+            const applied = SpeechRecognitionHelper.applyRecognitionResults(recognitionBuffer, entries);
+            renderTextareas();
+
+            applied.changedFinalIndexes.forEach((changedIndex) => {
+                scheduleTranslation(changedIndex);
+            });
         };
 
         recognition.onerror = (event) => {
@@ -288,6 +349,8 @@ document.addEventListener("DOMContentLoaded", () => {
         isListening = false;
         startBtn.disabled = false;
         stopBtn.disabled = true;
+        clearTranslationTimers();
+        translationQueue = [];
 
         if (recognition) {
             recognition.stop();
