@@ -1,4 +1,4 @@
-﻿(function (root) {
+(function (root) {
     var isWScript = typeof WScript !== "undefined";
     var results = [];
 
@@ -119,19 +119,34 @@
         assertEqual(applied.sourceText, "안녕하세요 식사는 하셨어요?", "mobile cumulative final transcript does not duplicate lines");
 
         applied = helper.applyRecognitionResults(buffer, [
-            { index: 0, transcript: "안녕하세요 식사는 하셨어요?", isFinal: true },
-            { index: 1, transcript: "반갑", isFinal: false }
+            { index: 0, transcript: "이제부터", isFinal: true },
+            { index: 1, transcript: "이제부터", isFinal: true },
+            { index: 2, transcript: "이제부터 실시간", isFinal: true },
+            { index: 3, transcript: "이제부터 실시간 통역을 합니다", isFinal: true }
         ]);
-        assertEqual(applied.sourceText, "안녕하세요 식사는 하셨어요?\n반갑", "interim transcript renders after stable final transcript");
+        assertEqual(applied.sourceText, "이제부터 실시간 통역을 합니다", "mobile repeated final indexes collapse to latest phrase");
+        assertArrayEqual(applied.changedFinalIndexes, [3], "collapsed mobile phrase only queues latest index");
 
-        helper.updateTranslatedSegment(buffer, 0, "안녕하세요 식사는 하셨어요?", "Hello, have you eaten?");
-        assertEqual(helper.getTranslatedText(buffer), "Hello, have you eaten?", "translated transcript stores per index");
-        assertEqual(helper.getTranslatedSourceTranscript(buffer, 0), "안녕하세요 식사는 하셨어요?", "translated source transcript remembers latest source text");
+        helper.updateTranslatedSegment(buffer, 3, "이제부터 실시간 통역을 합니다", "We will start live interpretation now.");
+        applied = helper.applyRecognitionResults(buffer, [
+            { index: 0, transcript: "이제부터", isFinal: true },
+            { index: 1, transcript: "이제부터", isFinal: true },
+            { index: 2, transcript: "이제부터 실시간", isFinal: true },
+            { index: 4, transcript: "이제부터 실시간 통역을 합니다", isFinal: true }
+        ]);
+        assertEqual(helper.getTranslatedText(buffer), "We will start live interpretation now.", "translation is preserved when the same collapsed phrase shifts index");
+        assertEqual(helper.getTranslatedSourceTranscript(buffer, 4), "이제부터 실시간 통역을 합니다", "preserved translation follows the latest collapsed index");
+
+        applied = helper.applyRecognitionResults(buffer, [
+            { index: 4, transcript: "이제부터 실시간 통역을 합니다", isFinal: true },
+            { index: 5, transcript: "반갑", isFinal: false }
+        ]);
+        assertEqual(applied.sourceText, "이제부터 실시간 통역을 합니다\n반갑", "interim transcript renders after collapsed final transcript");
     }
 
     function runMarkupChecks() {
         var markup = readText("../projects/live-translation/index.html");
-        assertEqual(markup.indexOf('live-translation-recognition.js') >= 0, true, "recognition helper script loaded in page");
+        assertEqual(markup.indexOf("live-translation-recognition.js") >= 0, true, "recognition helper script loaded in page");
     }
 
     var helper = loadHelper();
